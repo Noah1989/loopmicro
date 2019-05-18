@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 7
+Sheet 4 7
 Title ""
 Date ""
 Rev ""
@@ -35,9 +35,9 @@ P 6100 3650
 AR Path="/5CC1EE8E" Ref="U?"  Part="1" 
 AR Path="/5CC1878B/5CC1EE8E" Ref="U2"  Part="1" 
 AR Path="/5CC8DF11/5CC1EE8E" Ref="U5"  Part="1" 
-F 0 "U2" V 6300 3150 50  0000 C CNN
+F 0 "U5" V 6300 3150 50  0000 C CNN
 F 1 "74AC161" V 6100 3650 50  0000 C CNN
-F 2 "" H 6100 3650 50  0001 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket_LongPads" H 6100 3650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS161" H 6100 3650 50  0001 C CNN
 	1    6100 3650
 	0    1    1    0   
@@ -49,9 +49,9 @@ P 7900 3650
 AR Path="/5CC1EE94" Ref="U?"  Part="1" 
 AR Path="/5CC1878B/5CC1EE94" Ref="U1"  Part="1" 
 AR Path="/5CC8DF11/5CC1EE94" Ref="U4"  Part="1" 
-F 0 "U1" V 8100 3150 50  0000 C CNN
+F 0 "U4" V 8100 3150 50  0000 C CNN
 F 1 "74AC161" V 7900 3650 50  0000 C CNN
-F 2 "" H 7900 3650 50  0001 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket_LongPads" H 7900 3650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS161" H 7900 3650 50  0001 C CNN
 	1    7900 3650
 	0    1    1    0   
@@ -237,9 +237,9 @@ P 4300 3650
 AR Path="/5CC1EEEE" Ref="U?"  Part="1" 
 AR Path="/5CC1878B/5CC1EEEE" Ref="U3"  Part="1" 
 AR Path="/5CC8DF11/5CC1EEEE" Ref="U6"  Part="1" 
-F 0 "U3" V 4500 3150 50  0000 C CNN
+F 0 "U6" V 4500 3150 50  0000 C CNN
 F 1 "74AC161" V 4300 3650 50  0000 C CNN
-F 2 "" H 4300 3650 50  0001 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket_LongPads" H 4300 3650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS161" H 4300 3650 50  0001 C CNN
 	1    4300 3650
 	0    1    1    0   

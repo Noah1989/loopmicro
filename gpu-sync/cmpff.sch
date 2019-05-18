@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 7
+Sheet 5 7
 Title ""
 Date ""
 Rev ""
@@ -23,9 +23,9 @@ AR Path="/5CC6FF8F/5CC72C3E" Ref="U7"  Part="1"
 AR Path="/5CC85C26/5CC72C3E" Ref="U9"  Part="1" 
 AR Path="/5CC9C16E/5CC72C3E" Ref="U11"  Part="1" 
 AR Path="/5CCB1612/5CC72C3E" Ref="U13"  Part="1" 
-F 0 "U7" H 6200 1750 50  0000 L CNN
+F 0 "U13" H 6200 1750 50  0000 L CNN
 F 1 "74HC688" V 6050 2750 50  0000 C CNN
-F 2 "" H 6050 2650 50  0001 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket_LongPads" H 6050 2650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS688" H 6050 2650 50  0001 C CNN
 	1    6050 2650
 	1    0    0    -1  
@@ -39,32 +39,32 @@ AR Path="/5CC6FF8F/5CC72C44" Ref="U8"  Part="1"
 AR Path="/5CC85C26/5CC72C44" Ref="U10"  Part="1" 
 AR Path="/5CC9C16E/5CC72C44" Ref="U12"  Part="1" 
 AR Path="/5CCB1612/5CC72C44" Ref="U14"  Part="1" 
-F 0 "U8" H 6200 4600 50  0000 L CNN
+F 0 "U14" H 6200 4600 50  0000 L CNN
 F 1 "74HC688" V 6050 5600 50  0000 C CNN
-F 2 "" H 6050 5500 50  0001 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket_LongPads" H 6050 5500 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS688" H 6050 5500 50  0001 C CNN
 	1    6050 5500
 	1    0    0    -1  
 $EndComp
 $Comp
 L Graphics-rescue:74LS109-74xx U?
-U 1 1 5CC72C4A
+U 2 1 5CC72C4A
 P 7050 2650
 AR Path="/5CC72C4A" Ref="U?"  Part="1" 
 AR Path="/5CC6FF8F/5CC72C4A" Ref="U16"  Part="1" 
 AR Path="/5CC85C26/5CC72C4A" Ref="U16"  Part="2" 
 AR Path="/5CC9C16E/5CC72C4A" Ref="U17"  Part="1" 
 AR Path="/5CCB1612/5CC72C4A" Ref="U17"  Part="2" 
-F 0 "U16" H 6900 2350 50  0000 R CNN
+F 0 "U17" H 6900 2350 50  0000 R CNN
 F 1 "74HC109" V 7150 2400 50  0000 R CNN
-F 2 "" H 7050 2650 50  0001 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket_LongPads" H 7050 2650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS109" H 7050 2650 50  0001 C CNN
-	1    7050 2650
+	2    7050 2650
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC04 U?
-U 2 1 5CC72C50
+U 5 1 5CC72C50
 P 6650 2150
 AR Path="/5CC72C50" Ref="U?"  Part="1" 
 AR Path="/5CC6FF8F/5CC72C50" Ref="U15"  Part="2" 
@@ -73,9 +73,9 @@ AR Path="/5CC9C16E/5CC72C50" Ref="U15"  Part="4"
 AR Path="/5CCB1612/5CC72C50" Ref="U15"  Part="5" 
 F 0 "U15" V 6450 2300 50  0000 C CNN
 F 1 "74HC04" V 6750 2350 50  0000 C CNN
-F 2 "" H 6650 2150 50  0001 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket_LongPads" H 6650 2150 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74HC_HCT04.pdf" H 6650 2150 50  0001 C CNN
-	2    6650 2150
+	5    6650 2150
 	0    1    1    0   
 $EndComp
 Wire Wire Line
@@ -275,9 +275,9 @@ AR Path="/5CC6FF8F/5CE3CB3C" Ref="U21"  Part="1"
 AR Path="/5CC85C26/5CE3CB3C" Ref="U23"  Part="1" 
 AR Path="/5CC9C16E/5CE3CB3C" Ref="U25"  Part="1" 
 AR Path="/5CCB1612/5CE3CB3C" Ref="U27"  Part="1" 
-F 0 "U21" H 3650 3450 50  0000 C CNN
+F 0 "U27" H 3650 3450 50  0000 C CNN
 F 1 "74AC573" H 3650 2850 50  0000 C CNN
-F 2 "" H 3650 3150 50  0001 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket_LongPads" H 3650 3150 50  0001 C CNN
 F 3 "74xx/74hc573.pdf" H 3650 3150 50  0001 C CNN
 	1    3650 3150
 	1    0    0    -1  
@@ -306,9 +306,9 @@ AR Path="/5CC6FF8F/5CE46B72" Ref="U22"  Part="1"
 AR Path="/5CC85C26/5CE46B72" Ref="U24"  Part="1" 
 AR Path="/5CC9C16E/5CE46B72" Ref="U26"  Part="1" 
 AR Path="/5CCB1612/5CE46B72" Ref="U28"  Part="1" 
-F 0 "U22" H 3650 6300 50  0000 C CNN
+F 0 "U28" H 3650 6300 50  0000 C CNN
 F 1 "74AC573" H 3650 5700 50  0000 C CNN
-F 2 "" H 3650 6000 50  0001 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket_LongPads" H 3650 6000 50  0001 C CNN
 F 3 "74xx/74hc573.pdf" H 3650 6000 50  0001 C CNN
 	1    3650 6000
 	1    0    0    -1  
@@ -424,18 +424,18 @@ Wire Wire Line
 	3100 6500 3150 6500
 $Comp
 L 74xx:74HC00 U?
-U 1 1 5D446A15
+U 3 1 5D446A15
 P 2750 3550
 AR Path="/5D446A15" Ref="U?"  Part="1" 
 AR Path="/5CC9C16E/5D446A15" Ref="U33"  Part="1" 
 AR Path="/5CCB1612/5D446A15" Ref="U33"  Part="3" 
 AR Path="/5CC6FF8F/5D446A15" Ref="U32"  Part="1" 
 AR Path="/5CC85C26/5D446A15" Ref="U32"  Part="3" 
-F 0 "U32" H 2600 3750 50  0000 L CNN
+F 0 "U33" H 2600 3750 50  0000 L CNN
 F 1 "74HC00" H 2550 3300 50  0000 L CNN
-F 2 "" H 2750 3550 50  0001 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket_LongPads" H 2750 3550 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc00" H 2750 3550 50  0001 C CNN
-	1    2750 3550
+	3    2750 3550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -446,18 +446,18 @@ Wire Wire Line
 	2350 3650 2450 3650
 $Comp
 L 74xx:74HC00 U?
-U 2 1 5D44D4F0
+U 4 1 5D44D4F0
 P 2750 6400
 AR Path="/5D44D4F0" Ref="U?"  Part="1" 
 AR Path="/5CC9C16E/5D44D4F0" Ref="U33"  Part="2" 
 AR Path="/5CCB1612/5D44D4F0" Ref="U33"  Part="4" 
 AR Path="/5CC6FF8F/5D44D4F0" Ref="U32"  Part="2" 
 AR Path="/5CC85C26/5D44D4F0" Ref="U32"  Part="4" 
-F 0 "U32" H 2600 6600 50  0000 L CNN
+F 0 "U33" H 2600 6600 50  0000 L CNN
 F 1 "74HC00" H 2550 6150 50  0000 L CNN
-F 2 "" H 2750 6400 50  0001 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket_LongPads" H 2750 6400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc00" H 2750 6400 50  0001 C CNN
-	2    2750 6400
+	4    2750 6400
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
