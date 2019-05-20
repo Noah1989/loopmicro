@@ -1,5 +1,5 @@
 EESchema Schematic File Version 4
-EELAYER 26 0
+EELAYER 29 0
 EELAYER END
 $Descr A4 8268 11693 portrait
 encoding utf-8
@@ -737,19 +737,6 @@ NoConn ~ 6500 7400
 Text GLabel 4400 5000 2    50   Input ~ 0
 ~WR
 Wire Wire Line
-	4000 2900 4200 2900
-$Comp
-L Connector_Generic:Conn_02x08_Odd_Even J2
-U 1 1 5CBAD26B
-P 6800 6800
-F 0 "J2" H 6850 7317 50  0000 C CNN
-F 1 "Conn_02x08_Odd_Even" H 6850 7226 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical" H 6800 6800 50  0001 C CNN
-F 3 "~" H 6800 6800 50  0001 C CNN
-	1    6800 6800
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
 	6600 6500 6500 6500
 Wire Wire Line
 	6600 6600 6500 6600
@@ -931,8 +918,6 @@ F 3 "~" H 5350 2900 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	5750 2900 5650 2900
-Wire Wire Line
-	4200 2900 4950 2900
 Wire Wire Line
 	4200 1950 4200 2900
 Wire Wire Line
@@ -1415,7 +1400,19 @@ F 3 "" H 4950 4950 50  0001 C CNN
 	1    4950 4950
 	1    0    0    -1  
 $EndComp
-Connection ~ 4200 2900
 Wire Wire Line
 	4200 2900 4200 4050
+Wire Wire Line
+	4000 2900 4950 2900
+$Comp
+L Connector_Generic:Conn_02x08_Odd_Even J2
+U 1 1 5CBAD26B
+P 6900 6800
+F 0 "J2" H 6950 7317 50  0000 C CNN
+F 1 "Conn_02x08_Odd_Even" H 6950 7226 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical" H 6900 6800 50  0001 C CNN
+F 3 "~" H 6900 6800 50  0001 C CNN
+	1    6900 6800
+	-1   0    0    -1  
+$EndComp
 $EndSCHEMATC
