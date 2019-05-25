@@ -1,0 +1,313 @@
+EESchema Schematic File Version 4
+LIBS:ledrom-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 10 10
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L ledrom-rescue:4075-cmos_ieee U?
+U 3 1 5D135EBA
+P 5300 4550
+AR Path="/5D135EBA" Ref="U?"  Part="1" 
+AR Path="/5D135BA6/5D135EBA" Ref="U12"  Part="3" 
+F 0 "U12" H 5300 4159 50  0000 C CNN
+F 1 "74HC4075" H 5300 4250 50  0000 C CNN
+F 2 "Housings_DIP:DIP-14_W7.62mm_Socket" H 5300 4550 50  0001 C CNN
+F 3 "" H 5300 4550 50  0001 C CNN
+	3    5300 4550
+	1    0    0    1   
+$EndComp
+$Comp
+L ledrom-rescue:4075-cmos_ieee U?
+U 2 1 5D135EC1
+P 5300 5250
+AR Path="/5D135EC1" Ref="U?"  Part="2" 
+AR Path="/5D135BA6/5D135EC1" Ref="U12"  Part="2" 
+F 0 "U12" H 5300 4859 50  0000 C CNN
+F 1 "74HC4075" H 5300 4950 50  0000 C CNN
+F 2 "Housings_DIP:DIP-14_W7.62mm_Socket" H 5300 5250 50  0001 C CNN
+F 3 "" H 5300 5250 50  0001 C CNN
+	2    5300 5250
+	1    0    0    1   
+$EndComp
+$Comp
+L ledrom-rescue:4075-cmos_ieee U?
+U 1 1 5D135EC8
+P 6600 3050
+AR Path="/5D135EC8" Ref="U?"  Part="3" 
+AR Path="/5D135BA6/5D135EC8" Ref="U12"  Part="1" 
+F 0 "U12" H 6600 2659 50  0000 C CNN
+F 1 "74HC4075" H 6600 2750 50  0000 C CNN
+F 2 "Housings_DIP:DIP-14_W7.62mm_Socket" H 6600 3050 50  0001 C CNN
+F 3 "" H 6600 3050 50  0001 C CNN
+	1    6600 3050
+	1    0    0    1   
+$EndComp
+$Comp
+L ledrom-rescue:4075-cmos_ieee U?
+U 1 1 5D135ECF
+P 4000 3450
+AR Path="/5D135ECF" Ref="U?"  Part="1" 
+AR Path="/5D135BA6/5D135ECF" Ref="U11"  Part="1" 
+F 0 "U11" H 4000 3059 50  0000 C CNN
+F 1 "74HC4075" H 4000 3150 50  0000 C CNN
+F 2 "Housings_DIP:DIP-14_W7.62mm_Socket" H 4000 3450 50  0001 C CNN
+F 3 "" H 4000 3450 50  0001 C CNN
+	1    4000 3450
+	1    0    0    1   
+$EndComp
+$Comp
+L ledrom-rescue:4075-cmos_ieee U?
+U 2 1 5D135ED6
+P 4000 4150
+AR Path="/5D135ED6" Ref="U?"  Part="2" 
+AR Path="/5D135BA6/5D135ED6" Ref="U11"  Part="2" 
+F 0 "U11" H 4000 3759 50  0000 C CNN
+F 1 "74HC4075" H 4000 3850 50  0000 C CNN
+F 2 "Housings_DIP:DIP-14_W7.62mm_Socket" H 4000 4150 50  0001 C CNN
+F 3 "" H 4000 4150 50  0001 C CNN
+	2    4000 4150
+	1    0    0    1   
+$EndComp
+$Comp
+L ledrom-rescue:4075-cmos_ieee U?
+U 3 1 5D135EDD
+P 4000 4850
+AR Path="/5D135EDD" Ref="U?"  Part="3" 
+AR Path="/5D135BA6/5D135EDD" Ref="U11"  Part="3" 
+F 0 "U11" H 4000 4459 50  0000 C CNN
+F 1 "74HC4075" H 4000 4550 50  0000 C CNN
+F 2 "Housings_DIP:DIP-14_W7.62mm_Socket" H 4000 4850 50  0001 C CNN
+F 3 "" H 4000 4850 50  0001 C CNN
+	3    4000 4850
+	1    0    0    1   
+$EndComp
+Text HLabel 3400 3550 0    50   Input ~ 0
+A8
+Text HLabel 3400 3450 0    50   Input ~ 0
+A6
+Text HLabel 3400 4250 0    50   Input ~ 0
+A7
+Wire Wire Line
+	3400 4250 3500 4250
+Wire Wire Line
+	3500 3550 3400 3550
+Wire Wire Line
+	3400 3450 3500 3450
+Text HLabel 3400 4150 0    50   Input ~ 0
+A11
+Text HLabel 3400 4050 0    50   Input ~ 0
+A14
+Text HLabel 3400 4750 0    50   Input ~ 0
+A10
+Text HLabel 3400 4850 0    50   Input ~ 0
+A12
+Text HLabel 3400 4950 0    50   Input ~ 0
+A15
+Text HLabel 3400 5350 0    50   Input ~ 0
+A13
+Text HLabel 3400 5250 0    50   Input ~ 0
+A9
+Text HLabel 3400 2950 0    50   Input ~ 0
+~RD
+Text HLabel 3400 5150 0    50   Input ~ 0
+~MREQ
+Text HLabel 3400 3350 0    50   Input ~ 0
+~ON
+Wire Wire Line
+	3400 3350 3500 3350
+Wire Wire Line
+	3400 5150 4800 5150
+Wire Wire Line
+	3400 5250 4800 5250
+Wire Wire Line
+	4800 5350 3400 5350
+Wire Wire Line
+	4700 4450 4800 4450
+Wire Wire Line
+	4700 4450 4700 3450
+Wire Wire Line
+	4700 3450 4500 3450
+Wire Wire Line
+	4500 4850 4700 4850
+Wire Wire Line
+	4700 4850 4700 4550
+Wire Wire Line
+	4700 4550 4800 4550
+Wire Wire Line
+	4800 4650 4600 4650
+Wire Wire Line
+	4600 4650 4600 4150
+Wire Wire Line
+	4600 4150 4500 4150
+Wire Wire Line
+	3400 2950 6100 2950
+Wire Wire Line
+	6100 3150 6000 3150
+Wire Wire Line
+	6000 3150 6000 5250
+Wire Wire Line
+	6000 5250 5800 5250
+Wire Wire Line
+	5800 4550 5900 4550
+Wire Wire Line
+	5900 3050 6100 3050
+Wire Wire Line
+	5900 3050 5900 4550
+Wire Wire Line
+	3400 4050 3500 4050
+Wire Wire Line
+	3500 4150 3400 4150
+Wire Wire Line
+	3400 4750 3500 4750
+Wire Wire Line
+	3500 4850 3400 4850
+Wire Wire Line
+	3400 4950 3500 4950
+Text HLabel 7200 3050 2    50   Input ~ 0
+~ROB
+Wire Wire Line
+	7200 3050 7100 3050
+$Comp
+L ledrom-rescue:GND #PWR0101
+U 1 1 5D13E043
+P 4000 3250
+F 0 "#PWR0101" H 4000 3000 50  0001 C CNN
+F 1 "GND" H 4005 3077 50  0001 C CNN
+F 2 "" H 4000 3250 50  0001 C CNN
+F 3 "" H 4000 3250 50  0001 C CNN
+	1    4000 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:VCC #PWR0102
+U 1 1 5D13E0B6
+P 4000 3650
+F 0 "#PWR0102" H 4000 3500 50  0001 C CNN
+F 1 "VCC" H 4017 3823 50  0001 C CNN
+F 2 "" H 4000 3650 50  0001 C CNN
+F 3 "" H 4000 3650 50  0001 C CNN
+	1    4000 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:GND #PWR0103
+U 1 1 5D13E1C7
+P 4000 3950
+F 0 "#PWR0103" H 4000 3700 50  0001 C CNN
+F 1 "GND" H 4005 3777 50  0001 C CNN
+F 2 "" H 4000 3950 50  0001 C CNN
+F 3 "" H 4000 3950 50  0001 C CNN
+	1    4000 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:GND #PWR0104
+U 1 1 5D13E1E4
+P 4000 4650
+F 0 "#PWR0104" H 4000 4400 50  0001 C CNN
+F 1 "GND" H 4005 4477 50  0001 C CNN
+F 2 "" H 4000 4650 50  0001 C CNN
+F 3 "" H 4000 4650 50  0001 C CNN
+	1    4000 4650
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:VCC #PWR0105
+U 1 1 5D13E201
+P 4000 4350
+F 0 "#PWR0105" H 4000 4200 50  0001 C CNN
+F 1 "VCC" H 4017 4523 50  0001 C CNN
+F 2 "" H 4000 4350 50  0001 C CNN
+F 3 "" H 4000 4350 50  0001 C CNN
+	1    4000 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:VCC #PWR0106
+U 1 1 5D13E21E
+P 4000 5050
+F 0 "#PWR0106" H 4000 4900 50  0001 C CNN
+F 1 "VCC" H 4017 5223 50  0001 C CNN
+F 2 "" H 4000 5050 50  0001 C CNN
+F 3 "" H 4000 5050 50  0001 C CNN
+	1    4000 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:GND #PWR0107
+U 1 1 5B62DA83
+P 5300 4350
+F 0 "#PWR0107" H 5300 4100 50  0001 C CNN
+F 1 "GND" H 5305 4177 50  0001 C CNN
+F 2 "" H 5300 4350 50  0001 C CNN
+F 3 "" H 5300 4350 50  0001 C CNN
+	1    5300 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:VCC #PWR0108
+U 1 1 5B62DAA0
+P 5300 4750
+F 0 "#PWR0108" H 5300 4600 50  0001 C CNN
+F 1 "VCC" H 5317 4923 50  0001 C CNN
+F 2 "" H 5300 4750 50  0001 C CNN
+F 3 "" H 5300 4750 50  0001 C CNN
+	1    5300 4750
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:GND #PWR0109
+U 1 1 5B62DABD
+P 5300 5050
+F 0 "#PWR0109" H 5300 4800 50  0001 C CNN
+F 1 "GND" H 5305 4877 50  0001 C CNN
+F 2 "" H 5300 5050 50  0001 C CNN
+F 3 "" H 5300 5050 50  0001 C CNN
+	1    5300 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:VCC #PWR0110
+U 1 1 5B62DAEC
+P 5300 5450
+F 0 "#PWR0110" H 5300 5300 50  0001 C CNN
+F 1 "VCC" H 5317 5623 50  0001 C CNN
+F 2 "" H 5300 5450 50  0001 C CNN
+F 3 "" H 5300 5450 50  0001 C CNN
+	1    5300 5450
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:VCC #PWR0111
+U 1 1 5B62DB27
+P 6600 3250
+F 0 "#PWR0111" H 6600 3100 50  0001 C CNN
+F 1 "VCC" H 6617 3423 50  0001 C CNN
+F 2 "" H 6600 3250 50  0001 C CNN
+F 3 "" H 6600 3250 50  0001 C CNN
+	1    6600 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledrom-rescue:GND #PWR0112
+U 1 1 5B62DB44
+P 6600 2850
+F 0 "#PWR0112" H 6600 2600 50  0001 C CNN
+F 1 "GND" H 6605 2677 50  0001 C CNN
+F 2 "" H 6600 2850 50  0001 C CNN
+F 3 "" H 6600 2850 50  0001 C CNN
+	1    6600 2850
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
