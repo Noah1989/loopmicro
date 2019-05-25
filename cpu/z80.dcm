@@ -1,0 +1,8 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP 7414
+D Hex Schmitt Trigger Inverter
+K not inv
+$ENDCMP
+#
+#End Doc Library
