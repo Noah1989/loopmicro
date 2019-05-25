@@ -1,0 +1,159 @@
+EESchema Schematic File Version 4
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 10 10
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text HLabel 3250 2250 1    50   Input ~ 0
+D0
+Text HLabel 2850 2250 1    50   Input ~ 0
+D1
+Text HLabel 2450 2250 1    50   Input ~ 0
+D2
+Text HLabel 2050 2250 1    50   Input ~ 0
+D3
+$Comp
+L Device:R R?
+U 1 1 5D29C7F0
+P 3050 2650
+F 0 "R?" V 3150 2650 50  0000 C CNN
+F 1 "422" V 3050 2650 50  0000 C CNN
+F 2 "" V 2980 2650 50  0001 C CNN
+F 3 "~" H 3050 2650 50  0001 C CNN
+	1    3050 2650
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D29C8D5
+P 3250 2450
+F 0 "R?" V 3350 2450 50  0000 C CNN
+F 1 "845" V 3250 2450 50  0000 C CNN
+F 2 "" V 3180 2450 50  0001 C CNN
+F 3 "~" H 3250 2450 50  0001 C CNN
+	1    3250 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D29C90D
+P 2850 2450
+F 0 "R?" V 2950 2450 50  0000 C CNN
+F 1 "845" V 2850 2450 50  0000 C CNN
+F 2 "" V 2780 2450 50  0001 C CNN
+F 3 "~" H 2850 2450 50  0001 C CNN
+	1    2850 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D29C936
+P 2450 2450
+F 0 "R?" V 2550 2450 50  0000 C CNN
+F 1 "845" V 2450 2450 50  0000 C CNN
+F 2 "" V 2380 2450 50  0001 C CNN
+F 3 "~" H 2450 2450 50  0001 C CNN
+	1    2450 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D29C95C
+P 2050 2450
+F 0 "R?" V 2150 2450 50  0000 C CNN
+F 1 "845" V 2050 2450 50  0000 C CNN
+F 2 "" V 1980 2450 50  0001 C CNN
+F 3 "~" H 2050 2450 50  0001 C CNN
+	1    2050 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D29C980
+P 2250 2650
+F 0 "R?" V 2350 2650 50  0000 C CNN
+F 1 "422" V 2250 2650 50  0000 C CNN
+F 2 "" V 2180 2650 50  0001 C CNN
+F 3 "~" H 2250 2650 50  0001 C CNN
+	1    2250 2650
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D29C9AC
+P 2650 2650
+F 0 "R?" V 2750 2650 50  0000 C CNN
+F 1 "422" V 2650 2650 50  0000 C CNN
+F 2 "" V 2580 2650 50  0001 C CNN
+F 3 "~" H 2650 2650 50  0001 C CNN
+	1    2650 2650
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D29C9DA
+P 3450 2650
+F 0 "R?" V 3550 2650 50  0000 C CNN
+F 1 "845" V 3450 2650 50  0000 C CNN
+F 2 "" V 3380 2650 50  0001 C CNN
+F 3 "~" H 3450 2650 50  0001 C CNN
+	1    3450 2650
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D29CA93
+P 3650 2700
+F 0 "#PWR?" H 3650 2450 50  0001 C CNN
+F 1 "GND" H 3655 2527 50  0000 C CNN
+F 2 "" H 3650 2700 50  0001 C CNN
+F 3 "" H 3650 2700 50  0001 C CNN
+	1    3650 2700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3650 2700 3650 2650
+Wire Wire Line
+	3650 2650 3600 2650
+Wire Wire Line
+	3300 2650 3250 2650
+Wire Wire Line
+	3250 2650 3250 2600
+Connection ~ 3250 2650
+Wire Wire Line
+	3250 2650 3200 2650
+Wire Wire Line
+	3250 2300 3250 2250
+Wire Wire Line
+	2900 2650 2850 2650
+Wire Wire Line
+	2850 2600 2850 2650
+Connection ~ 2850 2650
+Wire Wire Line
+	2850 2650 2800 2650
+Wire Wire Line
+	2450 2600 2450 2650
+Wire Wire Line
+	2450 2650 2400 2650
+Wire Wire Line
+	2450 2650 2500 2650
+Connection ~ 2450 2650
+Wire Wire Line
+	2100 2650 2050 2650
+Wire Wire Line
+	2050 2650 2050 2600
+Wire Wire Line
+	2050 2650 2000 2650
+Connection ~ 2050 2650
+Text HLabel 2000 2650 0    50   Input ~ 0
+OUT
+$EndSCHEMATC
