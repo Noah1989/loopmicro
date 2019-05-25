@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name sc39-11)(type Legacy)(uri ${KIPRJMOD}/sc39-11.lib)(options "")(descr ""))
+  (lib (name c_network08)(type Legacy)(uri ${KIPRJMOD}/c_network08.lib)(options "")(descr ""))
+)
