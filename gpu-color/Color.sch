@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:Color-cache
 EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
@@ -2390,7 +2391,7 @@ U 1 1 5F2664EF
 P 15500 8450
 F 0 "J4" H 15472 8330 50  0000 R CNN
 F 1 "I2C" H 15472 8421 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Horizontal" H 15500 8450 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 15500 8450 50  0001 C CNN
 F 3 "~" H 15500 8450 50  0001 C CNN
 	1    15500 8450
 	-1   0    0    1   
