@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:Color-cache
 EELAYER 29 0
 EELAYER END
 $Descr A3 16535 11693
@@ -1537,13 +1538,7 @@ Wire Wire Line
 Wire Wire Line
 	5400 1500 5400 1000
 Wire Wire Line
-	5800 800  5800 1500
-Wire Wire Line
 	5900 1500 5900 800 
-Wire Wire Line
-	5600 800  5600 1500
-Wire Wire Line
-	5700 800  5700 1500
 Wire Wire Line
 	10900 800  10900 1500
 Connection ~ 7200 1400
@@ -1601,12 +1596,6 @@ Text GLabel 7500 800  1    50   Input ~ 0
 D3
 Text GLabel 5900 800  1    50   Input ~ 0
 D4
-Text GLabel 5800 800  1    50   Input ~ 0
-D5
-Text GLabel 5700 800  1    50   Input ~ 0
-D6
-Text GLabel 5600 800  1    50   Input ~ 0
-D7
 Text GLabel 15200 3500 2    50   Input ~ 0
 ~CS11
 Text GLabel 11000 800  1    50   Input ~ 0
@@ -2421,7 +2410,7 @@ F19 "Q3" I R 9100 4700 50
 F20 "Q4" I R 9100 4800 50 
 F21 "Q5" I R 9100 4900 50 
 F22 "Q6" I R 9100 5000 50 
-F23 "Q7" I R 9100 5050 50 
+F23 "Q7" I R 9100 5100 50 
 $EndSheet
 $Sheet
 S 9400 3800 800  1400
@@ -2947,4 +2936,31 @@ F 3 "" H 3650 1150 50  0001 C CNN
 	1    3650 1150
 	1    0    0    -1  
 $EndComp
+$Comp
+L power:GND #PWR0224
+U 1 1 5CF01C81
+P 5450 750
+F 0 "#PWR0224" H 5450 500 50  0001 C CNN
+F 1 "GND" H 5455 577 50  0000 C CNN
+F 2 "" H 5450 750 50  0001 C CNN
+F 3 "" H 5450 750 50  0001 C CNN
+	1    5450 750 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5600 700  5450 700 
+Wire Wire Line
+	5450 700  5450 750 
+Wire Wire Line
+	5600 700  5600 1500
+Wire Wire Line
+	5700 700  5600 700 
+Wire Wire Line
+	5700 700  5700 1500
+Connection ~ 5600 700 
+Wire Wire Line
+	5800 700  5700 700 
+Wire Wire Line
+	5800 700  5800 1500
+Connection ~ 5700 700 
 $EndSCHEMATC
