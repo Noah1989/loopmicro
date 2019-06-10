@@ -1,4 +1,4 @@
-(kicad_pcb (version 20171130) (host pcbnew 5.0.2-bee76a0~70~ubuntu18.04.1)
+(kicad_pcb (version 20171130) (host pcbnew 5.0.0+dfsg1-2)
 
   (general
     (thickness 1.6)
@@ -11,7 +11,7 @@
 
   (page A4)
   (layers
-    (0 F.Cu signal hide)
+    (0 F.Cu signal)
     (31 B.Cu signal)
     (32 B.Adhes user)
     (33 F.Adhes user)
@@ -735,6 +735,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE135EF)
@@ -819,6 +824,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE13251)
@@ -900,6 +910,11 @@
       (net 96 /~HBLANK))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -1118,10 +1133,10 @@
       (net 32 GND) (zone_connect 2))
     (pad A32 thru_hole circle (at 44.45 5.08 90) (size 5 5) (drill 2.90068) (layers *.Cu *.Mask)
       (net 32 GND) (zone_connect 2))
-    (model ${KIPRJMOD}/850030567.stp
-      (offset (xyz 0 -8.9 3.8))
+    (model /home/stefan/micro-21/common/din_41612_messerleiste_c-96abcr.stp
+      (offset (xyz 0 -15.28 4))
       (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
+      (rotate (xyz 90 0 180))
     )
   )
 
@@ -1204,6 +1219,11 @@
       (net 32 GND))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -1291,6 +1311,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE130F1)
@@ -1367,6 +1392,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE1319D)
@@ -1440,6 +1470,11 @@
       (net 92 ~RESET))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -1524,6 +1559,11 @@
       (net 32 GND))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -1648,6 +1688,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE1333C)
@@ -1729,6 +1774,11 @@
       (net 1 VCC))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -1816,6 +1866,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE55298)
@@ -1889,6 +1944,11 @@
       (net 1 VCC))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -1973,6 +2033,11 @@
       (net 1 VCC))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -2106,6 +2171,11 @@
       (at (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
+    )
+    (model /home/stefan/micro-21/common/9995.stp
+      (offset (xyz 6.75 -15.24 4.66))
+      (scale (xyz 1 1 1))
+      (rotate (xyz -90 0 90))
     )
   )
 
@@ -3561,6 +3631,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE13147)
@@ -3634,6 +3709,11 @@
       (net 92 ~RESET))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -3713,6 +3793,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE131C8)
@@ -3786,6 +3871,11 @@
       (net 92 ~RESET))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -3873,6 +3963,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE13280)
@@ -3957,6 +4052,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-14_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE1336B)
@@ -4026,6 +4126,11 @@
       (net 106 /~TCC))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-14_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -4102,6 +4207,11 @@
       (net 1 VCC))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -4189,6 +4299,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE524CC)
@@ -4270,6 +4385,11 @@
       (net 1 VCC))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -4357,6 +4477,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE5281A)
@@ -4438,6 +4563,11 @@
       (net 1 VCC))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -4525,6 +4655,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE13562)
@@ -4606,6 +4741,11 @@
       (net 1 VCC))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -4693,6 +4833,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE9A8A6)
@@ -4777,6 +4922,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE1361E)
@@ -4850,6 +5000,11 @@
       (net 1 VCC))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -4929,6 +5084,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-14_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE13674)
@@ -4998,6 +5158,11 @@
       (net 251 ~CS0))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-14_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -5073,6 +5238,11 @@
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset (xyz 0 0 4))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module Package_DIP:DIP-14_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5CE136C6)
@@ -5142,6 +5312,11 @@
       (net 266 ~CS8))
     (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-14_W7.62mm_Socket.wrl
       (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+    (model ${KISYS3DMOD}/Package_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset (xyz 0 0 4))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -8241,6 +8416,13 @@
         (xy 129.9605 145.5295) (xy 129.9805 145.5295) (xy 129.9805 145.9105) (xy 129.9605 145.9105) (xy 129.9605 145.9305)
         (xy 129.5795 145.9305) (xy 129.5795 145.9105) (xy 129.5595 145.9105) (xy 129.5595 145.5295) (xy 129.5795 145.5295)
         (xy 129.5795 145.5095) (xy 129.9605 145.5095)
+      )
+    )
+    (filled_polygon
+      (pts
+        (xy 129.15707 144.222424) (xy 128.975253 144.302027) (xy 128.713891 144.48432) (xy 128.493115 144.7141) (xy 128.3554 144.929396)
+        (xy 128.204489 144.745511) (xy 127.995651 144.574122) (xy 127.992283 144.572322) (xy 128.0015 144.525986) (xy 128.0015 144.374014)
+        (xy 127.971852 144.224962) (xy 127.913694 144.084558) (xy 127.829263 143.958197) (xy 127.772566 143.9015) (xy 128.836146 143.9015)
       )
     )
     (filled_polygon
