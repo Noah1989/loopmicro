@@ -1,4 +1,4 @@
-15824278206648345
+15827398584828345
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -5845,12 +5845,26 @@ C Rect series Radial pin pitch 37.50mm  length 41.5mm width 40mm Capacitor
 2
 2
 common
+color
+
+
+0
+0
+0
+common
 logo
 
 
 0
 0
 0
+common
+Socket_DIN41612-CaseC1-full-Female-96Pin-3rows
+
+
+0
+98
+97
 common
 Socket_DIN41612-CaseC1-full-Male-96Pin-3rows
 
