@@ -1,0 +1,440 @@
+EESchema Schematic File Version 4
+LIBS:keyboard-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 3
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector:Mini-DIN-6 J?
+U 1 1 5D41F713
+P 7500 4350
+AR Path="/5D41F713" Ref="J?"  Part="1" 
+AR Path="/5D41F4B4/5D41F713" Ref="J1"  Part="1" 
+AR Path="/5D42A20B/5D41F713" Ref="J1"  Part="1" 
+F 0 "J1" H 7500 4717 50  0000 C CNN
+F 1 "Mini-DIN-6" H 7500 4626 50  0000 C CNN
+F 2 "" H 7500 4350 50  0001 C CNN
+F 3 "http://service.powerdynamics.com/ec/Catalog17/Section%2011.pdf" H 7500 4350 50  0001 C CNN
+	1    7500 4350
+	-1   0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC14 U?
+U 2 1 5D41F71A
+P 5450 4450
+AR Path="/5D41F71A" Ref="U?"  Part="1" 
+AR Path="/5D41F4B4/5D41F71A" Ref="U3"  Part="2" 
+AR Path="/5D42A20B/5D41F71A" Ref="U4"  Part="2" 
+F 0 "U4" H 5450 4767 50  0000 C CNN
+F 1 "74HC14" H 5450 4676 50  0000 C CNN
+F 2 "" H 5450 4450 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 5450 4450 50  0001 C CNN
+	2    5450 4450
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:Q_NPN_CBE Q?
+U 1 1 5D41F721
+P 6450 3300
+AR Path="/5D41F721" Ref="Q?"  Part="1" 
+AR Path="/5D41F4B4/5D41F721" Ref="Q2"  Part="1" 
+AR Path="/5D42A20B/5D41F721" Ref="Q5"  Part="1" 
+F 0 "Q5" H 6641 3346 50  0000 L CNN
+F 1 "Q_NPN_CBE" H 6641 3255 50  0000 L CNN
+F 2 "" H 6650 3400 50  0001 C CNN
+F 3 "~" H 6450 3300 50  0001 C CNN
+	1    6450 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D41F728
+P 6000 3300
+AR Path="/5D41F728" Ref="R?"  Part="1" 
+AR Path="/5D41F4B4/5D41F728" Ref="R?"  Part="1" 
+AR Path="/5D42A20B/5D41F728" Ref="R?"  Part="1" 
+F 0 "R?" V 5793 3300 50  0000 C CNN
+F 1 "R" V 5884 3300 50  0000 C CNN
+F 2 "" V 5930 3300 50  0001 C CNN
+F 3 "~" H 6000 3300 50  0001 C CNN
+	1    6000 3300
+	0    1    1    0   
+$EndComp
+$Comp
+L 74xx:74HC14 U?
+U 1 1 5D41F72F
+P 6050 4450
+AR Path="/5D41F72F" Ref="U?"  Part="1" 
+AR Path="/5D41F4B4/5D41F72F" Ref="U3"  Part="1" 
+AR Path="/5D42A20B/5D41F72F" Ref="U4"  Part="1" 
+F 0 "U4" H 6050 4133 50  0000 C CNN
+F 1 "74HC14" H 6050 4224 50  0000 C CNN
+F 2 "" H 6050 4450 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 6050 4450 50  0001 C CNN
+	1    6050 4450
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5750 3300 5850 3300
+Wire Wire Line
+	6150 3300 6250 3300
+Wire Wire Line
+	6550 2800 6550 3100
+Connection ~ 6550 2800
+$Comp
+L Device:R R?
+U 1 1 5D41F73A
+P 6550 2550
+AR Path="/5D41F73A" Ref="R?"  Part="1" 
+AR Path="/5D41F4B4/5D41F73A" Ref="R?"  Part="1" 
+AR Path="/5D42A20B/5D41F73A" Ref="R?"  Part="1" 
+F 0 "R?" H 6480 2504 50  0000 R CNN
+F 1 "R" H 6480 2595 50  0000 R CNN
+F 2 "" V 6480 2550 50  0001 C CNN
+F 3 "~" H 6550 2550 50  0001 C CNN
+	1    6550 2550
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6550 2700 6550 2800
+$Comp
+L power:VCC #PWR?
+U 1 1 5D41F742
+P 6550 2400
+AR Path="/5D41F742" Ref="#PWR?"  Part="1" 
+AR Path="/5D41F4B4/5D41F742" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D41F742" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6550 2250 50  0001 C CNN
+F 1 "VCC" H 6567 2573 50  0000 C CNN
+F 2 "" H 6550 2400 50  0001 C CNN
+F 3 "" H 6550 2400 50  0001 C CNN
+	1    6550 2400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D41F748
+P 6550 3500
+AR Path="/5D41F748" Ref="#PWR?"  Part="1" 
+AR Path="/5D41F4B4/5D41F748" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D41F748" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6550 3250 50  0001 C CNN
+F 1 "GND" H 6555 3327 50  0000 C CNN
+F 2 "" H 6550 3500 50  0001 C CNN
+F 3 "" H 6550 3500 50  0001 C CNN
+	1    6550 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC14 U?
+U 5 1 5D41F74E
+P 5450 3300
+AR Path="/5D41F74E" Ref="U?"  Part="1" 
+AR Path="/5D41F4B4/5D41F74E" Ref="U3"  Part="5" 
+AR Path="/5D42A20B/5D41F74E" Ref="U4"  Part="5" 
+F 0 "U4" H 5450 3617 50  0000 C CNN
+F 1 "74HC14" H 5450 3526 50  0000 C CNN
+F 2 "" H 5450 3300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 5450 3300 50  0001 C CNN
+	5    5450 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Q_NPN_CBE Q?
+U 1 1 5D41F755
+P 6450 4950
+AR Path="/5D41F755" Ref="Q?"  Part="1" 
+AR Path="/5D41F4B4/5D41F755" Ref="Q3"  Part="1" 
+AR Path="/5D42A20B/5D41F755" Ref="Q6"  Part="1" 
+F 0 "Q6" H 6641 4996 50  0000 L CNN
+F 1 "Q_NPN_CBE" H 6641 4905 50  0000 L CNN
+F 2 "" H 6650 5050 50  0001 C CNN
+F 3 "~" H 6450 4950 50  0001 C CNN
+	1    6450 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D41F75C
+P 6000 4950
+AR Path="/5D41F75C" Ref="R?"  Part="1" 
+AR Path="/5D41F4B4/5D41F75C" Ref="R?"  Part="1" 
+AR Path="/5D42A20B/5D41F75C" Ref="R?"  Part="1" 
+F 0 "R?" V 5793 4950 50  0000 C CNN
+F 1 "R" V 5884 4950 50  0000 C CNN
+F 2 "" V 5930 4950 50  0001 C CNN
+F 3 "~" H 6000 4950 50  0001 C CNN
+	1    6000 4950
+	0    1    1    0   
+$EndComp
+$Comp
+L 74xx:74HC14 U?
+U 3 1 5D41F763
+P 5450 4950
+AR Path="/5D41F763" Ref="U?"  Part="1" 
+AR Path="/5D41F4B4/5D41F763" Ref="U3"  Part="3" 
+AR Path="/5D42A20B/5D41F763" Ref="U4"  Part="3" 
+F 0 "U4" H 5450 4633 50  0000 C CNN
+F 1 "74HC14" H 5450 4724 50  0000 C CNN
+F 2 "" H 5450 4950 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 5450 4950 50  0001 C CNN
+	3    5450 4950
+	1    0    0    1   
+$EndComp
+$Comp
+L 74xx:74HC14 U?
+U 4 1 5D41F76A
+P 5450 2800
+AR Path="/5D41F76A" Ref="U?"  Part="1" 
+AR Path="/5D41F4B4/5D41F76A" Ref="U3"  Part="4" 
+AR Path="/5D42A20B/5D41F76A" Ref="U4"  Part="4" 
+F 0 "U4" H 5450 2483 50  0000 C CNN
+F 1 "74HC14" H 5450 2574 50  0000 C CNN
+F 2 "" H 5450 2800 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 5450 2800 50  0001 C CNN
+	4    5450 2800
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5750 4950 5850 4950
+Wire Wire Line
+	6150 4950 6250 4950
+Wire Wire Line
+	6350 4450 6550 4450
+Wire Wire Line
+	6550 4450 6550 4750
+Connection ~ 6550 4450
+$Comp
+L Device:R R?
+U 1 1 5D41F776
+P 6550 4200
+AR Path="/5D41F776" Ref="R?"  Part="1" 
+AR Path="/5D41F4B4/5D41F776" Ref="R?"  Part="1" 
+AR Path="/5D42A20B/5D41F776" Ref="R?"  Part="1" 
+F 0 "R?" H 6480 4154 50  0000 R CNN
+F 1 "R" H 6480 4245 50  0000 R CNN
+F 2 "" V 6480 4200 50  0001 C CNN
+F 3 "~" H 6550 4200 50  0001 C CNN
+	1    6550 4200
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6550 4350 6550 4450
+$Comp
+L power:VCC #PWR?
+U 1 1 5D41F77E
+P 6550 4050
+AR Path="/5D41F77E" Ref="#PWR?"  Part="1" 
+AR Path="/5D41F4B4/5D41F77E" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D41F77E" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6550 3900 50  0001 C CNN
+F 1 "VCC" H 6567 4223 50  0000 C CNN
+F 2 "" H 6550 4050 50  0001 C CNN
+F 3 "" H 6550 4050 50  0001 C CNN
+	1    6550 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D41F784
+P 6550 5150
+AR Path="/5D41F784" Ref="#PWR?"  Part="1" 
+AR Path="/5D41F4B4/5D41F784" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D41F784" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 6550 4900 50  0001 C CNN
+F 1 "GND" H 6555 4977 50  0000 C CNN
+F 2 "" H 6550 5150 50  0001 C CNN
+F 3 "" H 6550 5150 50  0001 C CNN
+	1    6550 5150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Q_PMOS_SGD Q?
+U 1 1 5D41F78A
+P 7800 3750
+AR Path="/5D41F78A" Ref="Q?"  Part="1" 
+AR Path="/5D41F4B4/5D41F78A" Ref="Q1"  Part="1" 
+AR Path="/5D42A20B/5D41F78A" Ref="Q4"  Part="1" 
+F 0 "Q4" H 8005 3704 50  0000 L CNN
+F 1 "ZVP3306A" H 8005 3795 50  0000 L CNN
+F 2 "" H 8000 3850 50  0001 C CNN
+F 3 "~" H 7800 3750 50  0001 C CNN
+	1    7800 3750
+	1    0    0    1   
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D41F791
+P 7900 3550
+AR Path="/5D41F791" Ref="#PWR?"  Part="1" 
+AR Path="/5D41F4B4/5D41F791" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D41F791" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 7900 3400 50  0001 C CNN
+F 1 "VCC" H 7917 3723 50  0000 C CNN
+F 2 "" H 7900 3550 50  0001 C CNN
+F 3 "" H 7900 3550 50  0001 C CNN
+	1    7900 3550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7900 3950 7900 4350
+Wire Wire Line
+	7800 4350 7900 4350
+NoConn ~ 7800 4250
+NoConn ~ 7800 4450
+Wire Wire Line
+	7200 4350 7100 4350
+Wire Wire Line
+	7100 4350 7100 4650
+$Comp
+L power:GND #PWR?
+U 1 1 5D41F79D
+P 7100 4650
+AR Path="/5D41F79D" Ref="#PWR?"  Part="1" 
+AR Path="/5D41F4B4/5D41F79D" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D41F79D" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 7100 4400 50  0001 C CNN
+F 1 "GND" H 7105 4477 50  0000 C CNN
+F 2 "" H 7100 4650 50  0001 C CNN
+F 3 "" H 7100 4650 50  0001 C CNN
+	1    7100 4650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5750 2800 6550 2800
+Wire Wire Line
+	6550 4450 7200 4450
+Wire Wire Line
+	7200 4250 7100 4250
+Wire Wire Line
+	7100 4250 7100 2800
+Wire Wire Line
+	6550 2800 7100 2800
+Wire Wire Line
+	7600 3750 5150 3750
+Text HLabel 5150 2800 0    50   Input ~ 0
+~CLKIN
+Text HLabel 5150 3300 0    50   Input ~ 0
+CLKOUT
+Text HLabel 5150 3750 0    50   Input ~ 0
+~PWRON
+Text HLabel 5150 4450 0    50   Input ~ 0
+DATAIN
+Text HLabel 5150 4950 0    50   Input ~ 0
+DATAOUT
+$Comp
+L 74xx:74HC14 U?
+U 6 1 5D4678FF
+P 3450 3450
+AR Path="/5D4678FF" Ref="U?"  Part="1" 
+AR Path="/5D41F4B4/5D4678FF" Ref="U3"  Part="6" 
+AR Path="/5D42A20B/5D4678FF" Ref="U4"  Part="6" 
+F 0 "U4" H 3450 3767 50  0000 C CNN
+F 1 "74HC14" H 3450 3676 50  0000 C CNN
+F 2 "" H 3450 3450 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 3450 3450 50  0001 C CNN
+	6    3450 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC14 U?
+U 7 1 5D467FC7
+P 3500 4000
+AR Path="/5D467FC7" Ref="U?"  Part="1" 
+AR Path="/5D41F4B4/5D467FC7" Ref="U3"  Part="7" 
+AR Path="/5D42A20B/5D467FC7" Ref="U4"  Part="7" 
+F 0 "U4" V 3250 4000 50  0000 C CNN
+F 1 "74HC14" V 3350 4000 50  0000 C CNN
+F 2 "" H 3500 4000 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 3500 4000 50  0001 C CNN
+	7    3500 4000
+	0    -1   1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D4683DF
+P 4000 4000
+AR Path="/5D41F4B4/5D4683DF" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D4683DF" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 4000 3750 50  0001 C CNN
+F 1 "GND" H 4005 3827 50  0000 C CNN
+F 2 "" H 4000 4000 50  0001 C CNN
+F 3 "" H 4000 4000 50  0001 C CNN
+	1    4000 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D468921
+P 3000 3800
+AR Path="/5D41F4B4/5D468921" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D468921" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3000 3650 50  0001 C CNN
+F 1 "VCC" H 3017 3973 50  0000 C CNN
+F 2 "" H 3000 3800 50  0001 C CNN
+F 3 "" H 3000 3800 50  0001 C CNN
+	1    3000 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D468AD2
+P 3150 3450
+AR Path="/5D41F4B4/5D468AD2" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D468AD2" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 3150 3300 50  0001 C CNN
+F 1 "VCC" H 3167 3623 50  0000 C CNN
+F 2 "" H 3150 3450 50  0001 C CNN
+F 3 "" H 3150 3450 50  0001 C CNN
+	1    3150 3450
+	1    0    0    -1  
+$EndComp
+NoConn ~ 3750 3450
+$Comp
+L Device:C_Small C3
+U 1 1 5D468F7A
+P 2900 4100
+AR Path="/5D41F4B4/5D468F7A" Ref="C3"  Part="1" 
+AR Path="/5D42A20B/5D468F7A" Ref="C4"  Part="1" 
+F 0 "C4" H 2809 4054 50  0000 R CNN
+F 1 "100nF" H 2809 4145 50  0000 R CNN
+F 2 "" H 2900 4100 50  0001 C CNN
+F 3 "~" H 2900 4100 50  0001 C CNN
+	1    2900 4100
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	3000 3800 3000 3900
+Wire Wire Line
+	3000 3900 2900 3900
+Wire Wire Line
+	2900 3900 2900 4000
+Connection ~ 3000 3900
+Wire Wire Line
+	3000 3900 3000 4000
+$Comp
+L power:GND #PWR?
+U 1 1 5D469DB3
+P 2900 4300
+AR Path="/5D41F4B4/5D469DB3" Ref="#PWR?"  Part="1" 
+AR Path="/5D42A20B/5D469DB3" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2900 4050 50  0001 C CNN
+F 1 "GND" H 2905 4127 50  0000 C CNN
+F 2 "" H 2900 4300 50  0001 C CNN
+F 3 "" H 2900 4300 50  0001 C CNN
+	1    2900 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2900 4300 2900 4200
+$EndSCHEMATC
