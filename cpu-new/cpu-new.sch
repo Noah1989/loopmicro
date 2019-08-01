@@ -1,6 +1,6 @@
 EESchema Schematic File Version 4
 LIBS:cpu-new-cache
-EELAYER 29 0
+EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
@@ -1928,7 +1928,7 @@ Wire Wire Line
 Wire Wire Line
 	2950 7800 3100 7800
 Wire Wire Line
-	2950 7800 2800 7800
+	2950 7800 2850 7800
 Connection ~ 2950 7800
 $Comp
 L Device:CP_Small C14
@@ -2922,4 +2922,20 @@ F 3 "~" H 2500 7800 50  0001 C CNN
 	1    2500 7800
 	1    0    0    -1  
 $EndComp
+$Comp
+L power:PWR_FLAG #FLG0105
+U 1 1 5D4BCC7F
+P 2850 7350
+F 0 "#FLG0105" H 2850 7425 50  0001 C CNN
+F 1 "PWR_FLAG" H 2850 7524 50  0000 C CNN
+F 2 "" H 2850 7350 50  0001 C CNN
+F 3 "~" H 2850 7350 50  0001 C CNN
+	1    2850 7350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2850 7350 2850 7800
+Connection ~ 2850 7800
+Wire Wire Line
+	2850 7800 2800 7800
 $EndSCHEMATC
