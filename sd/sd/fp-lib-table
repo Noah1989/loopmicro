@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name common)(type KiCad)(uri /Users/stefan/Documents/GitHub/micro-21/common)(options "")(descr ""))
+  (lib (name 10067847)(type KiCad)(uri ${KIPRJMOD}/10067847.pretty)(options "")(descr ""))
+)
