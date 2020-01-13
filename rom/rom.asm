@@ -1,5 +1,6 @@
 .org $0000
-    jr start
+ld sp, $0000
+jr start
 
 debug equ 1
 
@@ -46,12 +47,10 @@ call init_sync
 call init_graphics
 call load_pal
 call load_chars
-;call clear_screen
-;call init_keyboard
-;ld hl, $8000
-;jp monitor
-todo:
-jr todo
+call clear_screen
+call init_keyboard
+ld hl, $8000
+jp monitor
 .endblock
 
 entrypoint init_sync
@@ -185,4 +184,6 @@ jr nz, loop
 ret
 .endblock
 
+.include keyboard.asm
+.include monitor.asm
 .include charmap.asm

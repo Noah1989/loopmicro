@@ -1,4 +1,4 @@
-.org $7000
+.align $1000
 charmap:
 ; char0
 .db $00, $00, $EE, $C6
