@@ -171,6 +171,9 @@ entrypoint clear_screen
 .block
 ld d, $0E
 ld e, $20
+xor a
+out gaddr_l, a
+out gaddr_h, a
 ld bc, 8192
 loop:
 ld a, d
