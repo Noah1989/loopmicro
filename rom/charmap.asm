@@ -1,3 +1,4 @@
+debug_align $1000
 .align $1000
 charmap:
 ; char0

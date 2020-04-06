@@ -20,7 +20,7 @@ gpalette_inc equ $BF
 .macro debug_align, %%1
 .if debug
 width := %%1
-fill $76, ((width-($ % width)) % width)
+fill $FF, ((width-($ % width)) % width)
 .endif
 .endm
 
@@ -32,14 +32,22 @@ label:
 .if debug
 jr label_code
 .db "label"
-fill " ", ((16-($ % 16)) % 16)
+fill $FF, ((16-($ % 16)) % 16)
 .endif
 label_code:
 .endm
 
+; dummy FF opcode jumps here
+debug_align $0038
+.org $0038
+error:
+halt
+jr error
+
+debug_align $0066
 .org $0066
 nmi:
-retn
+call error
 
 entrypoint start
 .block
@@ -49,7 +57,7 @@ call load_pal
 call load_chars
 call clear_screen
 call init_keyboard
-ld hl, $8000
+ld hl, $7F00
 jp monitor
 .endblock
 
@@ -190,3 +198,5 @@ ret
 .include keyboard.asm
 .include monitor.asm
 .include charmap.asm
+
+debug_align $7FF0

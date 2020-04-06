@@ -1,9 +1,11 @@
+all: rom.inc rom.hex
+
 rom.inc: rom.lst
 	./extract_symbols.sh rom
 
-rom.bin, rom.lst: *.asm
-	asm80 -m Z80 -t bin rom.asm
+rom.hex rom.lst: *.asm
+	asm80 -m Z80 -t hex rom.asm
 
-.PHONY: clean
+.PHONY: clean all
 clean:
-	rm -vf *.bin *.lst rom.inc
+	rm -vf *.bin *.hex *.lst rom.inc
