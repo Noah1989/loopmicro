@@ -41,8 +41,10 @@ label_code:
 debug_align $0038
 .org $0038
 error:
+ld ($fefe), sp
+stop:
 halt
-jr error
+jr stop
 
 debug_align $0066
 .org $0066
@@ -57,7 +59,7 @@ call load_pal
 call load_chars
 call clear_screen
 call init_keyboard
-ld hl, $7F00
+ld hl, $8000
 jp monitor
 .endblock
 
