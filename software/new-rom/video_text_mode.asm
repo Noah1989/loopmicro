@@ -98,6 +98,7 @@ video_text_mode_clear_screen_loop:
 	JR	NZ, video_text_mode_clear_screen_loop
 	RET
 
+section constants
 video_text_mode_colors:
 defb	$00, $0C, $20, $3C
 defb	$C0, $CC, $90, $FC

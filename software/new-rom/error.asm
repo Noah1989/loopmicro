@@ -21,6 +21,7 @@ error_halt_loop:
 	HALT
 	JR	error_halt_loop
 
+section strings
 error_message:
 defb	"ERROR @ $", 0
 error_message2:

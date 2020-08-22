@@ -1,5 +1,6 @@
 public font_terminus
 
+section charmap
 font_terminus:
 ;	$00 char0
 defb	$00, $00, $EE, $C6

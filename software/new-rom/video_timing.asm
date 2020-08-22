@@ -10,6 +10,7 @@ video_timing_init_loop:
 	INC	C
 	JR	video_timing_init_loop
 
+section constants
 video_timing_data:
 defb $D9, $39, $D4, $74
 defb $F6, $7E, $E4, $E2

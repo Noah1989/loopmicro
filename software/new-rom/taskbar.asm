@@ -44,16 +44,7 @@ taskbar_button_IX_draw:
 	CALL	ui_label_IX_draw
 	RET
 
-taskbar_button_colors:
-defb	$3F ; normal
-defb	$4F ; pressed
-defb	$2F ; selected
-taskbar_button_colors_hotkey:
-defb	$3E ; normal
-defb	$4E ; pressed
-defb	$2E ; selected
-
-
+section objects_immutable
 taskbar_window:
 defb	ui_object_type_window
 defb	0, 29
@@ -63,7 +54,6 @@ defw	taskbar_button_help
 defw	taskbar_button_memory
 defw	taskbar_button_files
 defw	0
-
 taskbar_button_help:
 defb	ui_object_type_widget
 defb	0, 0
@@ -79,7 +69,6 @@ defb	7, 1
 defw	taskbar_button_help
 defw	ui_label_IX_draw
 defw	taskbar_button_help_text
-
 taskbar_button_memory:
 defb	ui_object_type_widget
 defb	9, 0
@@ -95,7 +84,6 @@ defb	9, 1
 defw	taskbar_button_memory
 defw	ui_label_IX_draw
 defw	taskbar_button_memory_text
-
 taskbar_button_files:
 defb	ui_object_type_widget
 defb	20, 0
@@ -112,9 +100,20 @@ defw	taskbar_button_files
 defw	ui_label_IX_draw
 defw	taskbar_button_files_text
 
+section strings
 taskbar_button_help_text:
 defb	"F1-Help", 0
 taskbar_button_memory_text:
 defb	"F2-Memory", 0
 taskbar_button_files_text:
 defb	"F3-Files", 0
+
+section constants
+taskbar_button_colors:
+defb	$3F ; normal
+defb	$4F ; pressed
+defb	$2F ; selected
+taskbar_button_colors_hotkey:
+defb	$3E ; normal
+defb	$4E ; pressed
+defb	$2E ; selected

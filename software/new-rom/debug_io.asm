@@ -14,11 +14,6 @@ debug_io_init:
 	OTIR
 	RET
 
-debug_io_init_sequence:
-defb	4, %01000100 ; 9600 baud (prescaler 16), 1 stop bit, no parity
-defb	5, %01101000 ; 8 data bits, enable sender
-defc debug_io_init_sequence_length = ASMPC - debug_io_init_sequence
-
 debug_io_print_character_A:
 	PUSH	AF
 debug_io_print_character_A_wait_ready:
@@ -68,3 +63,9 @@ debug_io_print_hex_nibble_A:
 	DAA
 	CALL	debug_io_print_character_A
 	RET
+
+section constants
+debug_io_init_sequence:
+defb	4, %01000100 ; 9600 baud (prescaler 16), 1 stop bit, no parity
+defb	5, %01101000 ; 8 data bits, enable sender
+defc debug_io_init_sequence_length = ASMPC - debug_io_init_sequence
