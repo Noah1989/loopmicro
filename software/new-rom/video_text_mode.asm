@@ -85,6 +85,17 @@ video_text_mode_load_characters_skip2:
 	LD	A, B
 	OR	A, C
 	JR	NZ, video_text_mode_load_characters_loop
+video_text_mode_clear_screen:
+	LD	BC, 128 * 64 ; number of characters
+video_text_mode_clear_screen_loop:
+	LD	A, ' '
+	OUT	(video_table_name), A
+	LD	A, $07
+	OUT	(video_table_attribute_increment), A
+	DEC	BC
+	LD	A, B
+	OR	A, C
+	JR	NZ, video_text_mode_clear_screen_loop
 	RET
 
 video_text_mode_colors:

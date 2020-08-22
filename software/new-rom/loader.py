@@ -42,10 +42,8 @@ print('READY')
 
 fails = 0
 
-write_bytes(0x0000, [0x18, 0xfe])
+write_bytes(0x0000, [0x76])
 reset()
-write_bytes(0xfffe, [0x18, 0xfe])
-write_bytes(0x0001, [0xfc])
 
 for (start, stop) in hex.segments():
     for chunk in chunks(range(start, stop), 1024):

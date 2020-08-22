@@ -1,7 +1,9 @@
 sources = \
 	rom.asm debug_io.asm error.asm \
 	video_timing.asm video_text_mode.asm \
-	font_terminus.asm
+	font_terminus.asm \
+	ui_box.asm ui_window.asm ui_widget.asm ui_panel.asm ui_label.asm \
+	taskbar.asm
 
 .PHONY: clean program
 

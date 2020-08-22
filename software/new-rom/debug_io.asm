@@ -1,6 +1,6 @@
 public debug_io_init
 public debug_io_print_character_A
-public debug_io_print_string_iHL
+public debug_io_print_string_HL
 public debug_io_print_hex_byte_A
 
 ; I/O ports
@@ -37,17 +37,17 @@ debug_io_print_character_A_wait_sent:
 	POP	AF
 	RET
 
-debug_io_print_string_iHL:
+debug_io_print_string_HL:
 	PUSH	AF
 	PUSH	HL
-debug_io_print_string_iHL_loop:
+debug_io_print_string_HL_loop:
 	LD	A, (HL)
 	AND	A, A
-	JR	Z, debug_io_print_string_iHL_done
+	JR	Z, debug_io_print_string_HL_done
 	CALL	debug_io_print_character_A
 	INC	HL
-	JR	debug_io_print_string_iHL_loop
-debug_io_print_string_iHL_done:
+	JR	debug_io_print_string_HL_loop
+debug_io_print_string_HL_done:
 	POP	HL
 	POP	AF
 	RET
