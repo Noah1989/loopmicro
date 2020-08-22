@@ -1,4 +1,7 @@
-sources = rom.asm debug_io.asm error.asm
+sources = \
+	rom.asm debug_io.asm error.asm \
+	video_timing.asm video_text_mode.asm \
+	font_terminus.asm
 
 .PHONY: clean program
 
@@ -8,7 +11,7 @@ program: rom.hex
 clean:
 	rm -vf *.o *.bin *.hex *.err *.lis *.sym *.map
 
-%.o : %.asm #*.inc
+%.o : %.asm *.inc
 	z80asm -l $<
 
 rom.bin : $(sources:.asm=.o)

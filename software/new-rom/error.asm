@@ -5,7 +5,7 @@ public	error
 
 error:
 	DI
-	LD	HL, panic_message
+	LD	HL, error_message
 	CALL	debug_io_print_string_iHL
 	POP	HL ; caller return address
 	DEC	HL
@@ -14,7 +14,7 @@ error:
 	CALL	debug_io_print_hex_byte_A
 	LD	A, L
 	CALL	debug_io_print_hex_byte_A
-	LD	HL, panic_message2
+	LD	HL, error_message2
 	CALL	debug_io_print_string_iHL
 error_halt_loop:
 	HALT
