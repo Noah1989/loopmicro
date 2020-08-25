@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name z80ctc)(type Legacy)(uri /home/stefan/micro-21/sound/sound/z80ctc.lib)(options "")(descr ""))
+  (lib (name 4053)(type Legacy)(uri /home/stefan/micro-21/sound/sound/4053.lib)(options "")(descr ""))
+)
