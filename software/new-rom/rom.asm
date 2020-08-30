@@ -27,11 +27,7 @@ include "ui.inc"
 	CALL	video_timing_init
 	CALL	video_text_mode_init
 
-	LD	IX, root_window
-	CALL	ui_window_IX_draw
-
-	LD	IX, taskbar_window
-	CALL	ui_window_IX_draw
+	CALL	draw_windows
 
 	LD	A, interrupt_vectors/$100
 	LD	I, A
@@ -39,12 +35,36 @@ include "ui.inc"
 	EI
 main_loop:
 	HALT
+	CALL	handle_input
 	JR	main_loop
+
+draw_windows:
+	LD	HL, window_list
+draw_windows_loop:
+	LD	E, (HL)
+	INC	HL
+	LD	D, (HL)
+	INC	HL
+	LD	A, E
+	OR	A, D
+	RET	Z
+	LD	IX, DE
+	PUSH	HL
+	CALL	ui_window_IX_draw
+	POP	HL
+	JR	draw_windows_loop
+
+handle_input:
+	RET
 
 section interrupt_vectors
 interrupt_vectors:
 
 section objects_immutable
+window_list:
+defw	root_window
+defw	taskbar_window
+defw	0
 root_window:
 defb	ui_object_type_window
 defb	0, 0	; left, top

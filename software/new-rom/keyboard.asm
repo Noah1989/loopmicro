@@ -24,6 +24,16 @@ keyboard_init:
 	LD	(keyboard_input_buffer_write_offset), A
 	RET
 
+keyboard_get_key_A:
+	LD	H, keyboard_input_buffer/$100
+	LD	A, (keyboard_input_buffer_read_offset)
+	LD	L, A
+	LD	A, (keyboard_input_buffer_write_offset)
+	SUB	L
+	RET	Z
+	LD	A, (HL)
+	HALT
+
 keyboard_interrupt:
 	EX	AF, AF'
 	EXX
