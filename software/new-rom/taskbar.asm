@@ -46,17 +46,41 @@ taskbar_window_IX_handle_input_next_button:
 	BIT	0, D
 	JR	Z, taskbar_button_IX_press
 taskbar_button_IX_release:
+	LD	A, (IX+taskbar_button_state)
+	CP	taskbar_button_state_pressed
+	JP	NZ, ui_window_handle_input_do_not_propagate
+	LD	A, 0
+	LD	(taskbar_button_is_pressed), A
+	; select and draw the button
+	LD	A, taskbar_button_state_selected
+	LD	(IX+taskbar_button_state), A
+	PUSH	IX
+	CALL	ui_widget_IX_draw
+	POP	DE
+	; check if this button was already selected before
+	LD	HL, (taskbar_selected_button)
+	XOR	A, A ; clears carry flag
+	SBC	HL, DE
+	JP	Z, ui_window_handle_input_do_not_propagate
+	; if not, deselect and draw the previously selected button
+	LD	IX, (taskbar_selected_button)
+	LD	(taskbar_selected_button), DE
 	LD	A, taskbar_button_state_normal
 	LD	(IX+taskbar_button_state), A
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 taskbar_button_IX_press:
+	LD	A, (taskbar_button_is_pressed)
+	AND	A, A
+	JP	NZ, ui_window_handle_input_do_not_propagate
 	LD	A, taskbar_button_state_pressed
 	CP	A, (IX+taskbar_button_state)
-	JR	Z, taskbar_button_IX_press_no_change
+	JP	Z, ui_window_handle_input_do_not_propagate
+	;LD	A, taskbar_button_state_pressed
 	LD	(IX+taskbar_button_state), A
 	CALL	ui_widget_IX_draw
-taskbar_button_IX_press_no_change:
+	LD	A, 1
+	LD	(taskbar_button_is_pressed), A
 	JP	ui_window_handle_input_do_not_propagate
 
 
@@ -87,6 +111,12 @@ taskbar_button_IX_draw:
 	CALL	ui_label_IX_draw
 	RET
 
+section ram_initialized
+taskbar_selected_button:
+defw	taskbar_button_help
+taskbar_button_is_pressed:
+defb	0
+
 section objects_mutable
 taskbar_button_help:
 defb	ui_object_type_widget
@@ -96,7 +126,7 @@ defw	taskbar_window
 defw	taskbar_button_IX_draw
 defw	taskbar_button_help_label
 defb	$05 ; F1
-defb	taskbar_button_state_normal
+defb	taskbar_button_state_selected
 taskbar_button_memory:
 defb	ui_object_type_widget
 defb	9, 0
@@ -161,8 +191,8 @@ section constants
 taskbar_button_colors:
 defb	$3F ; normal
 defb	$4F ; pressed
-defb	$2F ; selected
+defb	$1F ; selected
 taskbar_button_colors_hotkey:
 defb	$3E ; normal
 defb	$4E ; pressed
-defb	$2E ; selected
+defb	$1E ; selected

@@ -106,30 +106,13 @@ defb	80, 30	; width, height
 defb	$30	; color
 defb	$B1	; character
 defw	ui_window_handle_input_do_not_propagate ; input handler
-defw	welcome_panel, welcome_label, 0 ; widget list
-welcome_panel:
-defb	ui_object_type_widget
-defb	20, 10	; left, top
-defb	40, 10	; width, height
-defw	root_window ; parent
-defw	ui_panel_IX_draw ; draw method
-defb	$3F, ' '; color, character
-welcome_label:
-defb	ui_object_type_widget
-defb	2, 1	; left, top
-defb	36, 8	; width, height
-defw	welcome_panel ; parent
-defw	ui_label_IX_draw ; draw method
-defw	welcome_text ; text
+defw	0 ; widget list
 
 section strings
 reset_message:
 defb	13, 10, 13, 10
 defb	"--- RESET ---"
 defb	13, 10, 13, 10, 0
-welcome_text:
-defb	"Welcome.", 10, 10
-defb	"This is just a test.", 0
 
 section constants
 
