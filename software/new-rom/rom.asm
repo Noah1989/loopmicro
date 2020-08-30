@@ -21,7 +21,12 @@ extern taskbar_window
 
 include "ui.inc"
 
-	LD	SP, variables
+	LD	DE, ram_initialized
+	LD	HL, initializer
+	LD	BC, ram_uninitialized - ram_initialized
+	LDIR
+
+	LD	SP, ram_initialized
 
 	CALL	debug_io_init
 	CALL	keyboard_init
@@ -130,6 +135,15 @@ section constants
 
 section charmap
 
-section variables
+section initializer
+initializer:
+
+section ram_initialized
 org $FF00
-variables:
+ram_initialized:
+
+section objects_mutable
+
+section ram_uninitialized
+org -1
+ram_uninitialized:

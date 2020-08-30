@@ -8,6 +8,8 @@ sources = \
 
 rom.bin: $(sources:.asm=.o)
 	z80asm --make-bin --map $^
+	cat rom_ram_initialized.bin >> rom.bin
+	rm -v rom_ram*.bin
 
 
 %.o: %.asm *.inc

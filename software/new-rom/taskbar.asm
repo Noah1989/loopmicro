@@ -87,6 +87,35 @@ taskbar_button_IX_draw:
 	CALL	ui_label_IX_draw
 	RET
 
+section objects_mutable
+taskbar_button_help:
+defb	ui_object_type_widget
+defb	0, 0
+defb	9, 1
+defw	taskbar_window
+defw	taskbar_button_IX_draw
+defw	taskbar_button_help_label
+defb	$05 ; F1
+defb	taskbar_button_state_normal
+taskbar_button_memory:
+defb	ui_object_type_widget
+defb	9, 0
+defb	11, 1
+defw	taskbar_window
+defw	taskbar_button_IX_draw
+defw	taskbar_button_memory_label
+defb	$06 ; F2
+defb	taskbar_button_state_normal
+taskbar_button_files:
+defb	ui_object_type_widget
+defb	20, 0
+defb	10, 1
+defw	taskbar_window
+defw	taskbar_button_IX_draw
+defw	taskbar_button_files_label
+defb	$04 ; F3
+defb	taskbar_button_state_normal
+
 section objects_immutable
 taskbar_window:
 defb	ui_object_type_window
@@ -98,15 +127,6 @@ defw	taskbar_button_help
 defw	taskbar_button_memory
 defw	taskbar_button_files
 defw	0
-taskbar_button_help:
-defb	ui_object_type_widget
-defb	0, 0
-defb	9, 1
-defw	taskbar_window
-defw	taskbar_button_IX_draw
-defw	taskbar_button_help_label
-defb	$05 ; F1
-defb	taskbar_button_state_normal
 taskbar_button_help_label:
 defb	ui_object_type_widget
 defb	1, 0
@@ -114,15 +134,6 @@ defb	7, 1
 defw	taskbar_button_help
 defw	ui_label_IX_draw
 defw	taskbar_button_help_text
-taskbar_button_memory:
-defb	ui_object_type_widget
-defb	9, 0
-defb	11, 1
-defw	taskbar_window
-defw	taskbar_button_IX_draw
-defw	taskbar_button_memory_label
-defb	$06 ; F2
-defb	taskbar_button_state_normal
 taskbar_button_memory_label:
 defb	ui_object_type_widget
 defb	1, 0
@@ -130,15 +141,6 @@ defb	9, 1
 defw	taskbar_button_memory
 defw	ui_label_IX_draw
 defw	taskbar_button_memory_text
-taskbar_button_files:
-defb	ui_object_type_widget
-defb	20, 0
-defb	10, 1
-defw	taskbar_window
-defw	taskbar_button_IX_draw
-defw	taskbar_button_files_label
-defb	$04 ; F3
-defb	taskbar_button_state_normal
 taskbar_button_files_label:
 defb	ui_object_type_widget
 defb	1, 0

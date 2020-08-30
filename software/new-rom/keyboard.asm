@@ -19,9 +19,6 @@ keyboard_init:
 	LD	C, sio_channel_a_control
 	LD	B, keyboard_init_data_a_length
 	OTIR
-	LD	A, keyboard_input_buffer&$FF
-	LD	(keyboard_input_buffer_read_offset), A
-	LD	(keyboard_input_buffer_write_offset), A
 	RET
 
 keyboard_get_key_success_NZ_scancode_E_flags_D:
@@ -141,11 +138,11 @@ defb	5, %11100000 ; power to peripheral (DTR), transmitter off
 defb	1, %00011000 ; interrupt when data received
 defc keyboard_init_data_a_length = ASMPC - keyboard_init_data_a
 
-section variables
+section ram_initialized
 keyboard_input_buffer_write_offset:
-defs	1
+defb	keyboard_input_buffer&$FF
 keyboard_input_buffer_read_offset:
-defs	1
+defb	keyboard_input_buffer&$FF
 
 section keyboard_input_buffer
 align keyboard_input_buffer_size
