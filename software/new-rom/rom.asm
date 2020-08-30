@@ -12,6 +12,8 @@ extern keyboard_init
 extern keyboard_get_key_success_NZ_scancode_E_flags_D
 
 extern ui_window_IX_draw
+extern ui_window_IX_handle_input_DE_propagate_NZ
+extern ui_window_handle_input_do_not_propagate
 extern ui_panel_IX_draw
 extern ui_label_IX_draw
 
@@ -60,12 +62,28 @@ draw_windows_loop:
 handle_input:
 	CALL	keyboard_get_key_success_NZ_scancode_E_flags_D
 	RET	Z
-	LD	A, E
-	CALL	debug_io_print_hex_byte_A
-	LD	A, D
-	CALL	debug_io_print_hex_byte_A
-	LD	A, ' '
-	CALL	debug_io_print_character_A
+	; find end of window list
+	LD	HL, window_list
+handle_input_find_top_window_loop:
+	LD	C, (HL)
+	INC	HL
+	LD	B, (HL)
+	INC	HL
+	LD	A, B
+	OR	A, C
+	JR	NZ, handle_input_find_top_window_loop
+	DEC	HL
+	DEC	HL
+handle_input_next_window:
+	DEC	HL
+	LD	B, (HL)
+	DEC	HL
+	LD	C, (HL)
+	LD	IX, BC
+	PUSH	HL
+	CALL	ui_window_IX_handle_input_DE_propagate_NZ
+	POP	HL
+	JR	NZ, handle_input_next_window
 	JR	handle_input
 
 section interrupt_vectors
@@ -82,6 +100,7 @@ defb	0, 0	; left, top
 defb	80, 30	; width, height
 defb	$30	; color
 defb	$B1	; character
+defw	ui_window_handle_input_do_not_propagate ; input handler
 defw	welcome_panel, welcome_label, 0 ; widget list
 welcome_panel:
 defb	ui_object_type_widget

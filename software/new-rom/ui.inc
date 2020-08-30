@@ -20,6 +20,7 @@ defvars ui_object {
 defvars ui_box {
 	ui_window_background_color ds.b 1
 	ui_window_background_character ds.b 1
+	ui_window_handle_input ds.w 1
 	ui_window_widgets ; variable length
 	ui_window
 }

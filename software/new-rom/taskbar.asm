@@ -2,7 +2,10 @@ public taskbar_window
 
 extern ui_box_IX_fill_color_L_character_H
 extern ui_box_IX_calculate_absolute_position_DE
+extern ui_widget_IX_draw
 extern ui_label_IX_draw
+extern ui_window_handle_input_propagate
+extern ui_window_handle_input_do_not_propagate
 
 include "ui.inc"
 include "video_io.inc"
@@ -14,8 +17,48 @@ defc taskbar_button_state_selected = 2
 ; taskbar button
 defvars ui_widget {
 	taskbar_button_label ds.w 1
+	taskbar_button_keycode ds.b 1
 	taskbar_button_state ds.b 1
+	taskbar_button
 }
+
+taskbar_window_IX_handle_input:
+	; params: E=scancode, D=flags
+	LD	BC, IX
+	LD	HL, ui_window_widgets
+	ADD	HL, BC
+taskbar_window_IX_handle_input_next_button:
+	; get pointer to button from widget list
+	LD	C, (HL)
+	INC	HL
+	LD	B, (HL)
+	INC	HL
+	; propagate event if none of the buttons matched
+	LD	A, B
+	OR	A, C
+	JR	Z, ui_window_handle_input_propagate
+	; check button scancode
+	LD	IX, BC
+	LD	A, (IX+taskbar_button_keycode)
+	CP	A, E
+	JR	NZ, taskbar_window_IX_handle_input_next_button
+	; handle event for found button
+	BIT	0, D
+	JR	Z, taskbar_button_IX_press
+taskbar_button_IX_release:
+	LD	A, taskbar_button_state_normal
+	LD	(IX+taskbar_button_state), A
+	CALL	ui_widget_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+taskbar_button_IX_press:
+	LD	A, taskbar_button_state_pressed
+	CP	A, (IX+taskbar_button_state)
+	JR	Z, taskbar_button_IX_press_no_change
+	LD	(IX+taskbar_button_state), A
+	CALL	ui_widget_IX_draw
+taskbar_button_IX_press_no_change:
+	JP	ui_window_handle_input_do_not_propagate
+
 
 taskbar_button_IX_draw:
 	LD	HL, taskbar_button_colors
@@ -50,6 +93,7 @@ defb	ui_object_type_window
 defb	0, 29
 defb	80, 1
 defb	$3F, ' '
+defw	taskbar_window_IX_handle_input
 defw	taskbar_button_help
 defw	taskbar_button_memory
 defw	taskbar_button_files
@@ -61,6 +105,7 @@ defb	9, 1
 defw	taskbar_window
 defw	taskbar_button_IX_draw
 defw	taskbar_button_help_label
+defb	$05 ; F1
 defb	taskbar_button_state_normal
 taskbar_button_help_label:
 defb	ui_object_type_widget
@@ -76,6 +121,7 @@ defb	11, 1
 defw	taskbar_window
 defw	taskbar_button_IX_draw
 defw	taskbar_button_memory_label
+defb	$06 ; F2
 defb	taskbar_button_state_normal
 taskbar_button_memory_label:
 defb	ui_object_type_widget
@@ -91,6 +137,7 @@ defb	10, 1
 defw	taskbar_window
 defw	taskbar_button_IX_draw
 defw	taskbar_button_files_label
+defb	$04 ; F3
 defb	taskbar_button_state_normal
 taskbar_button_files_label:
 defb	ui_object_type_widget
