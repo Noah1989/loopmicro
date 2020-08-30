@@ -1,5 +1,7 @@
 extern debug_io_init
 extern debug_io_print_string_HL
+extern debug_io_print_hex_byte_A
+extern debug_io_print_character_A
 
 extern error
 
@@ -7,6 +9,7 @@ extern video_timing_init
 extern video_text_mode_init
 
 extern keyboard_init
+extern keyboard_get_key_success_NZ_scancode_E_flags_D
 
 extern ui_window_IX_draw
 extern ui_panel_IX_draw
@@ -55,7 +58,15 @@ draw_windows_loop:
 	JR	draw_windows_loop
 
 handle_input:
-	RET
+	CALL	keyboard_get_key_success_NZ_scancode_E_flags_D
+	RET	Z
+	LD	A, E
+	CALL	debug_io_print_hex_byte_A
+	LD	A, D
+	CALL	debug_io_print_hex_byte_A
+	LD	A, ' '
+	CALL	debug_io_print_character_A
+	JR	handle_input
 
 section interrupt_vectors
 interrupt_vectors:
