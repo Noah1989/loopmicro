@@ -18,6 +18,7 @@ extern ui_panel_IX_draw
 extern ui_label_IX_draw
 
 extern taskbar_window
+extern help_window
 
 include "ui.inc"
 
@@ -98,6 +99,7 @@ section objects_immutable
 window_list:
 defw	root_window
 defw	taskbar_window
+defw	help_window
 defw	0
 root_window:
 defb	ui_object_type_window

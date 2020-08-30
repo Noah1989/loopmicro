@@ -4,7 +4,7 @@ sources = \
 	font_terminus.asm \
 	keyboard.asm \
 	ui_box.asm ui_window.asm ui_widget.asm ui_panel.asm ui_label.asm \
-	taskbar.asm
+	taskbar.asm help.asm
 
 rom.bin: $(sources:.asm=.o)
 	z80asm --make-bin --map $^
