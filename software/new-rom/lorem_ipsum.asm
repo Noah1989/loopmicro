@@ -1,7 +1,9 @@
 public lorem_ipsum
 
 section strings
+defb	0
 lorem_ipsum:
+defb	10
 defb	"Lorem ipsum dolor sit amet, consectetur adipiscing", 10
 defb	"elit. Cras sagittis vestibulum dui sed pellentesque.", 10
 defb	"Donec sit amet semper lectus. Vestibulum dapibus", 10
@@ -67,4 +69,5 @@ defb	"nisi ut sollicitudin. Cras elementum, sem eu", 10
 defb	"tincidunt semper, nibh leo lacinia eros, ut molestie", 10
 defb	"mauris nulla nec nibh. Suspendisse lacinia nunc id", 10
 defb	"suscipit blandit. Nullam ut facilisis dui. ", 10
+defb	10
 defb	0

@@ -23,7 +23,7 @@ ui_label_IX_draw_loop_line:
 	AND	A
 	JR	Z, ui_label_IX_draw_end
 	CP	A, 10
-	JR	Z, ui_label_IX_draw_loop_line_done
+	JR	Z, ui_label_IX_draw_loop_line_fill
 	OUT	(video_table_name_increment), A
 	DJNZ	ui_label_IX_draw_loop_line
 ui_label_IX_draw_loop_line_done:
@@ -35,3 +35,9 @@ ui_label_IX_draw_loop_line_done:
 ui_label_IX_draw_end:
 	POP	BC
 	RET
+ui_label_IX_draw_loop_line_fill:
+	LD	A, ' '
+ui_label_IX_draw_loop_line_fill_loop:
+	OUT	(video_table_name_increment), A
+	DJNZ	ui_label_IX_draw_loop_line_fill_loop
+	JR	ui_label_IX_draw_loop_line_done
