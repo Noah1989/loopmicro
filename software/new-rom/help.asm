@@ -84,7 +84,7 @@ section objects_mutable
 
 help_reader_text:
 defb	ui_object_type_widget
-defb	1, 0, 53, 28
+defb	1, 0, 52, 28
 defw	help_reader_window
 defw	ui_label_IX_draw
 defw	lorem_ipsum
@@ -123,7 +123,7 @@ defw	help_reader_scrollbar
 defw	0
 help_reader_panel:
 defb	ui_object_type_widget
-defb	1, 1, 53, 26
+defb	1, 1, 52, 26
 defw	help_reader_window
 defw	ui_panel_IX_draw
 defb	$1F, ' '

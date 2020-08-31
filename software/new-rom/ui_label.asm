@@ -26,6 +26,10 @@ ui_label_IX_draw_loop_line:
 	JR	Z, ui_label_IX_draw_loop_line_fill
 	OUT	(video_table_name_increment), A
 	DJNZ	ui_label_IX_draw_loop_line
+	LD	A, (HL)
+	CP	A, 10
+	JR	NZ, ui_label_IX_draw_loop_line_done
+	INC	HL
 ui_label_IX_draw_loop_line_done:
 	POP	BC
 	INC	D
