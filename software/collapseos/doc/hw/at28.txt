@@ -1,0 +1,56 @@
+# Writing to a AT28 from Collapse OS
+
+# Gathering parts
+
+* A RC2014 Classic
+* An extra AT28C64B
+* 1x 40106 inverter gates
+* Proto board, RC2014 header pins, wires, IC sockets, etc.
+
+# Building the EEPROM holder
+
+The AT28 is SRAM compatible so you could use a RAM module for
+it. However, there is only one RAM module with the Classic
+version of the RC2014 and we need it to run Collapse OS.
+
+You could probably use the 64K RAM module for this purpose, but
+I don't have one and I haven't tried it. For this recipe, I
+built my own module which is the same as the regular ROM module
+but with WR wired and geared for address range 0x2000-0x3fff.
+
+If you're tempted by the idea of hacking your existing RC2014
+ROM module by wiring WR and write directly to the range
+0x0000-0x1fff while running it, be aware that it's not that
+easy. I was also tempted by this idea, tried it, but on bootup,
+it seems that some random WR triggers happen and it corrupts the
+EEPROM contents. Theoretically, we could go around that by
+putting the AT28 in write protection mode, but I preferred
+building my own module.
+
+I don't think you need a schematic. It's really simple.
+
+# Writing contents to the AT28
+
+If you wait 10ms between each byte you write, you can write dir-
+ectly to the AT28 with regular memory access words. If you don't
+wait, the AT28 writing program will fail. Because it's not very
+pratical to insert waiting time between each byte writes, you
+need another solution.
+
+B321 contains an override routine called AT28$. When you call
+this, It defines new "C!" and "!" words and those words ensure
+that data is properly written to EEPROM before returning.
+
+Note that because it's new definitions for "C!" and "!", these
+are only going to work for direct execution or for words
+defined after you've called "AT28$".
+
+When you're done writing to the AT28, you can unset the over-
+ride with "FORGET C!".
+
+When polling, AT28 routines also verifies that the final byte in
+memory is the same as the byte written. If it's not, it will
+place a non-zero value in the IOERR 1b variable. Therefore, if
+you want to see, after a big write operation to your AT28,
+whether any write failed, do "IOERR C@ .". Re-initialize to zero
+before your next write operation.

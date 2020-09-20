@@ -1,0 +1,35 @@
+MEMDUMP_TGT = memdump
+UPLOAD_TGT = upload
+TTYSAFE_TGT = ttysafe
+PINGPONG_TGT = pingpong
+EXEC_TGT = exec
+BLKPACK_TGT = blkpack
+BLKUNPACK_TGT = blkunpack
+BLKUP_TGT = blkup
+BLKDOWN_TGT = blkdown
+TARGETS = $(MEMDUMP_TGT) $(UPLOAD_TGT) \
+	$(TTYSAFE_TGT) $(PINGPONG_TGT) $(EXEC_TGT) $(BLKPACK_TGT) \
+    $(BLKUNPACK_TGT) $(BLKUP_TGT) $(BLKDOWN_TGT)
+OBJS = common.o
+
+all: $(TARGETS)
+
+.SUFFIXES: .c .o
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(MEMDUMP_TGT): $(MEMDUMP_TGT).c
+$(UPLOAD_TGT): $(UPLOAD_TGT).c
+$(TTYSAFE_TGT): $(TTYSAFE_TGT).c
+$(PINGPONG_TGT): $(PINGPONG_TGT).c
+$(EXEC_TGT): $(EXEC_TGT).c
+$(BLKPACK_TGT): $(BLKPACK_TGT).c
+$(BLKUNPACK_TGT): $(BLKUNPACK_TGT).c
+$(BLKUP_TGT): $(BLKUP_TGT).c
+$(BLKDOWN_TGT): $(BLKDOWN_TGT).c
+$(TARGETS): $(OBJS)
+	$(CC) $(CFLAGS) $@.c $(OBJS) -o $@
+
+.PHONY: clean
+clean:
+	rm -f $(TARGETS) $(OBJS)

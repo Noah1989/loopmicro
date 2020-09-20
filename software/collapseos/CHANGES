@@ -1,0 +1,154 @@
+*** 2021-04-21
+
+- cvm: rename "forth" to "cos-grid" and add new "cos-serial" binary.
+- z80 asm: add CALLc op.
+- z80 asm: Add LDHL(HL), and LDBC(HL), macros.
+- z80: use DE instead of BC to store IP. This opens the door to interesting
+       optimizations. I took inspiration from Brad Rodriguez's CamelForth for
+       this. I'm not planning, however, on having an in-register TOS like Brad
+       does. It looks real neat, but Brad doesn't check for overflow/underflow
+       like I do and I'm thinking I'd mess things up with this kind of scheme.
+- z80: optimize next, exec, (br), (n), EXIT, LSHIFT, RSHIFT for speed.
+- z80: minimize overflow checks through counter system.
+- z80: IY register, which was previously unused, is now reserved for pointing to
+       SYSVARS.
+- Make 2DUP, 2DROP, > into regular Forth words. Not worth keeping as native.
+- Add CARRY? mechanism. See usage.txt. Not done for 8086 and 6809 yet.
+- In folder extras/, there's a WIP 6809 emulator written in Forth for Collapse
+  OS. This should make Collapse OS a much cozier development environment.
+
+*** 2021-04-03
+
+- xcomp: add XWRAP".
+- asm: remove BREAK,. Too complex and hackish for what it's worth.
+- Remove barely used word IMMED?
+- 8086 asm: add CMPri, CMPxi, and CMPxI,
+- 8086: inline chkPS, code and make more compact.
+- z80: make chkPS, parametrizable and inlined.
+- z80: optimize lblexec for speed
+- 6809 asm: fix broken [] addressing mode.
+- trs804p: fix broken emulator.
+- cvm: make oflw/uflw checks behave like other ports. It previously cheated,
+  making CVM behavior slightly different.
+- Check for overflow less often. Previously, we would check at every "next"
+  call. Now, we check upon entering a compiled word and at the end of any
+  native word with a "positive" PS balance.
+- Fix PC/AT MBR for some machines. (Jakob Krisch)
+- VE: refactor a little bit.
+
+*** 2021-03-20
+
+- Complete the 6809/CoCo2 port!
+  - Handle SHIFT in (key?)
+  - Implement the Grid protocol
+  - Implement stack overflow/underflow detection
+  - Implement QUIT and ABORT
+  - Add doc/hw/6809/coco2.txt
+  - This makes Collapse OS run properly on the CoCo2. No BLK yet, but otherwise
+    fully functional. Keyboard debouncing is still a bit shaky, but it doesn't
+    make the system unusable.
+- Big blkfs reshuffling. The idea was to make stuff that belong together con-
+  tiguous. Also, I brought back arch-specific device drivers into the main
+  blkfs space. When I created the arch overlay system, I hadn't yet started
+  offloading docs and code comments to the doc/ folder. Now that it's done,
+  arch-specific code isn't as heavy as it used to be, so putting everything
+  under the same blkfs makes sense again. See doc/usage.txt
+- Remove PICK: Too complex for what it's worth.
+- Remove 'S and S0: When I began, I thought I'd play with PS a lot through
+  those, but it turns out I never needed them.
+- trs80-4p: Allow BREAKing out of I/O induced infinite loops.
+- 6809 asm: detect 8-bit branching overflow.
+
+*** 2021-03-03
+
+- 6809 port: we have prompt! a barely usable one, but still feels good!
+- Fix bugs in 6809 assembler
+- Implement (imperfectly) the XMODEM protocol in the Remote Shell app.
+- tools: make blkup slightly faster.
+- xcomp: re-add X' which I though wasn't used, but was.
+- Remove automated testing. Most of the problems popping up in Collapse OS
+  development are hardware-related. Moreover, now that I use Collapse OS
+  to develop Collapse OS, "userland" is pretty well tested that way. This
+  removal allows me to remove tooling that is annoying to keep around.
+- Fix endian issues in core words.
+- Remove unused WIPED? from core.
+- cvm: make WCOLS/WLINES adjustments easier. only one place to adjust now.
+- cvm: simplify the staging program.
+- doc: add code subsection.
+- Remove unused >< and >=0 and simplify =><=.
+- Make z80 boot code more compact
+
+*** 2021-02-19
+
+- Make good progress on 6809 port!
+- Add W"" literal, allowing to "compile" WORD-using words. For example,
+  ": foo W" hello" CREATE ;" becomes possible.
+- Remove "~C!" mechanism. It was unnecessary and slow. Made the AT28 driver,
+  the reason for this system, use simple C! and ! overrides.
+- Remove 0, 1 and -1 native words and replace them with (b). It makes porting
+  simpler and makes binaries slightly slimmer overall.
+- Make S0 into a Forth word.
+- Add []= and make S= into a Forth word.
+- Remove CMP and make =, < and > native.
+- Improve 6809 assembler.
+- Make xcomp tools endian-aware.
+- Replace native _find with FIND. We don't need to find words in alternate dicts
+  anymore now that we have XFIND.
+- DOES>: swap PFA and jump address so that more than 2b can be attached it.
+  As a bonus, fix DOES> on 8086. It was simply broken.
+- Improve documentation, especially impl.txt which had a lot of out-of-date
+  and incomplete information.
+
+*** 2021-02-11
+
+- Add 6809 port WIP! Well, more of a placeholder... or a sneeze, really.
+  But it's a first step, and it actually runs on actual hardware and was
+  developed and deployed from Collapse OS itself.
+- Rename HERE to H and H@ to HERE. I had it all wrong...
+- Make QUIT and ABORT into native words.
+- Remove ROLL which wasn't used anywhere.
+- Add |T T! and T, words to assemblers. See "Endian-ness" in doc/cross.txt.
+- Add "QUIT jump" to stable ABI.
+- Fix endian-ness bugs in 6809 assembler
+- Add "LIVETGT" helper to assemblers. See "Live Targets" in doc/asm/intro.txt.
+- Improve Remote Shell reliability. It's now reliable enough for "rupload" to
+  be used for real stuff (for example, writing 6809 binaries to EEPROM!)
+- tools: make blkunpack right-trim whitespaces.
+- trs80-4p can now use both floppy drives.
+- trs80-4p add WIP "native" keyboard driver in effort to remove dependency on
+  TRS-DOS.
+- trs80-4p: improve RS-232 driver.
+- Place Z80 drivers together in their own little zone in blkfs.
+- Make font compilers more compact and fix a few glitches.
+
+*** 2021-01-25
+
+- Make Z80 and 8086 assemblers more compact
+- Add 6809 assembler
+- Create a new "asm" folder in doc, making it clearer.
+- Add KEY> core word
+- Fix PS leak in DUMP
+- Improve VE
+
+*** 2021-01-19
+
+- Remove "breathing" in tools/. Now that we have proper RTS/CTS in place,
+  this mechanism is spurious.
+- Improve VE.
+- Remove C<? word.
+- Improve LOAD.
+- Remove CURRENT*.
+- Improve Remote Shell and add "rupload".
+- Allow using aliases in xcomp.
+- Improve ACIA drivers in trs80 and rc2014.
+- Add "constant" word type, making CONSTANT much faster and usable in cross-
+  compilation.
+- Make Block Editor and Visual Editor a bit more compact in blkfs.
+
+*** 2021-01-05
+
+- Initial RCS-based release
+- Remove all git-related files
+- Transform .md files into plain text
+- Add "make clean" command in every Makefile
+- Add top-level "make clean" and "make dist"
