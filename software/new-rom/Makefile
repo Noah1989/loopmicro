@@ -4,7 +4,7 @@ sources = \
 	font_terminus.asm \
 	keyboard.asm \
 	ui_box.asm ui_window.asm ui_widget.asm ui_panel.asm ui_label.asm \
-	taskbar.asm help.asm \
+	taskbar.asm app.asm help.asm memory.asm files.asm \
 	lorem_ipsum.asm
 
 rom.bin: $(sources:.asm=.o)

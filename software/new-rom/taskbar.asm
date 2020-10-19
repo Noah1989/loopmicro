@@ -7,6 +7,11 @@ extern ui_label_IX_draw
 extern ui_window_handle_input_propagate
 extern ui_window_handle_input_do_not_propagate
 
+extern app_IX_activate
+extern help_app
+extern memory_app
+extern files_app
+
 include "ui.inc"
 include "video_io.inc"
 
@@ -19,6 +24,7 @@ defvars ui_widget {
 	taskbar_button_label ds.w 1
 	taskbar_button_keycode ds.b 1
 	taskbar_button_state ds.b 1
+	taskbar_button_app ds.w 1
 	taskbar_button
 }
 
@@ -68,6 +74,12 @@ taskbar_button_IX_release:
 	LD	A, taskbar_button_state_normal
 	LD	(IX+taskbar_button_state), A
 	CALL	ui_widget_IX_draw
+	; activate the app for the now selected button
+	LD	IX, (taskbar_selected_button)
+	LD	E, (IX+taskbar_button_app)
+	LD	D, (IX+taskbar_button_app+1)
+	LD	IX, DE
+	CALL	app_IX_activate
 	JP	ui_window_handle_input_do_not_propagate
 taskbar_button_IX_press:
 	LD	A, (taskbar_button_is_pressed)
@@ -127,6 +139,7 @@ defw	taskbar_button_IX_draw
 defw	taskbar_button_help_label
 defb	$05 ; F1
 defb	taskbar_button_state_selected
+defw	help_app
 taskbar_button_memory:
 defb	ui_object_type_widget
 defb	9, 0
@@ -136,6 +149,7 @@ defw	taskbar_button_IX_draw
 defw	taskbar_button_memory_label
 defb	$06 ; F2
 defb	taskbar_button_state_normal
+defw	memory_app
 taskbar_button_files:
 defb	ui_object_type_widget
 defb	20, 0
@@ -145,6 +159,7 @@ defw	taskbar_button_IX_draw
 defw	taskbar_button_files_label
 defb	$04 ; F3
 defb	taskbar_button_state_normal
+defw	files_app
 
 section objects_immutable
 taskbar_window:

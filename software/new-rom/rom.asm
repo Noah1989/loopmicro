@@ -1,3 +1,6 @@
+public window_list_app
+public draw_windows_HL
+
 extern debug_io_init
 extern debug_io_print_string_HL
 extern debug_io_print_hex_byte_A
@@ -18,11 +21,12 @@ extern ui_panel_IX_draw
 extern ui_label_IX_draw
 
 extern taskbar_window
-extern help_contents_window
-extern help_reader_window
-extern help_menu_window
+
+extern app_IX_activate
+extern help_app
 
 include "ui.inc"
+include "app.inc"
 
 	LD	DE, ram_initialized
 	LD	HL, initializer
@@ -40,7 +44,11 @@ include "ui.inc"
 	CALL	video_timing_init
 	CALL	video_text_mode_init
 
-	CALL	draw_windows
+	LD	HL, window_list
+	CALL	draw_windows_HL
+
+	LD	IX, help_app
+	CALL	app_IX_activate
 
 	LD	A, interrupt_vectors/$100
 	LD	I, A
@@ -51,9 +59,7 @@ main_loop:
 	CALL	handle_input
 	JR	main_loop
 
-draw_windows:
-	LD	HL, window_list
-draw_windows_loop:
+draw_windows_HL:
 	LD	E, (HL)
 	INC	HL
 	LD	D, (HL)
@@ -65,7 +71,7 @@ draw_windows_loop:
 	PUSH	HL
 	CALL	ui_window_IX_draw
 	POP	HL
-	JR	draw_windows_loop
+	JR	draw_windows_HL
 
 handle_input:
 	CALL	keyboard_get_key_success_NZ_scancode_E_flags_D
@@ -98,13 +104,6 @@ section interrupt_vectors
 interrupt_vectors:
 
 section objects_immutable
-window_list:
-defw	root_window
-defw	taskbar_window
-defw	help_contents_window
-defw	help_reader_window
-defw	help_menu_window
-defw	0
 root_window:
 defb	ui_object_type_window
 defb	0, 0	; left, top
@@ -132,6 +131,12 @@ org $FF00
 ram_initialized:
 
 section objects_mutable
+window_list:
+defw	root_window
+defw	taskbar_window
+window_list_app:
+defs	app_max_windows*2, 0
+defw	0
 
 section ram_uninitialized
 org -1

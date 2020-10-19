@@ -1,6 +1,7 @@
 public help_contents_window
 public help_reader_window
 public help_menu_window
+public help_app
 
 extern debug_io_print_hex_byte_A
 extern debug_io_print_character_A
@@ -80,6 +81,12 @@ help_reader_handle_input_scroll_up_limit:
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
+help_app_activate:
+	RET
+
+help_app_deactivate:
+	RET
+
 section objects_mutable
 
 help_reader_text:
@@ -90,6 +97,14 @@ defw	ui_label_IX_draw
 defw	lorem_ipsum
 
 section objects_immutable
+
+help_app:
+defw	help_app_activate
+defw	help_app_deactivate
+defw	help_contents_window
+defw	help_reader_window
+defw	help_menu_window
+defw	0
 
 help_contents_window:
 defb	ui_object_type_window
