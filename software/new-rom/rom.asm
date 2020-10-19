@@ -130,13 +130,14 @@ section ram_initialized
 org $FF00
 ram_initialized:
 
-section objects_mutable
 window_list:
 defw	root_window
 defw	taskbar_window
 window_list_app:
 defs	app_max_windows*2, 0
 defw	0
+
+section objects_mutable
 
 section ram_uninitialized
 org -1
