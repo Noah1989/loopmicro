@@ -17,7 +17,7 @@ extern lorem_ipsum
 include "ui.inc"
 
 help_reader_handle_input:
-	BIT	0, D
+	BIT	0, D ; ignore key release events
 	JP	NZ, ui_window_handle_input_propagate
 	LD	A, E
 	CP	$7A ; page down
