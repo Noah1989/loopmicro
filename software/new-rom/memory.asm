@@ -1,13 +1,18 @@
 public memory_app
 
 extern ui_window_handle_input_propagate
+extern ui_window_handle_input_do_not_propagate
 extern ui_label_IX_draw
 extern ui_panel_IX_draw
 extern ui_box_IX_calculate_absolute_position_DE
+extern ui_widget_IX_draw
 
 extern convert_A_to_hex_string_DE
 extern convert_A_to_binary_string_DE
 extern convert_HL_to_decimal_string_DE_ret_length_B
+
+extern debug_io_print_hex_byte_A
+extern debug_io_print_character_A
 
 include "video_io.inc"
 include "ui.inc"
@@ -17,6 +22,77 @@ memory_app_activate:
 
 memory_app_deactivate:
 	RET
+
+memory_handle_input:
+	BIT	0, D ; ignore key release events
+	JP	NZ, ui_window_handle_input_propagate
+	LD	A, E
+	CP	A, $6B ; left arrow
+	JR	Z, memory_handle_input_cursor_left
+	CP	A, $74 ; right arrow
+	JR	Z, memory_handle_input_cursor_right
+	CP	A, $75 ; up arrow
+	JR	Z, memory_handle_input_cursor_up
+	CP	A, $72 ; down arrow
+	JR	Z, memory_handle_input_cursor_down
+	CALL	debug_io_print_hex_byte_A
+	LD	A, 10
+	CALL	debug_io_print_character_A
+	JP	ui_window_handle_input_propagate
+
+memory_handle_input_cursor_left:
+	CALL	memory_cursor_hide
+	LD	HL, (memory_cursor_address)
+	DEC	HL
+	LD	(memory_cursor_address), HL
+	CALL	memory_cursor_show
+	LD	IX, memory_info_label
+	CALL	ui_widget_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+
+memory_handle_input_cursor_right:
+	CALL	memory_cursor_hide
+	LD	HL, (memory_cursor_address)
+	INC	HL
+	LD	(memory_cursor_address), HL
+	CALL	memory_cursor_show
+	LD	IX, memory_info_label
+	CALL	ui_widget_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+
+memory_handle_input_cursor_up:
+	CALL	memory_cursor_hide
+	LD	HL, (memory_cursor_address)
+	LD	BC, -16
+	ADD	HL, BC
+	LD	(memory_cursor_address), HL
+	CALL	memory_cursor_show
+	LD	IX, memory_info_label
+	CALL	ui_widget_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+
+memory_handle_input_cursor_down:
+	CALL	memory_cursor_hide
+	LD	HL, (memory_cursor_address)
+	LD	BC, 16
+	ADD	HL, BC
+	LD	(memory_cursor_address), HL
+	CALL	memory_cursor_show
+	LD	IX, memory_info_label
+	CALL	ui_widget_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+
+memory_cursor_hide:
+	LD	IX, memory_cursor
+	XOR	A, A
+	LD	(memory_cursor_visible), A
+	JP	ui_widget_IX_draw
+
+memory_cursor_show:
+	LD	IX, memory_cursor
+	LD	A, 1
+	LD	(memory_cursor_visible), A
+	JP	ui_widget_IX_draw
 
 memory_viewer_IX_draw:
 	CALL	ui_box_IX_calculate_absolute_position_DE
@@ -49,6 +125,7 @@ memory_viewer_IX_draw_hex_loop:
 	DJNZ	memory_viewer_IX_draw_hex_loop
 	OUT	(video_table_name_increment), A
 	OUT	(video_table_name_increment), A
+	; ascii view
 	LD	BC, -16
 	ADD	HL, BC
 	LD	B, 16
@@ -57,9 +134,11 @@ memory_viewer_IX_draw_hex_loop:
 	INC	D
 	POP	BC
 	DJNZ	memory_viewer_IX_draw_loop
-	; cursor
-	DEC	E
-	LD	HL, (memory_viewer_cursor_address)
+	RET
+
+memory_cursor_IX_draw:
+	CALL	ui_box_IX_calculate_absolute_position_DE
+	LD	HL, (memory_cursor_address)
 	LD	BC, (memory_viewer_top_address)
 	AND	A, A
 	SBC	HL, BC
@@ -73,39 +152,49 @@ memory_viewer_IX_draw_hex_loop:
 	SRL	H
 	RRA
 	EX	DE, HL
-	LD	BC, -24*$100
-	ADD	HL, BC
 	LD	B, A
 	LD	C, 0
 	ADD	HL, BC
-	LD	A, L
+	EX	DE, HL
+	LD	A, E
 	OUT	(video_address_l), A
-	LD	A, H
+	LD	A, D
 	OUT	(video_address_h), A
-	LD	B, 7
+	LD	HL, memory_cursor_visible
 	LD	A, $4F
-memory_viewer_IX_draw_cursor_address_loop:
+	LD	B, 7
+	BIT	0, (HL)
+	JR	NZ, memory_cursor_IX_draw_address_loop
+	LD	A, (memory_address_panel + ui_panel_background_color)
+memory_cursor_IX_draw_address_loop:
 	OUT	(video_table_attribute_increment), A
-	DJNZ	memory_viewer_IX_draw_cursor_address_loop
-	LD	A, (memory_viewer_cursor_address)
+	DJNZ	memory_cursor_IX_draw_address_loop
+	LD	A, (memory_cursor_address)
 	AND	A, $0F
 	LD	B, A
 	ADD	A, A
 	ADD	A, B
 	ADD	A, 8
-	ADD	A, L
+	ADD	A, E
 	OUT	(video_address_l), A
-	LD	B, 4
 	LD	A, $4F
-memory_viewer_IX_draw_cursor_hex_loop:
+	LD	B, 4
+	BIT	0, (HL)
+	JR	NZ, memory_cursor_IX_draw_hex_loop
+	LD	A, (memory_hexadecimal_panel + ui_panel_background_color)
+memory_cursor_IX_draw_hex_loop:
 	OUT	(video_table_attribute_increment), A
-	DJNZ	memory_viewer_IX_draw_cursor_hex_loop
-	LD	A, (memory_viewer_cursor_address)
+	DJNZ	memory_cursor_IX_draw_hex_loop
+	LD	A, (memory_cursor_address)
 	AND	A, $0F
 	ADD	A, 59
-	ADD	A, L
+	ADD	A, E
 	OUT	(video_address_l), A
 	LD	A, $4F
+	BIT	0, (HL)
+	JR	NZ, memory_cursor_IX_draw_ascii_out
+	LD	A, (memory_ascii_panel + ui_panel_background_color)
+memory_cursor_IX_draw_ascii_out:
 	OUT	(video_table_attribute_increment), A
 	RET
 
@@ -133,7 +222,7 @@ memory_info_label_draw:
 memory_info_text_update:
 	; address
 	LD	DE, memory_info_text_address
-	LD	HL, (memory_viewer_cursor_address)
+	LD	HL, (memory_cursor_address)
 	LD	A, H
 	CALL	convert_A_to_hex_string_DE
 	LD	A, L
@@ -147,25 +236,25 @@ memory_info_text_update:
 	LD	A, (HL)
 	CALL	convert_A_to_binary_string_DE
 	; decimal
-	LD	HL, (memory_viewer_cursor_address)
+	LD	HL, (memory_cursor_address)
 	LD	L, (HL)
 	LD	H, 0
 	LD	DE, memory_info_text_value_dec
 	CALL	convert_HL_to_decimal_string_DE_ret_length_B
-	LD	HL, (memory_viewer_cursor_address)
+	LD	HL, (memory_cursor_address)
 	LD	L, (HL)
 	BIT	7, L
-	RET	Z
+	JR	Z, memory_info_text_update_fill
 	; negative decimal
 	LD	A, L
 	NEG	A
 	LD	HL, memory_info_text_sep_neg
-	LD	BC, 4
+	LD	BC, memory_info_text_sep_neg_len
 	LDIR
 	LD	L, A
 	LD	H, B; 0 here
 	CALL	convert_HL_to_decimal_string_DE_ret_length_B
-	; fill to end
+memory_info_text_update_fill:
 	LD	HL, memory_info_text_end
 	XOR	A, A
 	SBC	HL, DE
@@ -191,11 +280,12 @@ memory_main_window:
 defb	ui_object_type_window
 defb	0, 1, 80, 28
 defb	$1F, ' '
-defw	ui_window_handle_input_propagate
+defw	memory_handle_input
 defw	memory_address_panel
 defw	memory_hexadecimal_panel
 defw	memory_ascii_panel
 defw	memory_viewer
+defw	memory_cursor
 defw	memory_info_label
 defw	0
 memory_address_panel:
@@ -218,13 +308,13 @@ defw	ui_panel_IX_draw
 defb	$07, ' '
 memory_info_label:
 defb	ui_object_type_widget
-defb	3, 26, memory_info_text_len, 1
+defb	2, 26, memory_info_text_len, 1
 defw	memory_main_window
 defw	memory_info_label_draw
 defw	memory_info_text
 memory_viewer:
 defb	ui_object_type_widget
-defb	2, 1, 5, 24
+defb	2, 1, 76, 24
 defw	memory_main_window
 defw	memory_viewer_IX_draw
 
@@ -235,15 +325,26 @@ defb	$30, ' '
 defw	ui_window_handle_input_propagate
 defw	0
 
+section objects_mutable
+memory_cursor:
+defb	ui_object_type_widget
+defb	0, 0, 76, 24
+defw	memory_viewer
+defw	memory_cursor_IX_draw
+
 section strings
 memory_info_text_sep_neg:
-defb	" / -"
+defb	" or -"
+memory_info_text_sep_neg_end:
+defc memory_info_text_sep_neg_len = memory_info_text_sep_neg_end - memory_info_text_sep_neg
 
 section ram_initialized
 memory_viewer_top_address:
 defw	$0000
-memory_viewer_cursor_address:
+memory_cursor_address:
 defw	$0000
+memory_cursor_visible:
+defb	1
 memory_info_text:
 defb	"Address: $"
 memory_info_text_address:
@@ -258,8 +359,8 @@ memory_info_text_value_bin:
 defb	"        "
 defb	"   Decimal: "
 memory_info_text_value_dec:
-;	"128 / -128"
-defb	"          "
+;	"128 or -128"
+defb	"           "
 memory_info_text_end:
 defb	0
 defc memory_info_text_len = memory_info_text_end - memory_info_text
