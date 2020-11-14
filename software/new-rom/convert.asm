@@ -1,4 +1,36 @@
+public convert_A_to_hex_string_DE
+public convert_A_to_binary_string_DE
 public convert_HL_to_decimal_string_DE_ret_length_B
+
+convert_A_to_hex_string_DE:
+	PUSH	AF
+	RRCA
+	RRCA
+	RRCA
+	RRCA
+	CALL	convert_A_to_hex_string_DE_nibble
+	POP	AF
+convert_A_to_hex_string_DE_nibble:
+	AND	A, $0F
+	ADD	A, $90
+	DAA
+	ADC	A, $40
+	DAA
+	LD	(DE), A
+	INC	DE
+	RET
+
+convert_A_to_binary_string_DE:
+	LD	C, A
+	LD	B, 8
+convert_A_to_binary_string_DE_loop:
+	LD	A, '0'
+	RLC	C
+	ADC	A, 0
+	LD	(DE), A
+	INC	DE
+	DJNZ	convert_A_to_binary_string_DE_loop
+	RET
 
 convert_HL_to_decimal_string_DE_ret_length_B:
 	CALL	convert_HL_to_decimal_string_DE_core

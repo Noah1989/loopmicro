@@ -5,39 +5,14 @@ extern ui_label_IX_draw
 extern ui_panel_IX_draw
 extern ui_box_IX_calculate_absolute_position_DE
 
+extern convert_A_to_hex_string_DE
+extern convert_A_to_binary_string_DE
 extern convert_HL_to_decimal_string_DE_ret_length_B
 
 include "video_io.inc"
 include "ui.inc"
 
 memory_app_activate:
-	LD	HL, (memory_viewer_cursor_address)
-	LD	L, (HL)
-	LD	H, 0
-	LD	DE, memory_info_text_value_dec
-	CALL	convert_HL_to_decimal_string_DE_ret_length_B
-	LD	HL, (memory_viewer_cursor_address)
-	LD	L, (HL)
-	BIT	7, L
-	RET	Z
-	LD	A, L
-	NEG	A
-	LD	HL, memory_info_text_sep_neg
-	LD	BC, 4
-	LDIR
-	LD	L, A
-	LD	H, B; 0 here
-	CALL	convert_HL_to_decimal_string_DE_ret_length_B
-	LD	HL, memory_info_text_end
-	XOR	A, A
-	SBC	HL, DE
-	RET	Z
-	LD	B, L
-	LD	A, ' '
-loop:
-	LD	(DE), A
-	INC	DE
-	DJNZ	loop
 	RET
 
 memory_app_deactivate:
@@ -151,6 +126,58 @@ memory_viewer_print_hex_nibble_A:
 	OUT	(video_table_name_increment), A
 	RET
 
+memory_info_label_draw:
+	CALL	memory_info_text_update
+	JP	ui_label_IX_draw
+
+memory_info_text_update:
+	; address
+	LD	DE, memory_info_text_address
+	LD	HL, (memory_viewer_cursor_address)
+	LD	A, H
+	CALL	convert_A_to_hex_string_DE
+	LD	A, L
+	CALL	convert_A_to_hex_string_DE
+	; hex
+	LD	DE, memory_info_text_value_hex
+	LD	A, (HL)
+	CALL	convert_A_to_hex_string_DE
+	; binary
+	LD	DE, memory_info_text_value_bin
+	LD	A, (HL)
+	CALL	convert_A_to_binary_string_DE
+	; decimal
+	LD	HL, (memory_viewer_cursor_address)
+	LD	L, (HL)
+	LD	H, 0
+	LD	DE, memory_info_text_value_dec
+	CALL	convert_HL_to_decimal_string_DE_ret_length_B
+	LD	HL, (memory_viewer_cursor_address)
+	LD	L, (HL)
+	BIT	7, L
+	RET	Z
+	; negative decimal
+	LD	A, L
+	NEG	A
+	LD	HL, memory_info_text_sep_neg
+	LD	BC, 4
+	LDIR
+	LD	L, A
+	LD	H, B; 0 here
+	CALL	convert_HL_to_decimal_string_DE_ret_length_B
+	; fill to end
+	LD	HL, memory_info_text_end
+	XOR	A, A
+	SBC	HL, DE
+	RET	Z
+	LD	B, L
+	LD	A, ' '
+memory_info_text_update_fill_loop:
+	LD	(DE), A
+	INC	DE
+	DJNZ	memory_info_text_update_fill_loop
+	RET
+
 section objects_immutable
 
 memory_app:
@@ -193,7 +220,7 @@ memory_info_label:
 defb	ui_object_type_widget
 defb	3, 26, memory_info_text_len, 1
 defw	memory_main_window
-defw	ui_label_IX_draw
+defw	memory_info_label_draw
 defw	memory_info_text
 memory_viewer:
 defb	ui_object_type_widget
@@ -216,7 +243,7 @@ section ram_initialized
 memory_viewer_top_address:
 defw	$0000
 memory_viewer_cursor_address:
-defw	$0007
+defw	$0000
 memory_info_text:
 defb	"Address: $"
 memory_info_text_address:
