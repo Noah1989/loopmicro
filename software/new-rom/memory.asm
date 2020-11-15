@@ -28,16 +28,20 @@ memory_handle_input:
 	JP	NZ, ui_window_handle_input_propagate
 	LD	A, E
 	CP	A, $6B ; left arrow
-	JR	Z, memory_handle_input_cursor_left
+	JP	Z, memory_handle_input_cursor_left
 	CP	A, $74 ; right arrow
-	JR	Z, memory_handle_input_cursor_right
+	JP	Z, memory_handle_input_cursor_right
 	CP	A, $75 ; up arrow
-	JR	Z, memory_handle_input_cursor_up
+	JP	Z, memory_handle_input_cursor_line_up
 	CP	A, $72 ; down arrow
-	JR	Z, memory_handle_input_cursor_down
-	CALL	debug_io_print_hex_byte_A
-	LD	A, 10
-	CALL	debug_io_print_character_A
+	JP	Z, memory_handle_input_cursor_line_down
+	CP	A, $7D ; page up
+	JP	Z, memory_handle_input_cursor_page_up
+	CP	A, $7A ; page down
+	JP	Z, memory_handle_input_cursor_page_down
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, 10
+	;CALL	debug_io_print_character_A
 	JP	ui_window_handle_input_propagate
 
 memory_handle_input_cursor_left:
@@ -45,6 +49,7 @@ memory_handle_input_cursor_left:
 	LD	HL, (memory_cursor_address)
 	DEC	HL
 	LD	(memory_cursor_address), HL
+	CALL	memory_check_cursor_underflow
 	CALL	memory_cursor_show
 	LD	IX, memory_info_label
 	CALL	ui_widget_IX_draw
@@ -55,32 +60,73 @@ memory_handle_input_cursor_right:
 	LD	HL, (memory_cursor_address)
 	INC	HL
 	LD	(memory_cursor_address), HL
+	CALL	memory_check_cursor_overflow
 	CALL	memory_cursor_show
 	LD	IX, memory_info_label
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
-memory_handle_input_cursor_up:
+memory_handle_input_cursor_page_up:
 	CALL	memory_cursor_hide
-	LD	HL, (memory_cursor_address)
+	LD	BC, -256
+	JR	memory_handle_input_cursor_up
+memory_handle_input_cursor_line_up:
+	CALL	memory_cursor_hide
 	LD	BC, -16
+memory_handle_input_cursor_up:
+	LD	HL, (memory_cursor_address)
 	ADD	HL, BC
 	LD	(memory_cursor_address), HL
+	CALL	memory_check_cursor_underflow
 	CALL	memory_cursor_show
 	LD	IX, memory_info_label
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
-memory_handle_input_cursor_down:
+memory_handle_input_cursor_page_down:
 	CALL	memory_cursor_hide
-	LD	HL, (memory_cursor_address)
+	LD	BC, 256
+	JR	memory_handle_input_cursor_down
+memory_handle_input_cursor_line_down:
+	CALL	memory_cursor_hide
 	LD	BC, 16
+memory_handle_input_cursor_down:
+	LD	HL, (memory_cursor_address)
 	ADD	HL, BC
 	LD	(memory_cursor_address), HL
+	CALL	memory_check_cursor_overflow
 	CALL	memory_cursor_show
 	LD	IX, memory_info_label
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
+
+memory_check_cursor_underflow:
+	LD	HL, (memory_cursor_address)
+	LD	DE, (memory_viewer_top_address)
+	XOR	A, A ; clear carry
+	SBC	HL, DE
+	RET	P
+	EX	DE, HL
+	LD	BC, -$100
+	ADD	HL, BC
+	LD	(memory_viewer_top_address), HL
+	LD	IX, memory_viewer
+	JP	ui_widget_IX_draw
+
+memory_check_cursor_overflow:
+	LD	HL, (memory_viewer_top_address)
+	LD	BC, 24*16-1
+	ADD	HL, BC
+	LD	DE, (memory_cursor_address)
+	XOR	A, A ; clear carry
+	SBC	HL, DE
+	RET	P
+	LD	HL, (memory_viewer_top_address)
+	LD	BC, $100
+	ADD	HL, BC
+	LD	(memory_viewer_top_address), HL
+	LD	IX, memory_viewer
+	JP	ui_widget_IX_draw
 
 memory_cursor_hide:
 	LD	IX, memory_cursor
