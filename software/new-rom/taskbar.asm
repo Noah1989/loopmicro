@@ -6,6 +6,7 @@ extern ui_widget_IX_draw
 extern ui_label_IX_draw
 extern ui_window_handle_input_propagate
 extern ui_window_handle_input_do_not_propagate
+extern ui_window_handle_vsync_noop
 
 extern app_IX_activate
 extern help_app
@@ -42,7 +43,7 @@ taskbar_window_IX_handle_input_next_button:
 	; propagate event if none of the buttons matched
 	LD	A, B
 	OR	A, C
-	JR	Z, ui_window_handle_input_propagate
+	JP	Z, ui_window_handle_input_propagate
 	; check button scancode
 	LD	IX, BC
 	LD	A, (IX+taskbar_button_keycode)
@@ -168,6 +169,7 @@ defb	0, 29
 defb	80, 1
 defb	$3F, ' '
 defw	taskbar_window_IX_handle_input
+defw	ui_window_handle_vsync_noop
 defw	taskbar_button_help
 defw	taskbar_button_memory
 defw	taskbar_button_files

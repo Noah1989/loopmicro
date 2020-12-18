@@ -2,6 +2,7 @@ public memory_app
 
 extern ui_window_handle_input_propagate
 extern ui_window_handle_input_do_not_propagate
+extern ui_window_handle_vsync_noop
 extern ui_label_IX_draw
 extern ui_panel_IX_draw
 extern ui_box_IX_calculate_absolute_position_DE
@@ -39,10 +40,59 @@ memory_handle_input:
 	JP	Z, memory_handle_input_cursor_page_up
 	CP	A, $7A ; page down
 	JP	Z, memory_handle_input_cursor_page_down
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, 10
-	;CALL	debug_io_print_character_A
+	CP	A, $2D ; R
+	JP	Z, memory_handle_input_run_code
+
+	LD	HL, memory_handle_input_hex_keycodes
+	LD	BC, 16
+	CPIR
+	JP	Z, memory_handle_input_hex
+
+	CALL	debug_io_print_hex_byte_A
+	LD	A, 10
+	CALL	debug_io_print_character_A
 	JP	ui_window_handle_input_propagate
+
+memory_handle_input_hex:
+	LD	A, $F
+	SUB	A, C
+	LD	HL, (memory_cursor_address)
+	RLD
+	JP	ui_window_handle_input_do_not_propagate
+memory_handle_input_hex_keycodes:
+defb	$45; 0
+defb	$16; 1
+defb	$1E; 2
+defb	$26; 3
+defb	$25; 4
+defb	$2E; 5
+defb	$36; 6
+defb	$3D; 7
+defb	$3E; 8
+defb	$46; 9
+defb	$1C; A
+defb	$32; B
+defb	$21; C
+defb	$23; D
+defb	$24; E
+defb	$2B; F
+
+memory_handle_vsync:
+	LD	IX, memory_viewer
+	CALL	ui_widget_IX_draw
+	LD	IX, memory_info_label
+	CALL	ui_widget_IX_draw
+	RET
+
+memory_handle_input_run_code:
+	CALL	memory_cursor_hide
+	LD	HL, memory_handle_input_run_code_return
+	PUSH	HL
+	LD	HL, (memory_cursor_address)
+	JP	(HL)
+memory_handle_input_run_code_return:
+	CALL	memory_cursor_show
+	JP	ui_window_handle_input_do_not_propagate
 
 memory_handle_input_cursor_left:
 	CALL	memory_cursor_hide
@@ -327,6 +377,7 @@ defb	ui_object_type_window
 defb	0, 1, 80, 28
 defb	$1F, ' '
 defw	memory_handle_input
+defw	memory_handle_vsync
 defw	memory_address_panel
 defw	memory_hexadecimal_panel
 defw	memory_ascii_panel
@@ -369,6 +420,7 @@ defb	ui_object_type_window
 defb	0, 0, 80, 1
 defb	$30, ' '
 defw	ui_window_handle_input_propagate
+defw	ui_window_handle_vsync_noop
 defw	0
 
 section objects_mutable
@@ -386,9 +438,9 @@ defc memory_info_text_sep_neg_len = memory_info_text_sep_neg_end - memory_info_t
 
 section ram_initialized
 memory_viewer_top_address:
-defw	$0000
+defw	$8000
 memory_cursor_address:
-defw	$0000
+defw	$8000
 memory_cursor_visible:
 defb	1
 memory_info_text:

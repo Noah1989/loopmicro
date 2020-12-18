@@ -1,5 +1,8 @@
 public ui_widget_IX_draw
 
+extern debug_io_print_hex_byte_A
+extern debug_io_print_character_A
+
 include "ui.inc"
 
 ui_widget_IX_draw:

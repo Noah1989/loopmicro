@@ -16,7 +16,9 @@ extern keyboard_get_key_success_NZ_scancode_E_flags_D
 
 extern ui_window_IX_draw
 extern ui_window_IX_handle_input_DE_propagate_NZ
+extern ui_window_IX_handle_vsync
 extern ui_window_handle_input_do_not_propagate
+extern ui_window_handle_vsync_noop
 extern ui_panel_IX_draw
 extern ui_label_IX_draw
 
@@ -28,6 +30,26 @@ extern help_app
 include "ui.inc"
 include "app.inc"
 
+	JP	start
+align $08
+	CALL	error
+align $10
+	CALL	error
+align $18
+	CALL	error
+align $20
+	CALL	error
+align $28
+	CALL	error
+align $30
+	CALL	error
+align $38
+	CALL	error
+align $66
+	CALL	error
+
+align $0100
+start:
 	LD	DE, ram_initialized
 	LD	HL, initializer
 	LD	BC, ram_uninitialized - ram_initialized
@@ -54,8 +76,10 @@ include "app.inc"
 	LD	I, A
 	IM	2
 	EI
+
 main_loop:
-	HALT
+	;HALT
+	CALL	handle_vsync
 	CALL	handle_input
 	JR	main_loop
 
@@ -72,6 +96,23 @@ draw_windows_HL:
 	CALL	ui_window_IX_draw
 	POP	HL
 	JR	draw_windows_HL
+
+handle_vsync:
+	;TODO: actually wait for vsync here
+	LD	HL, window_list
+handle_vsync_next_window:
+	LD	C, (HL)
+	INC	HL
+	LD	B, (HL)
+	INC	HL
+	LD	A, B
+	OR	A, C
+	RET	Z
+	LD	IX, BC
+	PUSH	HL
+	CALL	ui_window_IX_handle_vsync
+	POP	HL
+	JR	handle_vsync_next_window
 
 handle_input:
 	CALL	keyboard_get_key_success_NZ_scancode_E_flags_D
@@ -111,6 +152,7 @@ defb	80, 30	; width, height
 defb	$30	; color
 defb	$B1	; character
 defw	ui_window_handle_input_do_not_propagate ; input handler
+defw	ui_window_handle_vsync_noop ; vsync handler
 defw	0 ; widget list
 
 section strings

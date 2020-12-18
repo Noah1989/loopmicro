@@ -8,6 +8,7 @@ extern debug_io_print_character_A
 
 extern ui_window_handle_input_propagate
 extern ui_window_handle_input_do_not_propagate
+extern ui_window_handle_vsync_noop
 extern ui_widget_IX_draw
 extern ui_label_IX_draw
 extern ui_panel_IX_draw
@@ -111,6 +112,7 @@ defb	ui_object_type_window
 defb	0, 1, 25, 28
 defb	$1F, ' '
 defw	ui_window_handle_input_propagate
+defw	ui_window_handle_vsync_noop
 defw	help_contents_title_label
 defw	help_contents_scrollbar
 defw	0
@@ -132,6 +134,7 @@ defb	ui_object_type_window
 defb	25, 1, 55, 28
 defb	$19, ' '
 defw	help_reader_handle_input
+defw	ui_window_handle_vsync_noop
 defw	help_reader_panel
 defw	help_reader_text
 defw	help_reader_scrollbar
@@ -154,6 +157,7 @@ defb	ui_object_type_window
 defb	0, 0, 80, 1
 defb	$30, ' '
 defw	ui_window_handle_input_propagate
+defw	ui_window_handle_vsync_noop
 defw	0
 
 section strings
