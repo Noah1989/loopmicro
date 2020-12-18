@@ -1,6 +1,6 @@
 sources = \
 	rom.asm debug_io.asm error.asm convert.asm \
-	video_timing.asm video_text_mode.asm \
+	video_timing.asm video_text_mode.asm video_vsync.asm \
 	font_terminus.asm \
 	keyboard.asm \
 	ui_box.asm ui_window.asm ui_widget.asm ui_panel.asm ui_label.asm \

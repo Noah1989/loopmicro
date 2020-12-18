@@ -10,6 +10,8 @@ extern error
 
 extern video_timing_init
 extern video_text_mode_init
+extern video_vsync_wait
+extern video_vsync_init
 
 extern keyboard_init
 extern keyboard_get_key_success_NZ_scancode_E_flags_D
@@ -65,6 +67,7 @@ start:
 
 	CALL	video_timing_init
 	CALL	video_text_mode_init
+	CALL	video_vsync_init
 
 	LD	HL, window_list
 	CALL	draw_windows_HL
@@ -78,7 +81,6 @@ start:
 	EI
 
 main_loop:
-	;HALT
 	CALL	handle_vsync
 	CALL	handle_input
 	JR	main_loop
@@ -98,7 +100,7 @@ draw_windows_HL:
 	JR	draw_windows_HL
 
 handle_vsync:
-	;TODO: actually wait for vsync here
+	CALL	video_vsync_wait
 	LD	HL, window_list
 handle_vsync_next_window:
 	LD	C, (HL)
@@ -142,6 +144,7 @@ handle_input_next_window:
 	JR	handle_input
 
 section interrupt_vectors
+align $100
 interrupt_vectors:
 
 section objects_immutable
