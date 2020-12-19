@@ -1,5 +1,7 @@
 public sdcard_init
 
+extern video_vsync_wait
+
 extern debug_io_print_character_A
 extern debug_io_print_hex_byte_A
 extern error
@@ -11,6 +13,7 @@ defc sdcard_out_control = $D1 ; change speed and control CS singnal
 
 defc sdcard_control_deselected = $04 ; card deselected @ 312.5kHz
 defc sdcard_control_selected = $14 ; card selected @ 312.5kHz
+defc sdcard_voltage_range = %00011110 ; 3.1~3.5V
 
 sdcard_init:
 	CALL	sdcard_deselect
@@ -30,7 +33,7 @@ sdcard_init_startup_loop:
 	LD	HL, 0
 	LD	B, $95
 	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
-	CALL	sdcard_read_response_format1_A
+	CALL	sdcard_read_response_A
 	CP	$01
 	CALL	NZ, error
 
@@ -40,7 +43,7 @@ sdcard_init_startup_loop:
 	LD	HL, $01AA
 	LD	B, $87
 	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
-	CALL	sdcard_read_response_format7_ADEHL
+	CALL	sdcard_read_response_ADEHL
 	LD	A, D
 	OR	A, E
 	CALL	NZ, error
@@ -50,6 +53,35 @@ sdcard_init_startup_loop:
 	LD	A, $AA
 	CP	L
 	CALL	NZ, error
+
+	; read operation conditions register (check accepted voltage range)
+	LD	A, 58
+	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
+	CALL	sdcard_read_response_ADEHL
+	LD	A, sdcard_voltage_range
+	AND	A, E
+	CP	sdcard_voltage_range
+	CALL	NZ, error
+
+	LD	B, 60
+sdcard_init_acmd41_loop:
+	PUSH	BC
+	; send operation condition
+	LD	A, 55
+	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
+	CALL	sdcard_read_response_A
+	LD	A, 41
+	LD	DE, $4000
+	LD	HL, $0000
+	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
+	CALL	sdcard_read_response_A
+	POP	BC
+	AND	A, A
+	JR	Z, sdcard_init_acmd41_ready
+	CALL	video_vsync_wait
+	DJNZ	sdcard_init_acmd41_loop
+	CALL	error
+sdcard_init_acmd41_ready:
 
 	CALL	sdcard_deselect
 
@@ -67,6 +99,7 @@ sdcard_do_control:
 	RET
 
 sdcard_send_command_A_argument_DEHL_checksum_B:
+	SET	0, B
 	PUSH	AF
 	LD	A, 't'
 	CALL	debug_io_print_character_A
@@ -100,27 +133,27 @@ sdcard_send_command_A_argument_DEHL_checksum_B:
 	OUT	(C), B
 	RET
 
-sdcard_read_response_format1_A:
+sdcard_read_response_A:
 	LD	A, 'r'
 	CALL	debug_io_print_character_A
 	LD	B, 8
-	CALL	sdcard_read_response_format1_A_loop
+	CALL	sdcard_read_response_A_loop
 	PUSH	AF
 	LD	A, 10 ; \n
 	CALL	debug_io_print_character_A
 	POP	AF
 	RET
-sdcard_read_response_format1_A_loop:
+sdcard_read_response_A_loop:
 	IN	A, (sdcard_in_receive)
 	CALL	debug_io_print_hex_byte_A
 	CP	$FF
 	RET	NZ
-	DJNZ	sdcard_read_response_format1_A_loop
+	DJNZ	sdcard_read_response_A_loop
 	RET
 
-sdcard_read_response_format7_ADEHL:
+sdcard_read_response_ADEHL:
 
-	CALL	sdcard_read_response_format1_A
+	CALL	sdcard_read_response_A
 	PUSH	AF
 	LD	A, '+'
 	CALL	debug_io_print_character_A
