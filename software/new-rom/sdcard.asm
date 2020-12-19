@@ -83,8 +83,49 @@ sdcard_init_acmd41_loop:
 	CALL	error
 sdcard_init_acmd41_ready:
 
+	; read operation conditions register again (check power and capacity)
+	LD	A, 58
+	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
+	CALL	sdcard_read_response_ADEHL
+	BIT	7, D ; power up status (should be 1 now)
+	CALL	Z, error
+	BIT	6, D ; ensure this is a SDHC/SDXC card
+	CALL	Z, error ; SDSC not supported (yet)
+
+	LD	DE, 0
+	LD	HL, 0
+	CALL	sdcard_read_block_DEHL
+
 	CALL	sdcard_deselect
 
+	RET
+
+sdcard_read_block_DEHL:
+	LD	(sdcard_current_block_address), HL
+	LD	(sdcard_current_block_address+2), DE
+	LD	A, 17
+	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
+	CALL	sdcard_read_response_A
+	LD	BC, 1024 ; max retries (TODO: adjust to 100ms)
+sdcard_read_block_DEHL_start_token_loop:
+	IN	A, (sdcard_in_receive)
+	CP	A, $FE ; start token
+	JR	Z, sdcard_read_block_DEHL_start
+	DEC	BC
+	LD	A, B
+	OR	A, C
+	JR	NZ, sdcard_read_block_DEHL_start_token_loop
+	CALL	error
+sdcard_read_block_DEHL_start:
+	LD	HL, sdcard_block_buffer
+	LD	B, 0 ; 256 repetitions
+	LD	C, sdcard_in_receive
+	INIR
+	INIR
+	; receive CRC
+	IN	L, (C)
+	IN	H, (C)
+	LD	(sdcard_current_block_crc), HL
 	RET
 
 sdcard_select:
@@ -181,3 +222,14 @@ sdcard_read_response_ADEHL:
 	POP	AF
 
 	RET
+
+section ram_uninitialized
+sdcard_current_block_address:
+defw	0, 0
+sdcard_current_block_crc:
+defw	0
+
+section sdcard_block_buffer
+align $100
+sdcard_block_buffer:
+defs	512, 0
