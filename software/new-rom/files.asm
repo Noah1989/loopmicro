@@ -4,11 +4,13 @@ extern ui_window_handle_input_propagate
 extern ui_window_handle_vsync_noop
 
 extern sdcard_init
+extern fat32_init
 
 include "ui.inc"
 
 files_app_activate:
 	CALL	sdcard_init
+	CALL	fat32_init
 	RET
 
 files_app_deactivate:

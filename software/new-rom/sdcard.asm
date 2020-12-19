@@ -1,4 +1,6 @@
 public sdcard_init
+public sdcard_read_block_DEHL_lazy
+public sdcard_block_buffer
 
 extern video_vsync_wait
 
@@ -92,17 +94,49 @@ sdcard_init_acmd41_ready:
 	BIT	6, D ; ensure this is a SDHC/SDXC card
 	CALL	Z, error ; SDSC not supported (yet)
 
+	CALL	sdcard_deselect
+
 	LD	DE, 0
 	LD	HL, 0
 	CALL	sdcard_read_block_DEHL
 
-	CALL	sdcard_deselect
-
 	RET
 
+
+sdcard_read_block_DEHL_lazy:
+	LD	BC, (sdcard_current_block_address)
+	LD	(sdcard_current_block_address), HL
+	AND	A, A ; clears carry flag
+	SBC	HL, BC
+	LD	BC, (sdcard_current_block_address+2)
+	EX	DE, HL
+	LD	(sdcard_current_block_address+2), HL
+	JR	NZ, sdcard_read_block
+	AND	A, A ; clears carry flag
+	SBC	HL, BC
+	JR	NZ, sdcard_read_block
+	RET
 sdcard_read_block_DEHL:
 	LD	(sdcard_current_block_address), HL
 	LD	(sdcard_current_block_address+2), DE
+	JR	sdcard_read_block_start
+sdcard_read_block:
+	LD	HL, (sdcard_current_block_address)
+	LD	DE, (sdcard_current_block_address+2)
+sdcard_read_block_start:
+	LD	A, 'b'
+	CALL	debug_io_print_character_A
+	LD	A, D
+	CALL	debug_io_print_hex_byte_A
+	LD	A, E
+	CALL	debug_io_print_hex_byte_A
+	LD	A, H
+	CALL	debug_io_print_hex_byte_A
+	LD	A, L
+	CALL	debug_io_print_hex_byte_A
+	LD	A, 10 ; \n
+	CALL	debug_io_print_character_A
+	CALL	sdcard_select
 	LD	A, 17
 	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
 	CALL	sdcard_read_response_A
@@ -126,6 +160,7 @@ sdcard_read_block_DEHL_start:
 	IN	L, (C)
 	IN	H, (C)
 	LD	(sdcard_current_block_crc), HL
+	CALL	sdcard_deselect
 	RET
 
 sdcard_select:
@@ -142,7 +177,7 @@ sdcard_do_control:
 sdcard_send_command_A_argument_DEHL_checksum_B:
 	SET	0, B
 	PUSH	AF
-	LD	A, 't'
+	LD	A, 'c'
 	CALL	debug_io_print_character_A
 	POP	AF
 	CALL	debug_io_print_hex_byte_A
