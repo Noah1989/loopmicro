@@ -55,6 +55,10 @@ debug_io_print_hex_byte_A:
 	RRCA
 	CALL	debug_io_print_hex_nibble_A
 	POP	AF
+	PUSH	AF
+	CALL	debug_io_print_hex_nibble_A
+	POP	AF
+	RET
 debug_io_print_hex_nibble_A:
 	AND	A, $0F
 	ADD	A, $90

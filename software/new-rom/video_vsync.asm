@@ -7,10 +7,7 @@ defc ctc_channel_2 = $E2
 defc ctc_channel_3 = $E3
 
 video_vsync_init:
-	LD	HL, video_vsync_ctc_vectors
-	LD	A, H
-	LD	I, A
-	LD	A, L
+	LD	A, video_vsync_ctc_vectors & $FF
 	;	Interrupt vector is the same for all channels
 	OUT	(ctc_channel_0), A
 
@@ -27,8 +24,6 @@ video_vsync_init:
 	OUT	(ctc_channel_3), A
 	LD	A, 1
 	OUT	(ctc_channel_3), A
-	IM	2
-	EI
 	RET
 
 video_vsync_wait:
@@ -49,6 +44,7 @@ video_vsync_interrupt:
 	EI
 	RETI
 
+section ram_initialized
 video_vsync_status:
 defb	0
 

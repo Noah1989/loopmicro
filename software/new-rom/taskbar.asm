@@ -4,6 +4,7 @@ extern ui_box_IX_fill_color_L_character_H
 extern ui_box_IX_calculate_absolute_position_DE
 extern ui_widget_IX_draw
 extern ui_label_IX_draw
+extern ui_panel_IX_draw
 extern ui_window_handle_input_propagate
 extern ui_window_handle_input_do_not_propagate
 extern ui_window_handle_vsync_noop
@@ -12,6 +13,8 @@ extern app_IX_activate
 extern help_app
 extern memory_app
 extern files_app
+
+extern error
 
 include "ui.inc"
 include "video_io.inc"
@@ -28,6 +31,21 @@ defvars ui_widget {
 	taskbar_button_app ds.w 1
 	taskbar_button
 }
+
+defc taskbar_heartbeat_frames = 10
+
+taskbar_handle_vsync:
+	LD	HL, taskbar_heartbeat
+	DEC	(HL)
+	RET	NZ
+	LD	A, taskbar_heartbeat_frames
+	LD	(HL), A
+	LD	IX, taskbar_heartbeat_icon
+	LD	A, (IX+ui_panel_background_color)
+	XOR	A, $07
+	LD	(IX+ui_panel_background_color), A
+	CALL	ui_widget_IX_draw
+	RET
 
 taskbar_window_IX_handle_input:
 	; params: E=scancode, D=flags
@@ -129,6 +147,8 @@ taskbar_selected_button:
 defw	taskbar_button_help
 taskbar_button_is_pressed:
 defb	0
+taskbar_heartbeat:
+defb	taskbar_heartbeat_frames
 
 section objects_mutable
 taskbar_button_help:
@@ -161,6 +181,13 @@ defw	taskbar_button_files_label
 defb	$04 ; F3
 defb	taskbar_button_state_normal
 defw	files_app
+taskbar_heartbeat_icon:
+defb	ui_object_type_widget
+defb	79, 0
+defb	1, 1
+defw	taskbar_window
+defw	ui_panel_IX_draw
+defb	$33, $03
 
 section objects_immutable
 taskbar_window:
@@ -169,10 +196,11 @@ defb	0, 29
 defb	80, 1
 defb	$3F, ' '
 defw	taskbar_window_IX_handle_input
-defw	ui_window_handle_vsync_noop
+defw	taskbar_handle_vsync
 defw	taskbar_button_help
 defw	taskbar_button_memory
 defw	taskbar_button_files
+defw	taskbar_heartbeat_icon
 defw	0
 taskbar_button_help_label:
 defb	ui_object_type_widget
