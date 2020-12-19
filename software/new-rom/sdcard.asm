@@ -24,12 +24,32 @@ sdcard_init_startup_loop:
 
 	CALL	sdcard_select
 
+	; set card to idle mode
 	LD	A, 0
 	LD	DE, 0
 	LD	HL, 0
-	CALL	sdcard_send_command_A_argument_DEHL
+	LD	B, $95
+	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
+	CALL	sdcard_read_response_format1_A
+	CP	$01
+	CALL	NZ, error
 
-	CALL	sdcard_read_response_A
+	; send interface condition
+	LD	A, 8
+	LD	DE, $0000
+	LD	HL, $01AA
+	LD	B, $87
+	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
+	CALL	sdcard_read_response_format7_ADEHL
+	LD	A, D
+	OR	A, E
+	CALL	NZ, error
+	LD	A, $01
+	CP	H
+	CALL	NZ, error
+	LD	A, $AA
+	CP	L
+	CALL	NZ, error
 
 	CALL	sdcard_deselect
 
@@ -46,7 +66,7 @@ sdcard_do_control:
 	OUT	(sdcard_out_transmit), A
 	RET
 
-sdcard_send_command_A_argument_DEHL:
+sdcard_send_command_A_argument_DEHL_checksum_B:
 	PUSH	AF
 	LD	A, 't'
 	CALL	debug_io_print_character_A
@@ -63,6 +83,10 @@ sdcard_send_command_A_argument_DEHL:
 	CALL	debug_io_print_hex_byte_A
 	LD	A, L
 	CALL	debug_io_print_hex_byte_A
+	LD	A, ':'
+	CALL	debug_io_print_character_A
+	LD	A, B
+	CALL	debug_io_print_hex_byte_A
 	LD	A, 10 ; \n
 	CALL	debug_io_print_character_A
 	POP	AF
@@ -73,24 +97,54 @@ sdcard_send_command_A_argument_DEHL:
 	OUT	(C), E
 	OUT	(C), H
 	OUT	(C), L
-	LD	A, $95 ; CRC
-	OUT	(C), A
+	OUT	(C), B
 	RET
 
-sdcard_read_response_A:
+sdcard_read_response_format1_A:
 	LD	A, 'r'
 	CALL	debug_io_print_character_A
 	LD	B, 8
-	CALL	sdcard_read_response_A_loop
+	CALL	sdcard_read_response_format1_A_loop
 	PUSH	AF
 	LD	A, 10 ; \n
 	CALL	debug_io_print_character_A
 	POP	AF
 	RET
-sdcard_read_response_A_loop:
+sdcard_read_response_format1_A_loop:
 	IN	A, (sdcard_in_receive)
 	CALL	debug_io_print_hex_byte_A
 	CP	$FF
 	RET	NZ
-	DJNZ	sdcard_read_response_A_loop
+	DJNZ	sdcard_read_response_format1_A_loop
+	RET
+
+sdcard_read_response_format7_ADEHL:
+
+	CALL	sdcard_read_response_format1_A
+	PUSH	AF
+	LD	A, '+'
+	CALL	debug_io_print_character_A
+	POP 	AF
+	CP	2
+	CALL	NC, error
+
+	LD	C, sdcard_in_receive
+	IN	D, (C)
+	IN	E, (C)
+	IN	H, (C)
+	IN	L, (C)
+
+	PUSH	AF
+	LD	A, D
+	CALL	debug_io_print_hex_byte_A
+	LD	A, E
+	CALL	debug_io_print_hex_byte_A
+	LD	A, H
+	CALL	debug_io_print_hex_byte_A
+	LD	A, L
+	CALL	debug_io_print_hex_byte_A
+	LD	A, 10 ; \n
+	CALL	debug_io_print_character_A
+	POP	AF
+
 	RET
