@@ -1,6 +1,7 @@
 public sdcard_init
 public sdcard_read_block_DEHL_lazy
 public sdcard_block_buffer
+public sdcard_current_block_address
 
 extern video_vsync_wait
 
@@ -30,14 +31,23 @@ sdcard_init_startup_loop:
 	CALL	sdcard_select
 
 	; set card to idle mode
+	LD	B, 60
+sdcard_init_cmd0_loop:
+	PUSH	BC
 	LD	A, 0
 	LD	DE, 0
 	LD	HL, 0
 	LD	B, $95
 	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
 	CALL	sdcard_read_response_A
+	POP	BC
 	CP	$01
-	CALL	NZ, error
+	JR	Z, sdcard_init_cmd0_done
+	CALL	video_vsync_wait
+	DJNZ	sdcard_init_cmd0_loop
+sdcard_init_error_cmd0_timeout:
+	CALL	error
+sdcard_init_cmd0_done:
 
 	; send interface condition
 	LD	A, 8
@@ -48,12 +58,15 @@ sdcard_init_startup_loop:
 	CALL	sdcard_read_response_ADEHL
 	LD	A, D
 	OR	A, E
+sdcard_init_error_cmd8a:
 	CALL	NZ, error
 	LD	A, $01
 	CP	H
+sdcard_init_error_cmd8b:
 	CALL	NZ, error
 	LD	A, $AA
 	CP	L
+sdcard_init_error_cmd8c:
 	CALL	NZ, error
 
 	; read operation conditions register (check accepted voltage range)
@@ -63,6 +76,7 @@ sdcard_init_startup_loop:
 	LD	A, sdcard_voltage_range
 	AND	A, E
 	CP	sdcard_voltage_range
+sdcard_init_error_cmd58_voltage:
 	CALL	NZ, error
 
 	LD	B, 60
@@ -82,6 +96,7 @@ sdcard_init_acmd41_loop:
 	JR	Z, sdcard_init_acmd41_ready
 	CALL	video_vsync_wait
 	DJNZ	sdcard_init_acmd41_loop
+sdcard_init_error_acmd41_timeout:
 	CALL	error
 sdcard_init_acmd41_ready:
 
@@ -90,8 +105,10 @@ sdcard_init_acmd41_ready:
 	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
 	CALL	sdcard_read_response_ADEHL
 	BIT	7, D ; power up status (should be 1 now)
+sdcard_init_error_cmd58_powerup:
 	CALL	Z, error
 	BIT	6, D ; ensure this is a SDHC/SDXC card
+sdcard_init_error_cmd58_hcs:
 	CALL	Z, error ; SDSC not supported (yet)
 
 	CALL	sdcard_deselect
@@ -124,18 +141,18 @@ sdcard_read_block:
 	LD	HL, (sdcard_current_block_address)
 	LD	DE, (sdcard_current_block_address+2)
 sdcard_read_block_start:
-	LD	A, 'b'
-	CALL	debug_io_print_character_A
-	LD	A, D
-	CALL	debug_io_print_hex_byte_A
-	LD	A, E
-	CALL	debug_io_print_hex_byte_A
-	LD	A, H
-	CALL	debug_io_print_hex_byte_A
-	LD	A, L
-	CALL	debug_io_print_hex_byte_A
-	LD	A, 10 ; \n
-	CALL	debug_io_print_character_A
+	;LD	A, 'b'
+	;CALL	debug_io_print_character_A
+	;LD	A, D
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, E
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, H
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, L
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, 10 ; \n
+	;CALL	debug_io_print_character_A
 	CALL	sdcard_select
 	LD	A, 17
 	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
@@ -149,6 +166,7 @@ sdcard_read_block_DEHL_start_token_loop:
 	LD	A, B
 	OR	A, C
 	JR	NZ, sdcard_read_block_DEHL_start_token_loop
+sdcard_read_block_DEHL_error_timeout:
 	CALL	error
 sdcard_read_block_DEHL_start:
 	LD	HL, sdcard_block_buffer
@@ -175,30 +193,30 @@ sdcard_do_control:
 	RET
 
 sdcard_send_command_A_argument_DEHL_checksum_B:
-	SET	0, B
-	PUSH	AF
-	LD	A, 'c'
-	CALL	debug_io_print_character_A
-	POP	AF
-	CALL	debug_io_print_hex_byte_A
-	PUSH	AF
-	LD	A, ':'
-	CALL	debug_io_print_character_A
-	LD	A, D
-	CALL	debug_io_print_hex_byte_A
-	LD	A, E
-	CALL	debug_io_print_hex_byte_A
-	LD	A, H
-	CALL	debug_io_print_hex_byte_A
-	LD	A, L
-	CALL	debug_io_print_hex_byte_A
-	LD	A, ':'
-	CALL	debug_io_print_character_A
-	LD	A, B
-	CALL	debug_io_print_hex_byte_A
-	LD	A, 10 ; \n
-	CALL	debug_io_print_character_A
-	POP	AF
+	SET	0, B ; end bit
+	;PUSH	AF
+	;LD	A, 'c'
+	;CALL	debug_io_print_character_A
+	;POP	AF
+	;CALL	debug_io_print_hex_byte_A
+	;PUSH	AF
+	;LD	A, ':'
+	;CALL	debug_io_print_character_A
+	;LD	A, D
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, E
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, H
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, L
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, ':'
+	;CALL	debug_io_print_character_A
+	;LD	A, B
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, 10 ; \n
+	;CALL	debug_io_print_character_A
+	;POP	AF
 	LD	C, sdcard_out_transmit
 	OR	A, $40
 	OUT	(C), A
@@ -210,18 +228,18 @@ sdcard_send_command_A_argument_DEHL_checksum_B:
 	RET
 
 sdcard_read_response_A:
-	LD	A, 'r'
-	CALL	debug_io_print_character_A
+	;LD	A, 'r'
+	;CALL	debug_io_print_character_A
 	LD	B, 8
 	CALL	sdcard_read_response_A_loop
 	PUSH	AF
-	LD	A, 10 ; \n
-	CALL	debug_io_print_character_A
+	;LD	A, 10 ; \n
+	;CALL	debug_io_print_character_A
 	POP	AF
 	RET
 sdcard_read_response_A_loop:
 	IN	A, (sdcard_in_receive)
-	CALL	debug_io_print_hex_byte_A
+	;CALL	debug_io_print_hex_byte_A
 	CP	$FF
 	RET	NZ
 	DJNZ	sdcard_read_response_A_loop
@@ -230,10 +248,10 @@ sdcard_read_response_A_loop:
 sdcard_read_response_ADEHL:
 
 	CALL	sdcard_read_response_A
-	PUSH	AF
-	LD	A, '+'
-	CALL	debug_io_print_character_A
-	POP 	AF
+	;PUSH	AF
+	;LD	A, '+'
+	;CALL	debug_io_print_character_A
+	;POP 	AF
 	CP	2
 	CALL	NC, error
 
@@ -243,18 +261,18 @@ sdcard_read_response_ADEHL:
 	IN	H, (C)
 	IN	L, (C)
 
-	PUSH	AF
-	LD	A, D
-	CALL	debug_io_print_hex_byte_A
-	LD	A, E
-	CALL	debug_io_print_hex_byte_A
-	LD	A, H
-	CALL	debug_io_print_hex_byte_A
-	LD	A, L
-	CALL	debug_io_print_hex_byte_A
-	LD	A, 10 ; \n
-	CALL	debug_io_print_character_A
-	POP	AF
+	;PUSH	AF
+	;LD	A, D
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, E
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, H
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, L
+	;CALL	debug_io_print_hex_byte_A
+	;LD	A, 10 ; \n
+	;CALL	debug_io_print_character_A
+	;POP	AF
 
 	RET
 

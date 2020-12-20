@@ -1,6 +1,8 @@
 public video_vsync_init
 public video_vsync_wait
 
+extern error
+
 defc ctc_channel_0 = $E0
 defc ctc_channel_1 = $E1
 defc ctc_channel_2 = $E2
@@ -44,6 +46,13 @@ video_vsync_interrupt:
 	EI
 	RETI
 
+video_vsync_interrupt_invalid0:
+	CALL	error
+video_vsync_interrupt_invalid1:
+	CALL	error
+video_vsync_interrupt_invalid2:
+	CALL	error
+
 section ram_initialized
 video_vsync_status:
 defb	0
@@ -51,7 +60,7 @@ defb	0
 section interrupt_vectors
 align $100
 video_vsync_ctc_vectors:
-defw	0	; channel 0
-defw	0	; channel 1
-defw	0	; channel 2
+defw	video_vsync_interrupt_invalid0	; channel 0
+defw	video_vsync_interrupt_invalid1	; channel 1
+defw	video_vsync_interrupt_invalid2	; channel 2
 defw	video_vsync_interrupt	; channel 3
