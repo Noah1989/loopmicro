@@ -82,6 +82,9 @@ help_reader_handle_input_scroll_up_limit:
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
+help_app_init:
+	RET
+
 help_app_activate:
 	RET
 
@@ -100,6 +103,7 @@ defw	lorem_ipsum
 section objects_immutable
 
 help_app:
+defw	help_app_init
 defw	help_app_activate
 defw	help_app_deactivate
 defw	help_contents_window

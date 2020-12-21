@@ -18,6 +18,9 @@ extern debug_io_print_character_A
 include "video_io.inc"
 include "ui.inc"
 
+memory_app_init:
+	RET
+
 memory_app_activate:
 	RET
 
@@ -366,6 +369,7 @@ memory_info_text_update_fill_loop:
 section objects_immutable
 
 memory_app:
+defw	memory_app_init
 defw	memory_app_activate
 defw	memory_app_deactivate
 defw	memory_main_window

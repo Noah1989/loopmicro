@@ -1,8 +1,8 @@
 defvars 0 {
 	stream_get_byte_A ds.w 1
 	stream_put_byte_A ds.w 1
-	stream_read_block_HL_len_BC ds.w 1
-	stream_write_block_HL_len_BC ds.w 1
+	stream_read_block_DE_len_BC ds.w 1
+	stream_write_block_DE_len_BC ds.w 1
 	stream
 }
 

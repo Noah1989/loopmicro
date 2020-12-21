@@ -3,8 +3,9 @@ sources = \
 	video_timing.asm video_text_mode.asm video_vsync.asm \
 	font_terminus.asm \
 	keyboard.asm \
-	sdcard.asm fat32.asm stream.asm \
+	sdcard.asm stream.asm fat32.asm fat32_directory.asm \
 	ui_box.asm ui_window.asm ui_widget.asm ui_panel.asm ui_label.asm \
+	ui_listview.asm listing.asm \
 	taskbar.asm app.asm help.asm memory.asm files.asm \
 	lorem_ipsum.asm
 

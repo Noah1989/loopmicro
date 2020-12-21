@@ -172,7 +172,7 @@ section initializer
 initializer:
 
 section ram_initialized
-org $FD00
+org $FC00
 ram_initialized:
 
 window_list:

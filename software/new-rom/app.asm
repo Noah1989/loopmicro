@@ -13,6 +13,9 @@ app_IX_activate:
 	LD	A, E
 	OR	A, D
 	CALL	NZ, app_IX_deactivate
+	; init new app (TODO: only do this once)
+	LD	IX, (app_active)
+	CALL	app_IX_init
 	; copy window list
 	LD	DE, window_list_app
 	LD	HL, (app_active)
@@ -39,6 +42,11 @@ app_IX_activate_copy_window_list_loop:
 	LD	IX, (app_active)
 	LD	L, (IX+app_activate)
 	LD	H, (IX+app_activate+1)
+	JP	(HL)
+
+app_IX_init:
+	LD	L, (IX+app_init)
+	LD	H, (IX+app_init+1)
 	JP	(HL)
 
 app_IX_deactivate:

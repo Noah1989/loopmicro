@@ -45,3 +45,10 @@ defvars ui_widget {
 	ui_label_text ds.w 1
 	ui_label
 }
+
+; listview
+defvars ui_widget {
+	ui_listview_listing ds.w 1
+	ui_listview_line_buffer ; size = width
+	ui_listview
+}

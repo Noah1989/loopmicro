@@ -1,52 +1,19 @@
 public fat32_init
+public fat32_rootdir
 
 extern sdcard_read_block_DEHL_lazy
 extern sdcard_block_buffer
 extern sdcard_current_block_address
 
 extern stream_IX_seek_BCDE
+extern stream_IX_read_block_DE_len_BC_bytewise
 
 extern debug_io_print_character_A
 extern debug_io_print_hex_byte_A
 extern error
 
 include "stream.inc"
-
-defvars 0 {
-	mbr_boot_code   ds.b 446
-	mbr_partition_1 ds.b  16
-	mbr_partition_2 ds.b  16
-	mbr_partition_3 ds.b  16
-	mbr_partition_4 ds.b  16
-	mbr_magic       ds.b   2
-	mbr
-}
-
-defvars 0 {
-	partition_boot_flag ds.b 1
-	partition_chs_begin ds.b 3
-	partition_type_code ds.b 1
-	partition_chs_end   ds.b 3
-	partition_lba_begin ds.b 4
-	partition_lba_size  ds.b 4
-	partition
-}
-
-defvars stream_seekable {
-	chain_first_cluster       ds.b 4
-	chain_current_cluster     ds.b 4
-	chain_lba_current_sector  ds.b 4
-	chain_sectors_remaining_in_current_cluster ds.b 1
-	chain
-}
-
-defvars chain {
-	directory
-}
-
-defvars chain {
-	file
-}
+include "fat32.inc"
 
 defc volumeid_bytes_per_sector      = $00B ; ds.b 2
 defc volumeid_sectors_per_cluster   = $00D ; ds.b 1
@@ -66,12 +33,14 @@ fat32_init:
 	LD	BC, $AA55
 	AND	A, A
 	SBC	HL, BC
+fat32_init_error_invalid_mbr_signature:
 	CALL	NZ, error
 	; verify filesystem type is $0B or $0C (FAT32)
 	LD	A, (sdcard_block_buffer+mbr_partition_1+partition_type_code)
 	CP	A, $0B
 	JR	Z, fat32_init_type_ok
 	CP	A, $0C
+fat32_init_error_invalid_fs_type:
 	CALL	NZ, error
 fat32_init_type_ok:
 	; read volume id
@@ -83,16 +52,19 @@ fat32_init_type_ok:
 	LD	BC, $AA55
 	AND	A, A
 	SBC	HL, BC
+fat32_init_error_invalid_volumeid_signature:
 	CALL	NZ, error
 	; check bytes per sector
 	LD	HL, (sdcard_block_buffer+volumeid_bytes_per_sector)
 	LD	BC, 512
 	AND	A, A
 	SBC	HL, BC
+fat32_init_error_invalid_sector_size:
 	CALL	NZ, error
 	; check number of FATs
 	LD	A, (sdcard_block_buffer+volumeid_number_of_fats)
 	CP	A, 2
+fat32_init_error_invalid_number_of_fats:
 	CALL	NZ, error
 	; calculate FAT begin LBA
 	LD	DE, (sdcard_block_buffer+volumeid_reserved_sectors)
@@ -124,15 +96,144 @@ fat32_init_type_ok:
 	LD	(fat32_rootdir+chain_first_cluster), HL
 	LD	HL, (sdcard_block_buffer+volumeid_rootdir_first_cluster+2)
 	LD	(fat32_rootdir+chain_first_cluster+2), HL
-	LD	IX, fat32_rootdir
-	LD	BC, 0
-	LD	DE, 0
-	CALL	stream_IX_seek_BCDE
+	RET
+
+fat32_chain_IX_get_byte_A:
 	LD	L, (IX+chain_lba_current_sector+0)
 	LD	H, (IX+chain_lba_current_sector+1)
 	LD	E, (IX+chain_lba_current_sector+2)
 	LD	D, (IX+chain_lba_current_sector+3)
 	CALL	sdcard_read_block_DEHL_lazy
+	; get sector relative byte address
+	LD	L, (IX+stream_position)
+	LD	A, (IX+stream_position+1)
+	AND	A, $01
+	LD	H, A
+	; extract byte from sector
+	LD	DE, sdcard_block_buffer
+	ADD	HL, DE
+	LD	A, (HL)
+	PUSH	AF
+	; advance stream to next byte
+	LD	L, (IX+stream_position+0)
+	LD	H, (IX+stream_position+1)
+	LD	E, (IX+stream_position+2)
+	LD	D, (IX+stream_position+3)
+	LD	BC, 1 ; DEHL += 1
+	ADD	HL, BC
+	EX	DE, HL
+	LD	C, 0
+	ADC	HL, BC
+	EX	DE, HL
+	LD	(IX+stream_position+0), L
+	LD	(IX+stream_position+1), H
+	LD	(IX+stream_position+2), E
+	LD	(IX+stream_position+3), D
+	; detect end of sector
+	LD	A, H
+	AND	A, $01
+	OR	A, L
+	JR	NZ, fat32_chain_IX_get_byte_A_done
+	; check if sectors remain in current cluster
+	DEC	(IX+chain_sectors_remaining_in_current_cluster)
+	JR	Z, fat32_chain_IX_get_byte_A_next_cluster
+	; next sector in current cluster
+	LD	L, (IX+chain_lba_current_sector+0)
+	LD	H, (IX+chain_lba_current_sector+1)
+	LD	E, (IX+chain_lba_current_sector+2)
+	LD	D, (IX+chain_lba_current_sector+3)
+	LD	BC, 1 ; DEHL += 1
+	ADD	HL, BC
+	EX	DE, HL
+	LD	C, 0
+	ADC	HL, BC
+	EX	DE, HL
+	LD	(IX+chain_lba_current_sector+0), L
+	LD	(IX+chain_lba_current_sector+1), H
+	LD	(IX+chain_lba_current_sector+2), E
+	LD	(IX+chain_lba_current_sector+3), D
+	JR	fat32_chain_IX_get_byte_A_done
+fat32_chain_IX_get_byte_A_next_cluster:
+	CALL	fat32_chain_IX_lookup_next_cluster
+	LD	L, (IX+chain_current_cluster)
+	LD	H, (IX+chain_current_cluster+1)
+	LD	E, (IX+chain_current_cluster+2)
+	LD	D, (IX+chain_current_cluster+3)
+	LD	BC, -2 ; DEHL <- cluster number - 2
+	ADD	HL, BC
+	EX	DE, HL
+	LD	BC, $FFFF
+	ADC	HL, BC
+	EX	DE, HL
+	LD	A, (fat32_sectors_per_cluster)
+fat32_chain_IX_get_byte_A_next_cluster_calc_LBA_mult_loop:
+	SRL	A ; DEHL *= sectors per cluster (power of 2)
+	JR	Z, fat32_chain_IX_get_byte_A_next_cluster_calc_LBA_mult_done
+	SLA	L
+	RL	H
+	RL	E
+	RL	D
+	JR	fat32_chain_IX_get_byte_A_next_cluster_calc_LBA_mult_loop
+fat32_chain_IX_get_byte_A_next_cluster_calc_LBA_mult_done:
+	LD	BC, (fat32_clusters_begin_lba)
+	ADD	HL, BC ; lba = DEHL + fat32_clusters_begin_lba
+	LD	(IX+chain_lba_current_sector+0), L
+	LD	(IX+chain_lba_current_sector+1), H
+	EX	DE, HL
+	LD	BC, (fat32_clusters_begin_lba+2)
+	ADC	HL, BC
+	LD	(IX+chain_lba_current_sector+2), L
+	LD	(IX+chain_lba_current_sector+3), H
+	; all sectors remaining
+	LD	A, (fat32_sectors_per_cluster)
+	LD	(IX+chain_sectors_remaining_in_current_cluster), A
+fat32_chain_IX_get_byte_A_done:
+	POP	AF
+	RET
+
+fat32_chain_IX_lookup_next_cluster:
+	LD	A, (IX+chain_current_cluster)
+	LD	L, (IX+chain_current_cluster+1)
+	LD	H, (IX+chain_current_cluster+2)
+	LD	E, (IX+chain_current_cluster+3)
+	LD	D, 0
+	SLA	A
+	RL	L
+	RL	H
+	RL	E
+	RL	D
+	LD	BC, (fat32_fat_begin_lba)
+	ADD	HL, BC
+	EX	DE, HL
+	LD	BC, (fat32_fat_begin_lba+2)
+	ADC	HL, BC
+	EX	DE, HL
+	CALL	sdcard_read_block_DEHL_lazy
+	LD	L, (IX+chain_current_cluster)
+	LD	H, 0
+	ADD	HL, HL
+	ADD	HL, HL
+	LD	BC, sdcard_block_buffer
+	ADD	HL, BC
+	LD	A, $FF
+	LD	B, (HL)
+	AND	A, B
+	LD	(IX+chain_current_cluster+0), B
+	INC	HL
+	LD	B, (HL)
+	AND	A, B
+	LD	(IX+chain_current_cluster+1), B
+	INC	HL
+	LD	B, (HL)
+	AND	A, B
+	LD	(IX+chain_current_cluster+2), B
+	INC	HL
+	LD	B, (HL)
+	AND	A, B
+	LD	(IX+chain_current_cluster+3), B
+	CP	A, $FF
+fat32_chain_IX_lookup_next_cluster_error_end_of_chain:
+	CALL	Z, error
 	RET
 
 fat32_chain_IX_seek_BCDE:
@@ -170,40 +271,7 @@ fat32_chain_IX_seek_BCDE_cluster_loop:
 	; look up next cluster in FAT
 	PUSH	DE
 	PUSH	BC
-	LD	A, (IX+chain_current_cluster)
-	LD	L, (IX+chain_current_cluster+1)
-	LD	H, (IX+chain_current_cluster+2)
-	LD	E, (IX+chain_current_cluster+3)
-	LD	D, 0
-	SLA	A
-	RL	L
-	RL	H
-	RL	E
-	RL	D
-	LD	BC, (fat32_fat_begin_lba)
-	ADD	HL, BC
-	EX	DE, HL
-	LD	BC, (fat32_fat_begin_lba+2)
-	ADC	HL, BC
-	EX	DE, HL
-	CALL	sdcard_read_block_DEHL_lazy
-	LD	L, (IX+chain_current_cluster)
-	LD	H, 0
-	ADD	HL, HL
-	ADD	HL, HL
-	LD	BC, sdcard_block_buffer
-	ADD	HL, BC
-	LD	A, (HL)
-	LD	(IX+chain_current_cluster+0), A
-	INC	HL
-	LD	A, (HL)
-	LD	(IX+chain_current_cluster+1), A
-	INC	HL
-	LD	A, (HL)
-	LD	(IX+chain_current_cluster+2), A
-	INC	HL
-	LD	A, (HL)
-	LD	(IX+chain_current_cluster+3), A
+	CALL	fat32_chain_IX_lookup_next_cluster
 	POP	BC
 	POP	DE
 	; repeat
@@ -227,6 +295,7 @@ fat32_chain_IX_seek_BCDE_cluster_found:
 	; since clusters are max 64kB in size, BC should be 0 now
 	LD	A, B
 	OR	A, C
+fat32_init_error_invalid_cluster_size:
 	CALL	NZ, error
 	; calculate LBA for 1st sector of current cluster
 	PUSH	DE
@@ -240,7 +309,7 @@ fat32_chain_IX_seek_BCDE_cluster_found:
 	LD	BC, $FFFF
 	ADC	HL, BC
 	EX	DE, HL
-	LD	A, fat32_sectors_per_cluster
+	LD	A, (fat32_sectors_per_cluster)
 fat32_chain_IX_seek_BCDE_calc_LBA_mult_loop:
 	SRL	A ; DEHL *= sectors per cluster (power of 2)
 	JR	Z, fat32_chain_IX_seek_BCDE_calc_LBA_mult_done
@@ -280,9 +349,9 @@ fat32_chain_IX_seek_BCDE_calc_LBA_mult_done:
 
 section objects_mutable
 fat32_rootdir:
-defw	error	;stream_get_byte_A
+defw	fat32_chain_IX_get_byte_A ;stream_get_byte_A
 defw	error	;stream_put_byte_A
-defw	error	;stream_read_block_HL_len_BC
+defw	stream_IX_read_block_DE_len_BC_bytewise ;stream_read_block_HL_len_BC
 defw	error	;stream_write_block_HL_len_BC
 defw	0, 0	;stream_position
 defw	-1, -1	;stream_size
@@ -291,6 +360,7 @@ defw	0, 0	;chain_first_cluster
 defw	0, 0	;chain_current_cluster
 defw	0, 0	;chain_lba_current_sector
 defb	0	;chain_sectors_remaining_in_current_cluster
+defs	32	;directory_current_entry_buffer ds.b 32
 
 section ram_uninitialized
 fat32_fat_begin_lba:
