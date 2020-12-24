@@ -60,11 +60,11 @@ defb	1, 0, 38, 28 ; left, top, width, height
 defw	files_main_window ; ui_widget_parent
 defw	ui_listview_IX_draw ; ui_widget_draw
 defw	files_listing
-defs	38 	; ui_listview_line_buffer
+defs	39 	; ui_listview_line_buffer
 
 files_listing:
 defw	fat32_directory_listing_IX_seek_line_BC
 defw	fat32_directory_listing_IX_read_line_eof_Z
-defb	38
+defb	39
 defw	files_listview+ui_listview_line_buffer
 defw	fat32_rootdir
