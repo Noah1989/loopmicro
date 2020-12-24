@@ -68,3 +68,4 @@ defw	fat32_directory_listing_IX_read_line_eof_Z
 defb	39
 defw	files_listview+ui_listview_line_buffer
 defw	fat32_rootdir
+defs	1 ; lfn sequence number

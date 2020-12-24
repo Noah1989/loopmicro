@@ -58,6 +58,7 @@ fat32_directory_IX_next_valid_entry_done:
 
 defvars listing {
 	listing_directory ds.w 1
+	listing_lfn_sequence ds.b 1
 }
 
 fat32_directory_listing_IX_seek_line_BC:
@@ -84,9 +85,59 @@ fat32_directory_listing_IX_seek_line_BC_done:
 	POP	IX
 	RET
 
+fat32_directory_listing_IX_read_line_eof_Z:
+	LD	(IX+listing_lfn_sequence), $FF
+fat32_directory_listing_IX_read_line_eof_Z_loop:
+	PUSH	IX
+	LD	E, (IX+listing_directory)
+	LD	D, (IX+listing_directory+1)
+	LD	IX, DE
+	CALL	fat32_directory_IX_next_valid_entry_eof_Z
+	LD	A, (IX+directory_current_entry_attributes)
+	LD	DE, IX	; keep reference to directory
+	POP	IX
+	RET	Z
+	LD	HL, directory_current_entry_buffer
+	ADD	HL, DE ; HL <- directory entry address
+	CP	A, $0F ; long file name
+	JR	NZ, fat32_directory_listing_IX_read_line_handle_regular_entry
+	CALL	fat32_directory_listing_IX_read_line_handle_lfn_entry_HL
+	JR	fat32_directory_listing_IX_read_line_eof_Z_loop
+fat32_directory_listing_IX_read_line_handle_regular_entry:
+	LD	A, (IX+listing_lfn_sequence)
+	CP	A, 1 ; validate lfn sequence
+	JR	Z, fat32_directory_listing_IX_read_line_ok
+	; use short file name
+	LD	C, (IX+listing_buffer_size)
+	DEC	C ; null byte at end
+	LD	A, C
+	CP	A, 11 ; check buffer size
+	JR	C, fat32_directory_listing_IX_read_line_copy_short_name
+	LD	C, 11
+fat32_directory_listing_IX_read_line_copy_short_name:
+	LD	E, (IX+listing_buffer_address)
+	LD	D, (IX+listing_buffer_address+1)
+	LD	B, 0
+	LDIR	; copy BC bytes from (HL) to (DE)
+	XOR	A, A
+	LD	(DE), A ; terminator
+fat32_directory_listing_IX_read_line_ok:
+	INC	A ; clear Z flag
+	RET
+
 fat32_directory_listing_IX_read_line_handle_lfn_entry_HL:
 	LD	A, (HL)
+	BIT	6, A
+	JR	NZ, fat32_directory_listing_IX_read_line_handle_lfn_sequence_new
+	DEC	(IX+listing_lfn_sequence)
+	CP	A, (IX+listing_lfn_sequence)
+	JR	Z, fat32_directory_listing_IX_read_line_handle_lfn_sequence_valid
+	LD	(IX+listing_lfn_sequence), $FF
+	RET	; invalid sequence number
+fat32_directory_listing_IX_read_line_handle_lfn_sequence_new:
 	AND	A, $1F ; sequence number
+	LD	(IX+listing_lfn_sequence), A
+fat32_directory_listing_IX_read_line_handle_lfn_sequence_valid:
 	LD	B, A
 	LD	A, -13
 fat32_directory_listing_IX_read_line_handle_lfn_mult_loop:
@@ -137,40 +188,5 @@ fat32_directory_listing_IX_read_line_handle_lfn_copy_loop:
 	INC	HL ; TODO: handle non-ASCII characters correctly
 	INC	DE
 	DJNZ	fat32_directory_listing_IX_read_line_handle_lfn_copy_loop
-	INC	B ; clear Z flag
-	RET
-
-fat32_directory_listing_IX_read_line_eof_Z:
-	; search next entry
-	PUSH	IX
-	LD	E, (IX+listing_directory)
-	LD	D, (IX+listing_directory+1)
-	LD	IX, DE
-	CALL	fat32_directory_IX_next_valid_entry_eof_Z
-	LD	A, (IX+directory_current_entry_attributes)
-	LD	DE, IX	; keep reference to directory
-	POP	IX
-	RET	Z
-	LD	HL, directory_current_entry_buffer
-	ADD	HL, DE ; HL <- directory entry address
-	CP	A, $0F ; long file name
-	JR	NZ, fat32_directory_listing_IX_read_line_handle_regular_entry
-	CALL	fat32_directory_listing_IX_read_line_handle_lfn_entry_HL
-	JR	fat32_directory_listing_IX_read_line_eof_Z
-fat32_directory_listing_IX_read_line_handle_regular_entry:
-	RET	; TODO: check if lfn is valid
-	; short file name
-	LD	C, (IX+listing_buffer_size)
-	DEC	C ; null byte at end
-	LD	A, C
-	CP	A, 11 ; check buffer size
-	JR	C, fat32_directory_listing_IX_read_line_copy_short_name
-	LD	C, 11
-fat32_directory_listing_IX_read_line_copy_short_name:
-	LD	E, (IX+listing_buffer_address)
-	LD	D, (IX+listing_buffer_address+1)
-	LD	B, 0
-	LDIR	; copy BC bytes from (HL) to (DE)
-	LD	(HL), 0
 	INC	B ; clear Z flag
 	RET
