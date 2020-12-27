@@ -34,8 +34,6 @@ ui_listview_IX_draw_line:
 	OUT	(video_address_l), A
 	LD	A, D
 	OUT	(video_address_h), A
-ld a, $1e
-out (video_table_attribute), a
 	PUSH	DE
 	PUSH	BC
 	CALL	listing_IX_read_line_eof_Z
@@ -53,14 +51,12 @@ ui_listview_IX_draw_char:
 	DJNZ	ui_listview_IX_draw_char
 	JR	ui_listview_IX_draw_line_done
 ui_listview_IX_draw_line_fill:
-	LD	A, '.'
+	LD	A, ' '
 	OUT	(video_table_name_increment), A
 	DJNZ	ui_listview_IX_draw_line_fill
 ui_listview_IX_draw_line_done:
 	POP	BC
 	POP	DE
-ld a, $2d
-out (video_table_attribute), a
 	INC	D
 	DEC	C
 	JR	NZ, ui_listview_IX_draw_line

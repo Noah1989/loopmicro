@@ -104,6 +104,7 @@ fat32_directory_listing_IX_read_line_eof_Z_loop:
 	CALL	fat32_directory_listing_IX_read_line_handle_lfn_entry_HL
 	JR	fat32_directory_listing_IX_read_line_eof_Z_loop
 fat32_directory_listing_IX_read_line_handle_regular_entry:
+	PUSH	AF ; save attributes
 	LD	A, (IX+listing_lfn_sequence)
 	CP	A, 1 ; validate lfn sequence
 	JR	Z, fat32_directory_listing_IX_read_line_ok
@@ -142,10 +143,33 @@ fat32_directory_listing_IX_read_line_copy_short_extension_loop:
 	INC	DE
 fat32_directory_listing_IX_read_line_copy_short_extension_skip_space:
 	DJNZ	fat32_directory_listing_IX_read_line_copy_short_extension_loop
+	DEC	DE
+	LD	A, (DE)
+	CP	'.' ; remove trailing dot
+	JR	Z, fat32_directory_listing_IX_read_line_copy_short_filename_write_terminator
+	INC	DE
 fat32_directory_listing_IX_read_line_copy_short_filename_write_terminator:
 	LD	A, 0
 	LD	(DE), A
 fat32_directory_listing_IX_read_line_ok:
+	POP	AF ; attributes
+	BIT	4, A ; subdirectory? -> add / in front
+	JR	Z, fat32_directory_listing_IX_read_line_done
+	LD	L, (IX+listing_buffer_address)
+	LD	H, (IX+listing_buffer_address+1)
+	LD	B, 0
+	LD	C, (IX+listing_buffer_size)
+	DEC	C
+	JR	Z, fat32_directory_listing_IX_read_line_done
+	DEC	C
+	JR	Z, fat32_directory_listing_IX_read_line_done
+	ADD	HL, BC
+	LD	DE, HL
+	DEC	HL
+	LDDR
+	LD	A, '/'
+	LD	(DE), A
+fat32_directory_listing_IX_read_line_done:
 	INC	A ; clear Z flag
 	RET
 

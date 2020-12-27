@@ -4,7 +4,7 @@ from intelhex import IntelHex
 
 ser = serial.Serial()
 ser.baudrate = 62500
-ser.port     = '/dev/ttyUSB1'
+ser.port     = '/dev/ttyUSB0'
 ser.stopbits = serial.STOPBITS_ONE
 ser.xonoff   = 0
 ser.rtscts   = 0
