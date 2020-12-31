@@ -49,6 +49,15 @@ defvars ui_widget {
 ; listview
 defvars ui_widget {
 	ui_listview_listing ds.w 1
-	ui_listview_line_buffer ; size = width
+	ui_listview_top_line ds.w 1
+	ui_listview_line_buffer ; size = width+1
 	ui_listview
+}
+
+;line_cursor
+defvars ui_widget {
+	; ui_widget_parent must be listview
+	ui_listview_line_cursor_color_xor_bitmask ds.b 1
+	ui_listview_line_cursor_curent_line ds.w 1
+	ui_listview_line_cursor
 }

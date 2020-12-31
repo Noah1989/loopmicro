@@ -101,6 +101,6 @@ video_text_mode_clear_screen_loop:
 section constants
 video_text_mode_colors:
 defb	$00, $0C, $20, $3C
-defb	$C0, $CC, $90, $FC
+defb	$C0, $CC, $E0, $FC
 defb	$03, $0F, $33, $3F
 defb	$C3, $CF, $E3, $FF
