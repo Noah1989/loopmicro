@@ -114,7 +114,7 @@ defw	0
 help_contents_window:
 defb	ui_object_type_window
 defb	0, 1, 25, 28
-defb	$1F, ' '
+defb	$1E, ' '
 defw	ui_window_handle_input_propagate
 defw	ui_window_handle_vsync_noop
 defw	help_contents_title_label
@@ -122,7 +122,7 @@ defw	help_contents_scrollbar
 defw	0
 help_contents_title_label:
 defb	ui_object_type_widget
-defb	8, 1, 8, 28
+defb	8, 1, 8, 1
 defw	help_contents_window
 defw	ui_label_IX_draw
 defw	help_contents_title_label_text

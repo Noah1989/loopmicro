@@ -343,7 +343,7 @@ memory_info_text_update:
 	LD	HL, (memory_cursor_address)
 	LD	L, (HL)
 	BIT	7, L
-	JR	Z, memory_info_text_update_fill
+	JR	Z, memory_info_text_update_end
 	; negative decimal
 	LD	A, L
 	NEG	A
@@ -353,17 +353,9 @@ memory_info_text_update:
 	LD	L, A
 	LD	H, B; 0 here
 	CALL	convert_HL_to_decimal_string_DE_ret_length_B
-memory_info_text_update_fill:
-	LD	HL, memory_info_text_end
+memory_info_text_update_end:
 	XOR	A, A
-	SBC	HL, DE
-	RET	Z
-	LD	B, L
-	LD	A, ' '
-memory_info_text_update_fill_loop:
 	LD	(DE), A
-	INC	DE
-	DJNZ	memory_info_text_update_fill_loop
 	RET
 
 section objects_immutable

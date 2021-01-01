@@ -25,3 +25,20 @@ defvars stream_seekable {
 	chain_sectors_remaining_in_current_cluster ds.b 1
 	chain
 }
+
+defvars chain {
+	directory_current_entry_buffer
+	directory_current_entry_short_filename ds.b 8
+	directory_current_entry_short_extension ds.b 3
+	directory_current_entry_attributes ds.b 1
+	directory_current_entry_reserved ds.b 1
+	directory_current_entry_create_time ds.b 3
+	directory_current_entry_create_date ds.b 2
+	directory_current_entry_access_date ds.b 2
+	directory_current_entry_cluster_high ds.b 2
+	directory_current_entry_modify_time ds.b 2
+	directory_current_entry_modify_date ds.b 2
+	directory_current_entry_cluster_low ds.b 2
+	directory_current_entry_file_size ds.b 4
+	directory
+}

@@ -141,18 +141,18 @@ sdcard_read_block:
 	LD	HL, (sdcard_current_block_address)
 	LD	DE, (sdcard_current_block_address+2)
 sdcard_read_block_start:
-	;LD	A, 'b'
-	;CALL	debug_io_print_character_A
-	;LD	A, D
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, E
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, H
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, L
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, 10 ; \n
-	;CALL	debug_io_print_character_A
+	;ld	a, 'b'
+	;call	debug_io_print_character_A
+	;ld	a, d
+	;call	debug_io_print_hex_byte_A
+	;ld	a, e
+	;call	debug_io_print_hex_byte_A
+	;ld	a, h
+	;call	debug_io_print_hex_byte_A
+	;ld	a, l
+	;call	debug_io_print_hex_byte_A
+	;ld	a, 10 ; \n
+	;call	debug_io_print_character_A
 	CALL	sdcard_select
 	LD	A, 17
 	CALL	sdcard_send_command_A_argument_DEHL_checksum_B

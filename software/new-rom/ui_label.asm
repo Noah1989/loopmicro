@@ -19,9 +19,9 @@ ui_label_IX_draw_loop:
 	PUSH	BC
 ui_label_IX_draw_loop_line:
 	LD	A, (HL)
+	AND	A, A
+	JR	Z, ui_label_IX_draw_loop_line_fill
 	INC	HL
-	AND	A
-	JR	Z, ui_label_IX_draw_end
 	CP	A, 10
 	JR	Z, ui_label_IX_draw_loop_line_fill
 	OUT	(video_table_name_increment), A
@@ -36,10 +36,10 @@ ui_label_IX_draw_loop_line_done:
 	DEC	C
 	JR	NZ, ui_label_IX_draw_loop
 	RET
-ui_label_IX_draw_end:
-	POP	BC
-	RET
 ui_label_IX_draw_loop_line_fill:
+	XOR	A, A
+	CP	A, B
+	JR	Z, ui_label_IX_draw_loop_line_done
 	LD	A, ' '
 ui_label_IX_draw_loop_line_fill_loop:
 	OUT	(video_table_name_increment), A

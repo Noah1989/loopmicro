@@ -13,11 +13,18 @@ extern sdcard_init
 extern fat32_init
 extern fat32_directory_listing_IX_seek_line_BC
 extern fat32_directory_listing_IX_read_line_eof_Z
-extern fat32_rootdir
+extern fat32_working_directory
+extern fat32_directory_IX_next_valid_entry_eof_Z
+
+extern listing_IX_seek_line_BC
+extern listing_IX_read_line_eof_Z
 
 extern error
 
 include "ui.inc"
+include "stream.inc"
+include "fat32.inc"
+include "listing.inc"
 
 files_app_init:
 	CALL	sdcard_init
@@ -41,6 +48,8 @@ files_app_handle_input:
 	JR	Z, files_app_handle_input_up_arrow
 	CP	A, $72 ; down arrow
 	JR	Z, files_app_handle_input_down_arrow
+	CP	A, $5A ; enter
+	JR	Z, files_app_handle_input_enter
 	JP	ui_window_handle_input_propagate
 
 files_app_handle_input_up_arrow:
@@ -78,6 +87,55 @@ files_app_handle_input_down_arrow:
 	POP	DE
 	LD	(IX+ui_listview_line_cursor_curent_line), E
 	LD	(IX+ui_listview_line_cursor_curent_line+1), D
+	CALL	ui_widget_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+
+files_app_handle_input_enter:
+	LD	IX, files_listview_cursor
+	LD	C, (IX+ui_listview_line_cursor_curent_line)
+	LD	B, (IX+ui_listview_line_cursor_curent_line+1)
+	LD	IX, files_listing
+	CALL	listing_IX_seek_line_BC
+	CALL	listing_IX_read_line_eof_Z
+	LD	IX, fat32_working_directory
+	BIT	4, (IX+directory_current_entry_attributes) ; subdirectory?
+	JP	Z, ui_window_handle_input_do_not_propagate
+	LD	L, (IX+directory_current_entry_cluster_low)
+	LD	H, (IX+directory_current_entry_cluster_low+1)
+	LD	E, (IX+directory_current_entry_cluster_high)
+	LD	D, (IX+directory_current_entry_cluster_high+1)
+	LD	A, L ; ".." pointing to root directory has cluster number 0
+	OR	A, H
+	OR	A, E
+	OR	A, D
+	JR	NZ, files_app_handle_input_enter_cluster_ok
+	LD	L, 2 ; actual cluster number of root directory
+files_app_handle_input_enter_cluster_ok:
+	LD	(IX+chain_first_cluster+0), L
+	LD	(IX+chain_first_cluster+1), H
+	LD	(IX+chain_first_cluster+2), E
+	LD	(IX+chain_first_cluster+3), D
+	LD	IX, files_listing
+	LD	DE, files_listview_title_text_name
+	LD	L, (IX+listing_buffer_address)
+	LD	H, (IX+listing_buffer_address+1)
+	LD	BC, 78-22
+	LDIR
+	XOR	A, A
+	LD	(DE), A
+	LD	IX, files_listview_title_label
+	CALL	ui_widget_IX_draw
+	LD	IX, files_listview_cursor
+	CALL	ui_widget_IX_draw
+	LD	IX, files_listview
+	XOR	A, A
+	LD	(IX+ui_listview_top_line), A
+	LD	(IX+ui_listview_top_line+1), A
+	CALL	ui_widget_IX_draw
+	LD	IX, files_listview_cursor
+	XOR	A, A
+	LD	(IX+ui_listview_line_cursor_curent_line), A
+	LD	(IX+ui_listview_line_cursor_curent_line+1), A
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
@@ -119,7 +177,7 @@ defw	fat32_directory_listing_IX_seek_line_BC
 defw	fat32_directory_listing_IX_read_line_eof_Z
 defb	79 ; buffer size
 defw	files_listview+ui_listview_line_buffer
-defw	fat32_rootdir
+defw	fat32_working_directory
 defs	1 ; lfn sequence number
 
 files_listview_title_panel:
@@ -165,4 +223,4 @@ section ram_initialized
 files_listview_title_text:
 defb	"Contents of directory "
 files_listview_title_text_name:
-defb	"1234567890123456", 0
+defs	78-22+1;

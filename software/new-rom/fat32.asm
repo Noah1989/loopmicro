@@ -1,5 +1,5 @@
 public fat32_init
-public fat32_rootdir
+public fat32_working_directory
 
 extern sdcard_read_block_DEHL_lazy
 extern sdcard_block_buffer
@@ -93,9 +93,9 @@ fat32_init_error_invalid_number_of_fats:
 	LD	(fat32_sectors_per_cluster), A
 	; open root directory
 	LD	HL, (sdcard_block_buffer+volumeid_rootdir_first_cluster)
-	LD	(fat32_rootdir+chain_first_cluster), HL
+	LD	(fat32_working_directory+chain_first_cluster), HL
 	LD	HL, (sdcard_block_buffer+volumeid_rootdir_first_cluster+2)
-	LD	(fat32_rootdir+chain_first_cluster+2), HL
+	LD	(fat32_working_directory+chain_first_cluster+2), HL
 	RET
 
 fat32_chain_IX_get_byte_A:
@@ -303,6 +303,18 @@ fat32_init_error_invalid_cluster_size:
 	LD	H, (IX+chain_current_cluster+1)
 	LD	E, (IX+chain_current_cluster+2)
 	LD	D, (IX+chain_current_cluster+3)
+	;ld	a, 'c'
+	;call	debug_io_print_character_A
+	;ld	a, d
+	;call	debug_io_print_hex_byte_A
+	;ld	a, e
+	;call	debug_io_print_hex_byte_A
+	;ld	a, h
+	;call	debug_io_print_hex_byte_A
+	;ld	a, l
+	;call	debug_io_print_hex_byte_A
+	;ld	a, 10 ; \n
+	;call	debug_io_print_character_A
 	LD	BC, -2 ; DEHL <- cluster number - 2
 	ADD	HL, BC
 	EX	DE, HL
@@ -348,7 +360,7 @@ fat32_chain_IX_seek_BCDE_calc_LBA_mult_done:
 	RET
 
 section objects_mutable
-fat32_rootdir:
+fat32_working_directory:
 defw	fat32_chain_IX_get_byte_A ;stream_get_byte_A
 defw	error	;stream_put_byte_A
 defw	stream_IX_read_block_DE_len_BC_bytewise ;stream_read_block_HL_len_BC
