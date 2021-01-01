@@ -91,17 +91,7 @@ help_app_activate:
 help_app_deactivate:
 	RET
 
-section objects_mutable
-
-help_reader_text:
-defb	ui_object_type_widget
-defb	1, 0, 52, 28
-defw	help_reader_window
-defw	ui_label_IX_draw
-defw	lorem_ipsum
-
 section objects_immutable
-
 help_app:
 defw	help_app_init
 defw	help_app_activate
@@ -110,7 +100,6 @@ defw	help_contents_window
 defw	help_reader_window
 defw	help_menu_window
 defw	0
-
 help_contents_window:
 defb	ui_object_type_window
 defb	0, 1, 25, 28
@@ -118,7 +107,7 @@ defb	$1E, ' '
 defw	ui_window_handle_input_propagate
 defw	ui_window_handle_vsync_noop
 defw	help_contents_title_label
-defw	help_contents_scrollbar
+defw	help_contents_separator
 defw	0
 help_contents_title_label:
 defb	ui_object_type_widget
@@ -126,13 +115,12 @@ defb	8, 1, 8, 1
 defw	help_contents_window
 defw	ui_label_IX_draw
 defw	help_contents_title_label_text
-help_contents_scrollbar:
+help_contents_separator:
 defb	ui_object_type_widget
 defb	24, 0, 1, 28
 defw	help_contents_window
 defw	ui_panel_IX_draw
-defb	$19, $B3
-
+defb	$19, 179
 help_reader_window:
 defb	ui_object_type_window
 defb	25, 1, 55, 28
@@ -141,21 +129,13 @@ defw	help_reader_handle_input
 defw	ui_window_handle_vsync_noop
 defw	help_reader_panel
 defw	help_reader_text
-defw	help_reader_scrollbar
 defw	0
 help_reader_panel:
 defb	ui_object_type_widget
-defb	1, 1, 52, 26
+defb	1, 1, 53, 26
 defw	help_reader_window
 defw	ui_panel_IX_draw
 defb	$1F, ' '
-help_reader_scrollbar:
-defb	ui_object_type_widget
-defb	54, 0, 1, 28
-defw	help_reader_window
-defw	ui_panel_IX_draw
-defb	$19, $B3
-
 help_menu_window:
 defb	ui_object_type_window
 defb	0, 0, 80, 1
@@ -163,6 +143,14 @@ defb	$30, ' '
 defw	ui_window_handle_input_propagate
 defw	ui_window_handle_vsync_noop
 defw	0
+
+section objects_mutable
+help_reader_text:
+defb	ui_object_type_widget
+defb	1, 0, 53, 28
+defw	help_reader_window
+defw	ui_label_IX_draw
+defw	lorem_ipsum
 
 section strings
 help_contents_title_label_text:

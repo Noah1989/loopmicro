@@ -62,3 +62,10 @@ defvars ui_widget {
 	ui_listview_line_cursor_curent_line ds.w 1
 	ui_listview_line_cursor
 }
+
+; hotkey_highlight
+defvars ui_widget {
+	; ui_widget_parent must be label
+	ui_hotkey_highlight_color ds.b 1
+	ui_hotkey_highlight
+}

@@ -7,6 +7,7 @@ extern ui_label_IX_draw
 extern ui_panel_IX_draw
 extern ui_box_IX_calculate_absolute_position_DE
 extern ui_widget_IX_draw
+extern ui_hotkey_highlight_IX_draw
 
 extern convert_A_to_hex_string_DE
 extern convert_A_to_binary_string_DE
@@ -414,10 +415,24 @@ defw	memory_viewer_IX_draw
 memory_menu_window:
 defb	ui_object_type_window
 defb	0, 0, 80, 1
-defb	$30, ' '
+defb	$3F, ' '
 defw	ui_window_handle_input_propagate
 defw	ui_window_handle_vsync_noop
+defw	memory_menu_hotkey_highlight
+defw	memory_menu_label
 defw	0
+memory_menu_label:
+defb	ui_object_type_widget
+defb	1, 0, 78, 1
+defw	memory_menu_window
+defw	ui_label_IX_draw
+defw	memory_menu_label_text
+memory_menu_hotkey_highlight:
+defb	ui_object_type_widget
+defb	0, 0, 78, 1
+defw	memory_menu_label
+defw	ui_hotkey_highlight_IX_draw
+defw	$3E
 
 section objects_mutable
 memory_cursor:
@@ -427,6 +442,8 @@ defw	memory_viewer
 defw	memory_cursor_IX_draw
 
 section strings
+memory_menu_label_text:
+defb	27, 24, 25, 26, "-Move Cursor  PageUp/Down-Skip 256 Bytes  0~9/A~F-Change Byte  R-Run Code", 0
 memory_info_text_sep_neg:
 defb	" or -"
 memory_info_text_sep_neg_end:

@@ -5,8 +5,8 @@ sources = \
 	keyboard.asm \
 	sdcard.asm stream.asm fat32.asm fat32_directory.asm \
 	ui_box.asm ui_window.asm ui_widget.asm ui_panel.asm ui_label.asm \
-	ui_listview.asm listing.asm \
-	taskbar.asm app.asm help.asm memory.asm files.asm \
+	ui_hotkey_highlight.asm ui_listview.asm listing.asm \
+	taskbar.asm app.asm app_help.asm app_memory.asm app_files.asm \
 	lorem_ipsum.asm
 
 rom.bin: $(sources:.asm=.o)

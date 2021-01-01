@@ -157,7 +157,6 @@ defw	files_app_handle_input
 defw	ui_window_handle_vsync_noop
 defw	files_listview_title_panel
 defw	files_listview_title_label
-defw	files_listview_scrollbar
 defw	files_listview
 defw	files_listview_cursor
 defw	0
@@ -206,18 +205,11 @@ defs	79 ; ui_listview_line_buffer
 
 files_listview_cursor:
 defb	ui_object_type_widget
-defb	-1, 0, 79, 27
+defb	-1, 0, 80, 27
 defw	files_listview
 defw	ui_listview_line_cursor_IX_draw
 defb	$51 ; cursor color xor mask
 defw	0 ; current line
-
-files_listview_scrollbar:
-defb	ui_object_type_widget
-defb	78, 0, 1, 27
-defw	files_listview
-defw	ui_panel_IX_draw
-defb	$19, $B3
 
 section ram_initialized
 files_listview_title_text:
