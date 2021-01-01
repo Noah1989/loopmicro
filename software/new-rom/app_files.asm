@@ -57,15 +57,30 @@ files_app_handle_input_up_arrow:
 	LD	L, (IX+ui_listview_top_line)
 	LD	H, (IX+ui_listview_top_line+1)
 	LD	IX, files_listview_cursor
+	PUSH	HL
+	CALL	ui_widget_IX_draw
+	POP	HL
 	LD	E, (IX+ui_listview_line_cursor_curent_line)
 	LD	D, (IX+ui_listview_line_cursor_curent_line+1)
+	LD	A, E
+	OR	A, D
+	JR	Z, files_app_handle_input_up_arrow_end
 	XOR	A, A ; clear carry
 	SBC	HL, DE
-	JP	NC, ui_window_handle_input_do_not_propagate ; todo: scroll up?
 	DEC	DE
+	JR	C, files_app_handle_input_up_arrow_end
+	LD	IX, files_listview
+	LD	L, (IX+ui_listview_top_line)
+	LD	H, (IX+ui_listview_top_line+1)
+	LD	BC, -10
+	ADD	HL, BC
+	LD	(IX+ui_listview_top_line), L
+	LD	(IX+ui_listview_top_line+1), H
 	PUSH	DE
 	CALL	ui_widget_IX_draw
 	POP	DE
+files_app_handle_input_up_arrow_end:
+	LD	IX, files_listview_cursor
 	LD	(IX+ui_listview_line_cursor_curent_line), E
 	LD	(IX+ui_listview_line_cursor_curent_line+1), D
 	CALL	ui_widget_IX_draw
