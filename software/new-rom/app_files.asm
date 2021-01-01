@@ -45,11 +45,11 @@ files_app_handle_input:
 	JP	NZ, ui_window_handle_input_propagate
 	LD	A, E
 	CP	A, $75 ; up arrow
-	JR	Z, files_app_handle_input_up_arrow
+	JP	Z, files_app_handle_input_up_arrow
 	CP	A, $72 ; down arrow
-	JR	Z, files_app_handle_input_down_arrow
+	JP	Z, files_app_handle_input_down_arrow
 	CP	A, $5A ; enter
-	JR	Z, files_app_handle_input_enter
+	JP	Z, files_app_handle_input_enter
 	JP	ui_window_handle_input_propagate
 
 files_app_handle_input_up_arrow:
@@ -76,15 +76,46 @@ files_app_handle_input_down_arrow:
 	LD	L, (IX+ui_listview_bottom_line)
 	LD	H, (IX+ui_listview_bottom_line+1)
 	LD	IX, files_listview_cursor
+	PUSH	HL
+	CALL	ui_widget_IX_draw
+	POP	HL
 	LD	E, (IX+ui_listview_line_cursor_curent_line)
 	LD	D, (IX+ui_listview_line_cursor_curent_line+1)
 	XOR	A, A ; clear carry
 	INC	DE
 	SBC	HL, DE
-	JP	C, ui_window_handle_input_do_not_propagate ; todo: scroll down?
+	JR	NC, files_app_handle_input_down_arrow_end
+	ADD	HL, DE
+	LD	IX, files_listview
+	LD	C, (IX+ui_listview_top_line)
+	LD	B, (IX+ui_listview_top_line+1)
+	XOR	A, A
+	SBC	HL, BC
+	LD	C, (IX+ui_box_height)
+	DEC	C
+	LD	B, A
+	SBC	HL, BC
+	JR	Z, files_app_handle_input_down_arrow_scroll_ok
+	DEC	DE
+	JR	files_app_handle_input_down_arrow_end
+files_app_handle_input_down_arrow_scroll_ok:
+	LD	L, (IX+ui_listview_top_line)
+	LD	H, (IX+ui_listview_top_line+1)
+	LD	BC, 10
+	ADD	HL, BC
+	LD	(IX+ui_listview_top_line), L
+	LD	(IX+ui_listview_top_line+1), H
 	PUSH	DE
 	CALL	ui_widget_IX_draw
 	POP	DE
+	LD	L, (IX+ui_listview_bottom_line)
+	LD	H, (IX+ui_listview_bottom_line+1)
+	XOR	A, A
+	SBC	HL, DE
+	JR	NC, files_app_handle_input_down_arrow_end
+	DEC	DE
+files_app_handle_input_down_arrow_end:
+	LD	IX, files_listview_cursor
 	LD	(IX+ui_listview_line_cursor_curent_line), E
 	LD	(IX+ui_listview_line_cursor_curent_line+1), D
 	CALL	ui_widget_IX_draw
