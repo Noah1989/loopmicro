@@ -44,16 +44,40 @@ files_app_handle_input:
 	JP	ui_window_handle_input_propagate
 
 files_app_handle_input_up_arrow:
+	LD	IX, files_listview
+	LD	L, (IX+ui_listview_top_line)
+	LD	H, (IX+ui_listview_top_line+1)
 	LD	IX, files_listview_cursor
+	LD	E, (IX+ui_listview_line_cursor_curent_line)
+	LD	D, (IX+ui_listview_line_cursor_curent_line+1)
+	XOR	A, A ; clear carry
+	SBC	HL, DE
+	JP	NC, ui_window_handle_input_do_not_propagate ; todo: scroll up?
+	DEC	DE
+	PUSH	DE
 	CALL	ui_widget_IX_draw
-	DEC	(IX+ui_listview_line_cursor_curent_line)
+	POP	DE
+	LD	(IX+ui_listview_line_cursor_curent_line), E
+	LD	(IX+ui_listview_line_cursor_curent_line+1), D
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
 files_app_handle_input_down_arrow:
+	LD	IX, files_listview
+	LD	L, (IX+ui_listview_bottom_line)
+	LD	H, (IX+ui_listview_bottom_line+1)
 	LD	IX, files_listview_cursor
+	LD	E, (IX+ui_listview_line_cursor_curent_line)
+	LD	D, (IX+ui_listview_line_cursor_curent_line+1)
+	XOR	A, A ; clear carry
+	INC	DE
+	SBC	HL, DE
+	JP	C, ui_window_handle_input_do_not_propagate ; todo: scroll down?
+	PUSH	DE
 	CALL	ui_widget_IX_draw
-	INC	(IX+ui_listview_line_cursor_curent_line)
+	POP	DE
+	LD	(IX+ui_listview_line_cursor_curent_line), E
+	LD	(IX+ui_listview_line_cursor_curent_line+1), D
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
@@ -119,6 +143,7 @@ defw	files_main_window ; ui_widget_parent
 defw	ui_listview_IX_draw ; ui_widget_draw
 defw	files_listing
 defw	0 ; top line (scroll)
+defw	-1 ; bottom line
 defs	79 ; ui_listview_line_buffer
 
 files_listview_cursor:

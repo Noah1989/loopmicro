@@ -50,6 +50,7 @@ defvars ui_widget {
 defvars ui_widget {
 	ui_listview_listing ds.w 1
 	ui_listview_top_line ds.w 1
+	ui_listview_bottom_line ds.w 1
 	ui_listview_line_buffer ; size = width+1
 	ui_listview
 }

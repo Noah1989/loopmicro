@@ -13,23 +13,23 @@ include "listing.inc"
 
 ui_listview_IX_draw:
 	PUSH	IX
-
 	CALL	ui_box_IX_calculate_absolute_position_DE
 	LD	B, (IX+ui_box_width)
 	LD	C, (IX+ui_box_height)
-
 	PUSH	BC
 	PUSH	DE
-
-	LD	C, (IX+ui_listview_listing)
-	LD	B, (IX+ui_listview_listing+1)
-	LD	IX, BC
-	LD	BC, 0
+	LD	C, (IX+ui_listview_top_line)
+	LD	B, (IX+ui_listview_top_line+1)
+	LD	HL, BC
+	DEC	HL ; bottom line counter
+	LD	E, (IX+ui_listview_listing)
+	LD	D, (IX+ui_listview_listing+1)
+	LD	IX, DE
+	PUSH	HL
 	CALL	listing_IX_seek_line_BC
-
+	POP	HL
 	POP	DE
 	POP	BC
-
 ui_listview_IX_draw_line:
 	LD	A, E
 	OUT	(video_address_l), A
@@ -37,10 +37,13 @@ ui_listview_IX_draw_line:
 	OUT	(video_address_h), A
 	PUSH	DE
 	PUSH	BC
+	PUSH	HL
 	CALL	listing_IX_read_line_eof_Z
+	POP	HL
 	POP	BC
 	PUSH	BC
 	JR	Z, ui_listview_IX_draw_line_fill
+	INC	HL
 	LD	E, (IX+listing_buffer_address)
 	LD	D, (IX+listing_buffer_address+1)
 ui_listview_IX_draw_char:
@@ -61,8 +64,9 @@ ui_listview_IX_draw_line_done:
 	INC	D
 	DEC	C
 	JR	NZ, ui_listview_IX_draw_line
-
 	POP	IX
+	LD	(IX+ui_listview_bottom_line), L
+	LD	(IX+ui_listview_bottom_line+1), H
 	RET
 
 ui_listview_line_cursor_IX_draw:
