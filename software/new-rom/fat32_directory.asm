@@ -1,9 +1,17 @@
 public fat32_directory_listing_IX_seek_line_BC
 public fat32_directory_listing_IX_read_line_eof_Z
-public fat32_directory_IX_next_valid_entry_eof_Z
+public fat32_directory_listing_IX_delete_current_entry
 
+extern fat32_fat_begin_lba
+extern fat32_fat_number_of_sectors
 extern stream_IX_read_block_DE_len_BC
 extern stream_IX_seek_BCDE
+extern stream_IX_put_byte_A
+extern stream_IX_skip_bytes_BC
+extern sdcard_read_block_DEHL_lazy
+extern sdcard_block_buffer
+extern sdcard_current_block_address
+extern sdcard_write_block
 
 extern error
 
@@ -43,6 +51,7 @@ fat32_directory_IX_next_valid_entry_done:
 defvars listing {
 	listing_directory ds.w 1
 	listing_lfn_sequence ds.b 1
+	listing_lfn_count ds.b 1
 }
 
 fat32_directory_listing_IX_seek_line_BC:
@@ -74,6 +83,7 @@ fat32_directory_listing_IX_seek_line_BC_done:
 	RET
 
 fat32_directory_listing_IX_read_line_eof_Z:
+	LD	(IX+listing_lfn_count), 0
 	LD	(IX+listing_lfn_sequence), $FF
 fat32_directory_listing_IX_read_line_eof_Z_loop:
 	PUSH	IX
@@ -168,10 +178,12 @@ fat32_directory_listing_IX_read_line_handle_lfn_entry_HL:
 	DEC	(IX+listing_lfn_sequence)
 	CP	A, (IX+listing_lfn_sequence)
 	JR	Z, fat32_directory_listing_IX_read_line_handle_lfn_sequence_valid
+	LD	(IX+listing_lfn_count), 0
 	LD	(IX+listing_lfn_sequence), $FF
 	RET	; invalid sequence number
 fat32_directory_listing_IX_read_line_handle_lfn_sequence_new:
 	AND	A, $1F ; sequence number
+	LD	(IX+listing_lfn_count), A
 	LD	(IX+listing_lfn_sequence), A
 fat32_directory_listing_IX_read_line_handle_lfn_sequence_valid:
 	LD	B, A
@@ -238,6 +250,123 @@ fat32_directory_listing_IX_read_line_handle_lfn_copy_skip:
 	INC	DE
 	DJNZ	fat32_directory_listing_IX_read_line_handle_lfn_copy_loop
 	INC	B ; clear Z flag
+	RET
+
+fat32_directory_listing_IX_delete_current_entry:
+	; step 1: mark directory entry incl. long file name as deleted
+	LD	A, (IX+listing_lfn_count)
+	INC	A
+	PUSH	IX
+	PUSH	AF
+	LD	E, (IX+listing_directory)
+	LD	D, (IX+listing_directory+1)
+	LD	IX, DE
+	LD	L, (IX+stream_position+0)
+	LD	H, (IX+stream_position+1)
+	LD	E, (IX+stream_position+2)
+	LD	D, (IX+stream_position+3)
+fat32_directory_listing_IX_delete_current_entry_calculate_position_loop:
+	LD	BC, -32
+	ADD	HL, BC
+	LD	BC, -1
+	EX	DE, HL
+	ADC	HL, BC
+	EX	DE, HL
+	DEC	A
+	JR	NZ, fat32_directory_listing_IX_delete_current_entry_calculate_position_loop
+	LD	BC, DE
+	EX	DE, HL
+	CALL	stream_IX_seek_BCDE
+	POP	BC	; AF from above
+fat32_directory_listing_IX_delete_current_entry_mark_deleted_loop:
+	LD	A, $E5
+	PUSH	BC
+	CALL	stream_IX_put_byte_A
+	LD	BC, 31
+	CALL	stream_IX_skip_bytes_BC
+	POP	BC
+	DJNZ	fat32_directory_listing_IX_delete_current_entry_mark_deleted_loop
+	; step 2: mark clusters as free
+	LD	L, (IX+directory_current_entry_cluster_low)
+	LD	H, (IX+directory_current_entry_cluster_low+1)
+	LD	E, (IX+directory_current_entry_cluster_high)
+	LD	D, (IX+directory_current_entry_cluster_high+1)
+fat32_directory_listing_IX_delete_current_entry_free_clusters_loop:
+	LD	A, L ; check for empty file (has cluster #0)
+	OR	A, H
+	OR	A, E
+	OR	A, D
+	JR	Z, fat32_directory_listing_IX_delete_current_entry_done
+	PUSH	DE
+	PUSH	HL
+	LD	A, L	; divide by 128 (entries per FAT sector)
+	LD	L, H
+	LD	H, E
+	LD	E, D
+	LD	D, 0	; /256
+	SLA	A
+	RL	L
+	RL	H
+	RL	E
+	RL	D	; *2
+	LD	BC, (fat32_fat_begin_lba)
+	ADD	HL, BC
+	EX	DE, HL
+	LD	BC, (fat32_fat_begin_lba+2)
+	ADC	HL, BC
+	EX	DE, HL
+	CALL	sdcard_read_block_DEHL_lazy ; read from FAT
+	POP	HL
+	POP	DE
+	LD	A, L
+	AND	A, $7F
+	LD	L, A
+	LD	H, 0 ; HL <- # of entry relative to sector
+	ADD	HL, HL
+	ADD	HL, HL ; * 4 (bytes per entry)
+	LD	BC, sdcard_block_buffer
+	ADD	HL, BC ; HL <- FAT entry address in buffer
+	XOR	A, A
+	LD	C, (HL)
+	LD	(HL), A
+	INC	HL
+	LD	B, (HL)
+	LD	(HL), A
+	INC	HL
+	LD	E, (HL)
+	LD	(HL), A
+	INC	HL
+	LD	D, (HL) ; DEBC <- FAT entry (next cluster # or $FFFFFFFF)
+	LD	(HL), A ; cluster maked free again
+	LD	A, 1
+	PUSH	BC
+	PUSH	DE ; save FAT entry
+	CALL	sdcard_write_block ; write changes to both FATs
+	LD	DE, (sdcard_current_block_address)
+	LD	BC, (sdcard_current_block_address+2)
+	LD	HL, (fat32_fat_number_of_sectors)
+	ADD	HL, DE
+	LD	(sdcard_current_block_address), HL
+	LD	HL, (fat32_fat_number_of_sectors+2)
+	ADC	HL, BC
+	LD	(sdcard_current_block_address+2), HL
+	PUSH	BC
+	PUSH	DE
+	CALL	sdcard_write_block
+	POP	DE
+	POP	BC
+	LD	(sdcard_current_block_address), DE
+	LD	(sdcard_current_block_address+2), BC
+	POP	DE
+	POP	HL ; DEHL <- fat entry
+	LD	A, L ; check for end of chain
+	AND	A, H
+	AND	A, E
+	AND	A, D
+	CP	A, $FF
+	JR	NZ, fat32_directory_listing_IX_delete_current_entry_free_clusters_loop
+fat32_directory_listing_IX_delete_current_entry_done:
+	POP	IX
 	RET
 
 ucs2_map_dirty: ; start at code point $00A0

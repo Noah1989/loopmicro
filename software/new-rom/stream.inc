@@ -3,6 +3,7 @@ defvars 0 {
 	stream_put_byte_A ds.w 1
 	stream_read_block_DE_len_BC ds.w 1
 	stream_write_block_DE_len_BC ds.w 1
+	stream_skip_bytes_BC ds.w 1
 	stream
 }
 

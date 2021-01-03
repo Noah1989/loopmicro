@@ -13,8 +13,8 @@ extern sdcard_init
 extern fat32_init
 extern fat32_directory_listing_IX_seek_line_BC
 extern fat32_directory_listing_IX_read_line_eof_Z
+extern fat32_directory_listing_IX_delete_current_entry
 extern fat32_working_directory
-extern fat32_directory_IX_next_valid_entry_eof_Z
 
 extern listing_IX_seek_line_BC
 extern listing_IX_read_line_eof_Z
@@ -50,6 +50,8 @@ files_app_handle_input:
 	JP	Z, files_app_handle_input_down_arrow
 	CP	A, $5A ; enter
 	JP	Z, files_app_handle_input_enter
+	CP	A, $71 ; delete
+	JP	Z, files_app_handle_input_delete
 	JP	ui_window_handle_input_propagate
 
 files_app_handle_input_up_arrow:
@@ -185,6 +187,26 @@ files_app_handle_input_enter_cluster_ok:
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
+files_app_handle_input_delete:
+	LD	IX, files_listview_cursor
+	CALL	ui_widget_IX_draw
+	LD	C, (IX+ui_listview_line_cursor_curent_line)
+	LD	B, (IX+ui_listview_line_cursor_curent_line+1)
+	LD	IX, files_listing
+	CALL	listing_IX_seek_line_BC
+	CALL	listing_IX_read_line_eof_Z
+	LD	IX, fat32_working_directory
+	BIT	4, (IX+directory_current_entry_attributes) ; subdirectory?
+	JR	NZ, files_app_handle_input_delete_done ; todo: delete directories
+	LD	IX, files_listing
+	CALL	fat32_directory_listing_IX_delete_current_entry
+	LD	IX, files_listview
+	CALL	ui_widget_IX_draw
+files_app_handle_input_delete_done:
+	LD	IX, files_listview_cursor
+	CALL	ui_widget_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+
 section objects_immutable
 
 files_app:
@@ -224,6 +246,7 @@ defb	79 ; buffer size
 defw	files_listview+ui_listview_line_buffer
 defw	fat32_working_directory
 defs	1 ; lfn sequence number
+defs	1 ; number of lfn entries
 
 files_listview_title_panel:
 defb	ui_object_type_widget

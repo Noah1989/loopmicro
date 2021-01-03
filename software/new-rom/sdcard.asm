@@ -2,6 +2,8 @@ public sdcard_init
 public sdcard_read_block_DEHL_lazy
 public sdcard_block_buffer
 public sdcard_current_block_address
+public sdcard_write_block
+public sdcard_current_block_dirty
 
 extern video_vsync_wait
 
@@ -113,6 +115,8 @@ sdcard_init_error_cmd58_hcs:
 
 	CALL	sdcard_deselect
 
+	LD	A, 0
+	LD	(sdcard_current_block_dirty), A
 	LD	DE, 0
 	LD	HL, 0
 	CALL	sdcard_read_block_DEHL
@@ -121,19 +125,34 @@ sdcard_init_error_cmd58_hcs:
 
 
 sdcard_read_block_DEHL_lazy:
-	LD	BC, (sdcard_current_block_address)
-	LD	(sdcard_current_block_address), HL
-	AND	A, A ; clears carry flag
-	SBC	HL, BC
-	LD	BC, (sdcard_current_block_address+2)
-	EX	DE, HL
-	LD	(sdcard_current_block_address+2), HL
-	JR	NZ, sdcard_read_block
-	AND	A, A ; clears carry flag
-	SBC	HL, BC
-	JR	NZ, sdcard_read_block
+	PUSH	IX
+	LD	IX, sdcard_current_block_address
+	LD	A, L
+	CP	A, (IX+0)
+	JR	NZ, sdcard_read_block_DEHL_lazy_must_read
+	LD	A, H
+	CP	A, (IX+1)
+	JR	NZ, sdcard_read_block_DEHL_lazy_must_read
+	LD	A, E
+	CP	A, (IX+2)
+	JR	NZ, sdcard_read_block_DEHL_lazy_must_read
+	LD	A, D
+	CP	A, (IX+3)
+	JR	NZ, sdcard_read_block_DEHL_lazy_must_read
+	POP	IX
 	RET
+sdcard_read_block_DEHL_lazy_must_read:
+	POP	IX
 sdcard_read_block_DEHL:
+	LD	A, (sdcard_current_block_dirty)
+	AND	A, A ; dirty?
+	JR	Z, sdcard_read_block_DEHL_go
+	PUSH	DE
+	PUSH	HL
+	CALL	sdcard_write_block
+	POP	HL
+	POP	DE
+sdcard_read_block_DEHL_go:
 	LD	(sdcard_current_block_address), HL
 	LD	(sdcard_current_block_address+2), DE
 	JR	sdcard_read_block_start
@@ -179,6 +198,36 @@ sdcard_read_block_DEHL_start:
 	IN	H, (C)
 	LD	(sdcard_current_block_crc), HL
 	CALL	sdcard_deselect
+	XOR	A, A
+	LD	(sdcard_current_block_dirty), A
+	RET
+
+sdcard_write_block:
+	LD	HL, (sdcard_current_block_address)
+	LD	DE, (sdcard_current_block_address+2)
+	CALL	sdcard_select
+	LD	A, 24
+	CALL	sdcard_send_command_A_argument_DEHL_checksum_B
+	CALL	sdcard_read_response_A
+	LD	A, $FE ; start token
+	OUT	(sdcard_out_transmit), A
+	LD	HL, sdcard_block_buffer
+	LD	B, 0 ; 256 repetitions
+	LD	C, sdcard_out_transmit
+	OTIR
+	OTIR
+	CALL	sdcard_read_response_A
+	AND	A, %11111
+	CP	A, %00101
+sdcard_write_block_error_data_rejected:
+	CALL	NZ, error
+sdcard_write_block_busy_loop:
+	IN	A, (sdcard_in_receive)
+	AND	A, A
+	JR	Z, sdcard_write_block_busy_loop
+	CALL	sdcard_deselect
+	XOR	A, A
+	LD	(sdcard_current_block_dirty), A
 	RET
 
 sdcard_select:
@@ -194,29 +243,29 @@ sdcard_do_control:
 
 sdcard_send_command_A_argument_DEHL_checksum_B:
 	SET	0, B ; end bit
-	;PUSH	AF
-	;LD	A, 'c'
-	;CALL	debug_io_print_character_A
-	;POP	AF
-	;CALL	debug_io_print_hex_byte_A
-	;PUSH	AF
-	;LD	A, ':'
-	;CALL	debug_io_print_character_A
-	;LD	A, D
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, E
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, H
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, L
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, ':'
-	;CALL	debug_io_print_character_A
-	;LD	A, B
-	;CALL	debug_io_print_hex_byte_A
-	;LD	A, 10 ; \n
-	;CALL	debug_io_print_character_A
-	;POP	AF
+	push	af
+	ld	a, 'c'
+	call	debug_io_print_character_A
+	pop	af
+	call	debug_io_print_hex_byte_A
+	push	af
+	ld	a, ':'
+	call	debug_io_print_character_A
+	ld	a, d
+	call	debug_io_print_hex_byte_A
+	ld	a, e
+	call	debug_io_print_hex_byte_A
+	ld	a, h
+	call	debug_io_print_hex_byte_A
+	ld	a, l
+	call	debug_io_print_hex_byte_A
+	ld	a, ':'
+	call	debug_io_print_character_A
+	ld	a, b
+	call	debug_io_print_hex_byte_A
+	ld	a, 10 ; \n
+	call	debug_io_print_character_A
+	pop	af
 	LD	C, sdcard_out_transmit
 	OR	A, $40
 	OUT	(C), A
@@ -228,18 +277,18 @@ sdcard_send_command_A_argument_DEHL_checksum_B:
 	RET
 
 sdcard_read_response_A:
-	;LD	A, 'r'
-	;CALL	debug_io_print_character_A
+	ld	a, 'r'
+	call	debug_io_print_character_A
 	LD	B, 8
-	CALL	sdcard_read_response_A_loop
-	PUSH	AF
-	;LD	A, 10 ; \n
-	;CALL	debug_io_print_character_A
-	POP	AF
-	RET
+	call	sdcard_read_response_A_loop
+	push	AF
+	ld	A, 10 ; \n
+	call	debug_io_print_character_A
+	pop	AF
+	ret
 sdcard_read_response_A_loop:
 	IN	A, (sdcard_in_receive)
-	;CALL	debug_io_print_hex_byte_A
+	call	debug_io_print_hex_byte_A
 	CP	$FF
 	RET	NZ
 	DJNZ	sdcard_read_response_A_loop
@@ -281,6 +330,8 @@ sdcard_current_block_address:
 defw	0, 0
 sdcard_current_block_crc:
 defw	0
+sdcard_current_block_dirty:
+defb	0
 
 section sdcard_block_buffer
 align $100
