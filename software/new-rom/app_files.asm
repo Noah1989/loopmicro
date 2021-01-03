@@ -62,8 +62,8 @@ files_app_handle_input_up_arrow:
 	PUSH	HL
 	CALL	ui_widget_IX_draw
 	POP	HL
-	LD	E, (IX+ui_listview_line_cursor_curent_line)
-	LD	D, (IX+ui_listview_line_cursor_curent_line+1)
+	LD	E, (IX+ui_listview_line_cursor_current_line)
+	LD	D, (IX+ui_listview_line_cursor_current_line+1)
 	LD	A, E
 	OR	A, D
 	JR	Z, files_app_handle_input_up_arrow_end
@@ -83,8 +83,8 @@ files_app_handle_input_up_arrow:
 	POP	DE
 files_app_handle_input_up_arrow_end:
 	LD	IX, files_listview_cursor
-	LD	(IX+ui_listview_line_cursor_curent_line), E
-	LD	(IX+ui_listview_line_cursor_curent_line+1), D
+	LD	(IX+ui_listview_line_cursor_current_line), E
+	LD	(IX+ui_listview_line_cursor_current_line+1), D
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
@@ -96,8 +96,8 @@ files_app_handle_input_down_arrow:
 	PUSH	HL
 	CALL	ui_widget_IX_draw
 	POP	HL
-	LD	E, (IX+ui_listview_line_cursor_curent_line)
-	LD	D, (IX+ui_listview_line_cursor_curent_line+1)
+	LD	E, (IX+ui_listview_line_cursor_current_line)
+	LD	D, (IX+ui_listview_line_cursor_current_line+1)
 	XOR	A, A ; clear carry
 	INC	DE
 	SBC	HL, DE
@@ -133,15 +133,15 @@ files_app_handle_input_down_arrow_scroll_ok:
 	DEC	DE
 files_app_handle_input_down_arrow_end:
 	LD	IX, files_listview_cursor
-	LD	(IX+ui_listview_line_cursor_curent_line), E
-	LD	(IX+ui_listview_line_cursor_curent_line+1), D
+	LD	(IX+ui_listview_line_cursor_current_line), E
+	LD	(IX+ui_listview_line_cursor_current_line+1), D
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
 files_app_handle_input_enter:
 	LD	IX, files_listview_cursor
-	LD	C, (IX+ui_listview_line_cursor_curent_line)
-	LD	B, (IX+ui_listview_line_cursor_curent_line+1)
+	LD	C, (IX+ui_listview_line_cursor_current_line)
+	LD	B, (IX+ui_listview_line_cursor_current_line+1)
 	LD	IX, files_listing
 	CALL	listing_IX_seek_line_BC
 	CALL	listing_IX_read_line_eof_Z
@@ -182,16 +182,16 @@ files_app_handle_input_enter_cluster_ok:
 	CALL	ui_widget_IX_draw
 	LD	IX, files_listview_cursor
 	XOR	A, A
-	LD	(IX+ui_listview_line_cursor_curent_line), A
-	LD	(IX+ui_listview_line_cursor_curent_line+1), A
+	LD	(IX+ui_listview_line_cursor_current_line), A
+	LD	(IX+ui_listview_line_cursor_current_line+1), A
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
 files_app_handle_input_delete:
 	LD	IX, files_listview_cursor
 	CALL	ui_widget_IX_draw
-	LD	C, (IX+ui_listview_line_cursor_curent_line)
-	LD	B, (IX+ui_listview_line_cursor_curent_line+1)
+	LD	C, (IX+ui_listview_line_cursor_current_line)
+	LD	B, (IX+ui_listview_line_cursor_current_line+1)
 	LD	IX, files_listing
 	CALL	listing_IX_seek_line_BC
 	CALL	listing_IX_read_line_eof_Z
@@ -200,10 +200,21 @@ files_app_handle_input_delete:
 	JR	NZ, files_app_handle_input_delete_done ; todo: delete directories
 	LD	IX, files_listing
 	CALL	fat32_directory_listing_IX_delete_current_entry
+files_app_handle_input_delete_done:
 	LD	IX, files_listview
 	CALL	ui_widget_IX_draw
-files_app_handle_input_delete_done:
+	LD	L, (IX+ui_listview_bottom_line)
+	LD	H, (IX+ui_listview_bottom_line+1)
 	LD	IX, files_listview_cursor
+	LD	E, (IX+ui_listview_line_cursor_current_line)
+	LD	D, (IX+ui_listview_line_cursor_current_line+1)
+	XOR	A, A ; clears carry
+	SBC	HL, DE
+	JR	NC, files_app_handle_input_delete_cursor_ok
+	ADD	HL, DE
+	LD	(IX+ui_listview_line_cursor_current_line), L
+	LD	(IX+ui_listview_line_cursor_current_line+1), H
+files_app_handle_input_delete_cursor_ok:
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 

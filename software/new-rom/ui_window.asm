@@ -20,6 +20,7 @@ ui_window_IX_draw:
 	CALL	ui_box_IX_fill_color_L_character_H
 	; let HL point to widget list
 	LD	DE, IX
+	PUSH	DE ; save IX value
 	LD	HL, ui_window_widgets
 	ADD	HL, DE
 ui_window_IX_draw_widgets_loop:
@@ -31,7 +32,7 @@ ui_window_IX_draw_widgets_loop:
 	; null pointer marks end of widget list
 	LD	A, E
 	OR	A, D
-	RET	Z
+	JR	Z, ui_window_IX_draw_done
 	; draw the widget
 	PUSH	HL
 	LD	IX, DE
@@ -39,6 +40,9 @@ ui_window_IX_draw_widgets_loop:
 	POP	HL
 	; next
 	JR	ui_window_IX_draw_widgets_loop
+ui_window_IX_draw_done:
+	POP	IX
+	RET
 
 ui_window_IX_handle_input_DE_propagate_NZ:
 	LD	L, (IX+ui_window_handle_input)

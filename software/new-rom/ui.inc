@@ -59,7 +59,7 @@ defvars ui_widget {
 defvars ui_widget {
 	; ui_widget_parent must be listview
 	ui_listview_line_cursor_color_xor_bitmask ds.b 1
-	ui_listview_line_cursor_curent_line ds.w 1
+	ui_listview_line_cursor_current_line ds.w 1
 	ui_listview_line_cursor
 }
 

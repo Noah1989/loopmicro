@@ -78,8 +78,8 @@ ui_listview_line_cursor_IX_draw:
 	LD	C, (HL) ; BC <- top line
 	INC	HL
 	LD	B, (HL)
-	LD	L, (IX+ui_listview_line_cursor_curent_line)
-	LD	H, (IX+ui_listview_line_cursor_curent_line+1)
+	LD	L, (IX+ui_listview_line_cursor_current_line)
+	LD	H, (IX+ui_listview_line_cursor_current_line+1)
 	XOR	A, A ; clear carry flag
 	SBC	HL, BC ; HL <- current line - top line
 	LD	A, D
