@@ -1,5 +1,6 @@
 public ui_box_IX_fill_color_L_character_H
 public ui_box_IX_calculate_absolute_position_DE
+public ui_box_IX_toggle_visibility
 
 include "ui.inc"
 include "video_io.inc"
@@ -57,4 +58,10 @@ ui_box_IX_calculate_absolute_position_DE_loop:
 	JR	Z, ui_box_IX_calculate_absolute_position_DE_loop
 	; done
 	POP	IX
+	RET
+
+ui_box_IX_toggle_visibility:
+	LD	A, (IX+ui_box_left)
+	ADD	A, 128
+	LD	(IX+ui_box_left), A
 	RET

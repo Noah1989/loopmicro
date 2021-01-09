@@ -80,3 +80,35 @@ convert_HL_to_decimal_string_DE_digit_loop:
 	LD	A, B
 	LD	(DE), A
 	RET
+
+convert_scancode_E_to_ascii_char_A:
+	
+
+section constants
+scancodes_0_to_9:
+defb	$45, $16, $1E, $26, $25 ; 0-4
+defb	$2E, $36, $3D, $3E, $46 ; 5-9
+scancodes_A_to_Z:
+defb	$1C, $32, $21, $23, $24 ; A-E
+defb	$2B, $34, $33, $43, $3B ; F-J
+defb	$42, $4B, $3A, $31, $44 ; K-O
+defb	$4D, $15, $2D, $1B, $2C ; P-T
+defb	$3C, $2A, $1D, $22, $35 ; U-Y
+defb	$1A ; Z
+scancode_map_other:
+defb	$0E, '`', '~'
+defb	$7B, '-', '_'
+defb	$55, '=', '+'
+defb	$54, '[', '{'
+defb	$5B, ']', '}'
+defb	$5D, '\', '|'
+defb	$4C, ';', ':'
+defb	$52, $27, $34 ; quotes
+defb	$41, ',', '<'
+defb	$49, '.', '>'
+defb	$4A, '/', '?'
+defb	$29, ' ', ' '
+defb	0
+ascii_numbers_shifted:
+defb	')', '!', '@', '#', '$' ; 0-4
+defb	'%', '^', '&'. '*', '(' ; 5-9

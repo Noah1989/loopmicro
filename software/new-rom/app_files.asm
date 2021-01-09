@@ -8,6 +8,9 @@ extern ui_panel_IX_draw
 extern ui_label_IX_draw
 extern ui_listview_line_cursor_IX_draw
 extern ui_widget_IX_draw
+extern ui_window_IX_draw
+extern ui_box_IX_toggle_visibility
+extern ui_box_IX_calculate_absolute_position_DE
 
 extern sdcard_init
 extern fat32_init
@@ -25,6 +28,7 @@ include "ui.inc"
 include "stream.inc"
 include "fat32.inc"
 include "listing.inc"
+include "video_io.inc"
 
 files_app_init:
 	CALL	sdcard_init
@@ -52,6 +56,8 @@ files_app_handle_input:
 	JP	Z, files_app_handle_input_enter
 	CP	A, $71 ; delete
 	JP	Z, files_app_handle_input_delete
+	CP	A, $31 ; N
+	JP	Z, files_app_new_file
 	JP	ui_window_handle_input_propagate
 
 files_app_handle_input_up_arrow:
@@ -218,6 +224,40 @@ files_app_handle_input_delete_cursor_ok:
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
+files_app_new_file:
+	XOR	A, A
+	LD	(files_name_input_buffer), A
+	LD	IX, files_listview_cursor
+	CALL	ui_widget_IX_draw
+	CALL	ui_box_IX_toggle_visibility ; hide
+	LD	IX, files_name_input_window
+	CALL	ui_box_IX_toggle_visibility ; show
+	CALL	ui_window_IX_draw
+	LD	HL, files_app_handle_input_name
+	LD	(files_name_input_window+ui_window_handle_input), HL
+	JP	ui_window_handle_input_do_not_propagate
+
+files_app_handle_input_name:
+	JP	ui_window_handle_input_do_not_propagate
+
+files_name_input_cursor_IX_draw:
+	CALL	ui_box_IX_calculate_absolute_position_DE
+	LD	HL, files_name_input_buffer
+	LD	BC, 60
+	XOR	A, A
+	CPIR
+	LD	A, 59
+	SUB	A, C
+	ADD	A, E
+	OUT	(video_address_l), A
+	LD	A, D
+	OUT	(video_address_h), A
+	LD	A, 219
+	OUT	(video_table_name_increment), A
+	LD	A, ' '
+	OUT	(video_table_name), A
+	RET
+
 section objects_immutable
 
 files_app:
@@ -226,6 +266,7 @@ defw	files_app_activate
 defw	files_app_deactivate
 defw	files_main_window
 defw	files_menu_window
+defw	files_name_input_window
 defw	0
 
 files_main_window:
@@ -248,17 +289,6 @@ defw	ui_window_handle_input_propagate
 defw	ui_window_handle_vsync_noop
 defw	0
 
-section objects_mutable
-
-files_listing:
-defw	fat32_directory_listing_IX_seek_line_BC
-defw	fat32_directory_listing_IX_read_line_eof_Z
-defb	79 ; buffer size
-defw	files_listview+ui_listview_line_buffer
-defw	fat32_working_directory
-defs	1 ; lfn sequence number
-defs	1 ; number of lfn entries
-
 files_listview_title_panel:
 defb	ui_object_type_widget
 defb	0, 0, 80, 1
@@ -272,6 +302,24 @@ defb	1, 0, 78, 1
 defw	files_listview_title_panel
 defw	ui_label_IX_draw
 defw	files_listview_title_text
+
+files_name_input_label:
+defb	ui_object_type_widget
+defb	1, 0, 17, 1
+defw	files_name_input_window
+defw	ui_label_IX_draw
+defw	files_name_input_label_text
+
+section objects_mutable
+
+files_listing:
+defw	fat32_directory_listing_IX_seek_line_BC
+defw	fat32_directory_listing_IX_read_line_eof_Z
+defb	79 ; buffer size
+defw	files_listview+ui_listview_line_buffer
+defw	fat32_working_directory
+defs	1 ; lfn sequence number
+defs	1 ; number of lfn entries
 
 files_listview:
 defb	ui_object_type_widget
@@ -291,8 +339,38 @@ defw	ui_listview_line_cursor_IX_draw
 defb	$51 ; cursor color xor mask
 defw	0 ; current line
 
+files_name_input_window:
+defb	ui_object_type_window
+defb	128, 0, 80, 1
+defb	$4E, ' '
+defw	ui_window_handle_input_propagate
+defw	ui_window_handle_vsync_noop
+defw	files_name_input_label
+defw	files_name_input_panel
+defw	files_name_input_cursor
+defw	0
+
+files_name_input_panel:
+defb	ui_object_type_widget
+defb	18, 0, 60, 1
+defw	files_name_input_label
+defw	ui_panel_IX_draw
+defb	$4F, ' ';
+
+files_name_input_cursor:
+defb	ui_object_type_widget
+defb	0, 0, 60, 1
+defw	files_name_input_panel
+defw	files_name_input_cursor_IX_draw
+
+section strings
+
 section ram_initialized
 files_listview_title_text:
 defb	"Contents of directory "
 files_listview_title_text_name:
 defs	78-22+1;
+files_name_input_label_text:
+defb	"Name of new file: "
+files_name_input_buffer:
+defs	60+1
