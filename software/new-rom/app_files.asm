@@ -22,7 +22,11 @@ extern fat32_working_directory
 extern listing_IX_seek_line_BC
 extern listing_IX_read_line_eof_Z
 
+extern convert_scancode_E_shift_D_to_ascii_char_A_found_NZ
+
 extern error
+extern debug_io_print_hex_byte_A
+extern debug_io_print_character_A
 
 include "ui.inc"
 include "stream.inc"
@@ -235,18 +239,79 @@ files_app_new_file:
 	CALL	ui_window_IX_draw
 	LD	HL, files_app_handle_input_name
 	LD	(files_name_input_window+ui_window_handle_input), HL
+	LD	HL, ui_window_handle_input_propagate
+	LD	(files_main_window+ui_window_handle_input), HL
 	JP	ui_window_handle_input_do_not_propagate
 
+files_app_handle_input_name_shift:
+	LD	A, D
+	AND	A, $01 ; keyup?
+	DEC	A
+	LD	(files_name_input_shift), A
+	JP	ui_window_handle_input_do_not_propagate
 files_app_handle_input_name:
+	LD	A, E
+	CP	A, $12 ; shift (left)
+	JR	Z, files_app_handle_input_name_shift
+	CP	A, $59 ; shift (left)
+	JR	Z, files_app_handle_input_name_shift
+	BIT	0, D ; ignore key release events
+	JP	NZ, ui_window_handle_input_propagate
+	CP	A, $66 ; backspace
+	JR	Z, files_app_handle_input_name_backspace
+	CP	A, $76 ; escape
+	JR	Z, files_app_handle_input_name_escape
+	LD	A, (files_name_input_shift)
+	LD	D, A
+	CALL	convert_scancode_E_shift_D_to_ascii_char_A_found_NZ
+	JP	Z, ui_window_handle_input_propagate
+	LD	E, A
+	XOR	A, A ; find end of string
+	LD	HL, files_name_input_buffer
+	LD	BC, 60
+	CPIR
+	JP	NZ, ui_window_handle_input_do_not_propagate ; buffer full
+	LD	(HL), A
+	DEC	HL
+	LD	(HL), E
+	JR	files_app_handle_input_name_redraw
+files_app_handle_input_name_backspace:
+	XOR	A, A ; find end of string
+	LD	HL, files_name_input_buffer
+	LD	BC, 61
+	CPIR
+	LD	A, 60
+	CP	A, C
+	JP	Z, ui_window_handle_input_do_not_propagate ; buffer empty
+	DEC	HL
+	DEC	HL
+	LD	(HL), 0
+files_app_handle_input_name_redraw:
+	LD	IX, files_name_input_label
+	CALL	ui_widget_IX_draw
+	LD	IX, files_name_input_cursor
+	CALL	ui_widget_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+files_app_handle_input_name_escape:
+	LD	IX, files_name_input_window
+	CALL	ui_box_IX_toggle_visibility ; hide
+	LD	IX, files_listview_cursor
+	CALL	ui_box_IX_toggle_visibility ; show
+	LD	IX, files_main_window
+	CALL	ui_window_IX_draw
+	LD	HL, ui_window_handle_input_propagate
+	LD	(files_name_input_window+ui_window_handle_input), HL
+	LD	HL, files_app_handle_input
+	LD	(files_main_window+ui_window_handle_input), HL
 	JP	ui_window_handle_input_do_not_propagate
 
 files_name_input_cursor_IX_draw:
 	CALL	ui_box_IX_calculate_absolute_position_DE
 	LD	HL, files_name_input_buffer
-	LD	BC, 60
+	LD	BC, 61
 	XOR	A, A
 	CPIR
-	LD	A, 59
+	LD	A, 60
 	SUB	A, C
 	ADD	A, E
 	OUT	(video_address_l), A
@@ -254,8 +319,6 @@ files_name_input_cursor_IX_draw:
 	OUT	(video_address_h), A
 	LD	A, 219
 	OUT	(video_table_name_increment), A
-	LD	A, ' '
-	OUT	(video_table_name), A
 	RET
 
 section objects_immutable
@@ -267,18 +330,6 @@ defw	files_app_deactivate
 defw	files_main_window
 defw	files_menu_window
 defw	files_name_input_window
-defw	0
-
-files_main_window:
-defb	ui_object_type_window
-defb	0, 1, 80, 28
-defb	$1F, ' '
-defw	files_app_handle_input
-defw	ui_window_handle_vsync_noop
-defw	files_listview_title_panel
-defw	files_listview_title_label
-defw	files_listview
-defw	files_listview_cursor
 defw	0
 
 files_menu_window:
@@ -305,12 +356,24 @@ defw	files_listview_title_text
 
 files_name_input_label:
 defb	ui_object_type_widget
-defb	1, 0, 17, 1
+defb	1, 0, 79, 1
 defw	files_name_input_window
 defw	ui_label_IX_draw
 defw	files_name_input_label_text
 
 section objects_mutable
+
+files_main_window:
+defb	ui_object_type_window
+defb	0, 1, 80, 28
+defb	$1F, ' '
+defw	files_app_handle_input
+defw	ui_window_handle_vsync_noop
+defw	files_listview_title_panel
+defw	files_listview_title_label
+defw	files_listview
+defw	files_listview_cursor
+defw	0
 
 files_listing:
 defw	fat32_directory_listing_IX_seek_line_BC
@@ -341,12 +404,12 @@ defw	0 ; current line
 
 files_name_input_window:
 defb	ui_object_type_window
-defb	128, 0, 80, 1
+defb	128, 28, 80, 1
 defb	$4E, ' '
 defw	ui_window_handle_input_propagate
 defw	ui_window_handle_vsync_noop
-defw	files_name_input_label
 defw	files_name_input_panel
+defw	files_name_input_label
 defw	files_name_input_cursor
 defw	0
 
@@ -374,3 +437,5 @@ files_name_input_label_text:
 defb	"Name of new file: "
 files_name_input_buffer:
 defs	60+1
+files_name_input_shift:
+defb	0
