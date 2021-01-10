@@ -18,6 +18,7 @@ extern fat32_directory_listing_IX_seek_line_BC
 extern fat32_directory_listing_IX_read_line_eof_Z
 extern fat32_directory_listing_IX_delete_current_entry
 extern fat32_working_directory
+extern fat32_directory_IX_create_file_name_HL
 
 extern listing_IX_seek_line_BC
 extern listing_IX_read_line_eof_Z
@@ -253,7 +254,7 @@ files_app_handle_input_name:
 	LD	A, E
 	CP	A, $12 ; shift (left)
 	JR	Z, files_app_handle_input_name_shift
-	CP	A, $59 ; shift (left)
+	CP	A, $59 ; shift (right)
 	JR	Z, files_app_handle_input_name_shift
 	BIT	0, D ; ignore key release events
 	JP	NZ, ui_window_handle_input_propagate
@@ -261,10 +262,16 @@ files_app_handle_input_name:
 	JR	Z, files_app_handle_input_name_backspace
 	CP	A, $76 ; escape
 	JR	Z, files_app_handle_input_name_escape
+	CP	A, $5A ; enter
+	JR	Z, files_app_handle_input_name_enter
 	LD	A, (files_name_input_shift)
 	LD	D, A
 	CALL	convert_scancode_E_shift_D_to_ascii_char_A_found_NZ
 	JP	Z, ui_window_handle_input_propagate
+	LD	HL, filename_forbidden_chars
+	LD	BC, 9
+	CPIR
+	JP	Z, ui_window_handle_input_do_not_propagate ; forbidden char
 	LD	E, A
 	XOR	A, A ; find end of string
 	LD	HL, files_name_input_buffer
@@ -304,6 +311,23 @@ files_app_handle_input_name_escape:
 	LD	HL, files_app_handle_input
 	LD	(files_main_window+ui_window_handle_input), HL
 	JP	ui_window_handle_input_do_not_propagate
+files_app_handle_input_name_enter:
+	XOR	A, A
+	LD	HL, files_name_input_buffer
+	LD	BC, 61
+	CPIR
+	LD	A, 60
+	SUB	A, C
+	JP	Z, ui_window_handle_input_do_not_propagate ; empty name
+	DEC	HL
+	DEC	HL
+	LD	A, (HL)
+	CP	A, '.'
+	JP	Z, ui_window_handle_input_do_not_propagate ; invalid name
+	LD	IX, fat32_working_directory
+	LD	HL, files_name_input_buffer
+	CALL	fat32_directory_IX_create_file_name_HL
+	JR	files_app_handle_input_name_escape
 
 files_name_input_cursor_IX_draw:
 	CALL	ui_box_IX_calculate_absolute_position_DE
@@ -320,6 +344,12 @@ files_name_input_cursor_IX_draw:
 	LD	A, 219
 	OUT	(video_table_name_increment), A
 	RET
+
+section constants
+filename_forbidden_chars:
+defb	$5C, '/', ':'
+defb	'*', '?', $22
+defb	'<', '>', '|'
 
 section objects_immutable
 

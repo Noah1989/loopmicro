@@ -10,6 +10,7 @@ extern sdcard_current_block_dirty
 
 extern stream_IX_seek_BCDE
 extern stream_IX_read_block_DE_len_BC_bytewise
+extern stream_IX_write_block_DE_len_BC_bytewise
 
 extern debug_io_print_character_A
 extern debug_io_print_hex_byte_A
@@ -408,7 +409,7 @@ fat32_working_directory:
 defw	fat32_chain_IX_get_byte_A ;stream_get_byte_A
 defw	fat32_chain_IX_put_byte_A ;stream_put_byte_A
 defw	stream_IX_read_block_DE_len_BC_bytewise ;stream_read_block_DE_len_BC
-defw	error	;stream_write_block_DE_len_BC
+defw	stream_IX_write_block_DE_len_BC_bytewise ;stream_write_block_DE_len_BC
 defw	fat32_chain_IX_skip_bytes_BC ;stream_skip_bytes_BC
 defw	0, 0	;stream_position
 defw	-1, -1	;stream_size

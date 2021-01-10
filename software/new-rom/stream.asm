@@ -4,6 +4,7 @@ public stream_IX_put_byte_A
 public stream_IX_read_block_DE_len_BC
 public stream_IX_read_block_DE_len_BC_bytewise
 public stream_IX_write_block_DE_len_BC
+public stream_IX_write_block_DE_len_BC_bytewise
 public stream_IX_skip_bytes_BC
 
 include "stream.inc"
@@ -50,4 +51,18 @@ stream_IX_read_block_DE_len_BC_bytewise:
 	LD	A, B
 	OR	A, C
 	JR	NZ, stream_IX_read_block_DE_len_BC_bytewise
+	RET
+
+stream_IX_write_block_DE_len_BC_bytewise:
+	LD	A, (DE)
+	INC	DE
+	PUSH	BC
+	PUSH	DE
+	CALL	stream_IX_put_byte_A
+	POP	DE
+	POP	BC
+	DEC	BC
+	LD	A, B
+	OR	A, C
+	JR	NZ, stream_IX_write_block_DE_len_BC_bytewise
 	RET

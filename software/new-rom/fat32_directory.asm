@@ -1,6 +1,7 @@
 public fat32_directory_listing_IX_seek_line_BC
 public fat32_directory_listing_IX_read_line_eof_Z
 public fat32_directory_listing_IX_delete_current_entry
+public fat32_directory_IX_create_file_name_HL
 
 extern fat32_fat_begin_lba
 extern fat32_fat_number_of_sectors
@@ -8,10 +9,13 @@ extern stream_IX_read_block_DE_len_BC
 extern stream_IX_seek_BCDE
 extern stream_IX_put_byte_A
 extern stream_IX_skip_bytes_BC
+extern stream_IX_write_block_DE_len_BC
 extern sdcard_read_block_DEHL_lazy
 extern sdcard_block_buffer
 extern sdcard_current_block_address
 extern sdcard_write_block
+
+extern convert_A_to_hex_string_DE
 
 extern error
 
@@ -46,6 +50,157 @@ fat32_directory_IX_next_valid_entry_eof_Z:
 fat32_directory_IX_next_valid_entry_done:
 	XOR	A, A
 	INC	A ; clear Z flag
+	RET
+
+fat32_directory_IX_create_file_name_HL:
+	PUSH	HL ; save for later
+	XOR	A, A
+	LD	BC, 256
+	CPIR
+	LD	A, 255
+	SUB	A, C ; file name length
+fat32_directory_IX_create_file_error_empty_name:
+	CALL	Z, error
+	LD	C, 1 ; number of consecutive free entries required
+fat32_directory_IX_create_file_calc_num_entries_loop:
+	INC	C
+	SUB	A, 13 ; max characters per long file name entry
+	JR	NC, fat32_directory_IX_create_file_calc_num_entries_loop
+	PUSH	BC
+	LD	BC, 0
+	LD	DE, 0
+	CALL	stream_IX_seek_BCDE
+	POP	BC
+fat32_directory_IX_create_file_find_gap_reset:
+	LD	B, 0 ; number of free entries found
+	LD	E, (IX+stream_position)
+	LD	D, (IX+stream_position+1)
+	LD	H, (IX+stream_position+2)
+	LD	L, (IX+stream_position+3)
+fat32_directory_IX_create_file_find_gap_loop:
+	PUSH	BC
+	PUSH	DE
+	PUSH	HL
+	CALL	fat32_directory_IX_read_entry
+	POP	HL
+	POP	DE
+	POP	BC
+	LD	A, (IX+directory_current_entry_buffer)
+	AND	A, A ; empty entry?
+	JR	Z, fat32_directory_IX_create_file_find_gap_ok
+	CP	A, $E5 ; deleted entry?
+	JR	NZ, fat32_directory_IX_create_file_find_gap_reset
+fat32_directory_IX_create_file_find_gap_ok:
+	INC	B
+	LD	A, B
+	CP	A, C
+	JR	NZ, fat32_directory_IX_create_file_find_gap_loop
+	; go to beginning of gap
+	PUSH	BC ; B = C = number of entries
+	LD	BC, HL ; go to saved stream position
+	CALL	stream_IX_seek_BCDE
+	; first construct (but do not write) the regular entry
+	LD	DE, IX
+	LD	HL, directory_current_entry_buffer
+	ADD	HL, DE
+	EX	DE, HL ; generate bogus but unique short file name
+	LD	A, (IX+stream_position+3)
+	CALL	convert_A_to_hex_string_DE
+	LD	A, (IX+stream_position+2)
+	CALL	convert_A_to_hex_string_DE
+	LD	A, (IX+stream_position+1)
+	CALL	convert_A_to_hex_string_DE
+	LD	A, (IX+stream_position+0)
+	CALL	convert_A_to_hex_string_DE
+	LD	A, $20 ; space / attributes
+	LD	B, 4
+fat32_directory_IX_create_file_build_regular_entry_extension_and_attributes_loop:
+	LD	(DE), A
+	INC	DE
+	DJNZ	fat32_directory_IX_create_file_build_regular_entry_extension_and_attributes_loop
+	XOR	A, A ; stuff the rest with zeroes
+	LD	B, 20
+fat32_directory_IX_create_file_build_regular_entry_fill_zeroes_loop:
+	LD	(DE), A
+	INC	DE
+	DJNZ	fat32_directory_IX_create_file_build_regular_entry_fill_zeroes_loop
+	; calculate the checksum for lfn entries
+	LD	HL, -32
+	ADD	HL, DE
+	XOR	A, A
+	LD	B, 11
+fat32_directory_IX_create_file_calculate_lfn_checksum_loop:
+	RRCA
+	ADD	A, (HL)
+	INC	HL
+	DJNZ	fat32_directory_IX_create_file_calculate_lfn_checksum_loop
+	LD	(fat32_directory_lfn_checksum), A
+	; write long file name entries
+	POP	BC
+	DEC	B ; number of long file name entries
+	LD	A, -13
+fat32_directory_IX_create_file_find_first_lfn_character_loop:
+	ADD	A, 13
+	DJNZ	fat32_directory_IX_create_file_find_first_lfn_character_loop
+	LD	D, B ; 0
+	LD	E, A
+	POP	HL ; pointer to file name (saved at the very beginning)
+	ADD	HL, DE
+	LD	B, C
+	DEC	B ; number of long file name entries
+	LD	A, $40 ; marker for first long file name entry
+fat32_directory_IX_create_file_write_next_long_file_name:
+	PUSH	BC
+	PUSH	HL
+	OR	A, B
+	CALL	stream_IX_put_byte_A
+	POP	HL
+	LD	B, 5
+	CALL	fat32_directory_IX_create_file_write_long_file_name_loop
+	PUSH	HL
+	LD	A, $0F ; attributes
+	CALL	stream_IX_put_byte_A
+	XOR	A, A
+	CALL	stream_IX_put_byte_A
+	LD	A, (fat32_directory_lfn_checksum)
+	CALL	stream_IX_put_byte_A
+	POP	HL
+	LD	B, 6
+	CALL	fat32_directory_IX_create_file_write_long_file_name_loop
+	PUSH	HL
+	XOR	A, A
+	CALL	stream_IX_put_byte_A
+	XOR	A, A
+	CALL	stream_IX_put_byte_A
+	POP	HL
+	LD	B, 2
+	CALL	fat32_directory_IX_create_file_write_long_file_name_loop
+	LD	BC, -26
+	ADD	HL, BC
+	XOR	A, A ; used at beginning of loop
+	POP	BC
+	DJNZ	fat32_directory_IX_create_file_write_next_long_file_name
+	; now write the regular entry
+	LD	DE, IX
+	LD	HL, directory_current_entry_buffer
+	ADD	HL, DE
+	EX	DE, HL
+	LD	BC, 32
+	CALL	stream_IX_write_block_DE_len_BC
+	CALL	sdcard_write_block
+	RET
+
+fat32_directory_IX_create_file_write_long_file_name_loop:
+	LD	A, (HL)
+	INC	HL
+	PUSH	BC
+	PUSH	HL
+	CALL	stream_IX_put_byte_A
+	XOR	A, A
+	CALL	stream_IX_put_byte_A
+	POP	HL
+	POP	BC
+	DJNZ	fat32_directory_IX_create_file_write_long_file_name_loop
 	RET
 
 defvars listing {
@@ -369,6 +524,8 @@ fat32_directory_listing_IX_delete_current_entry_done:
 	POP	IX
 	RET
 
+section constants
+
 ucs2_map_dirty: ; start at code point $00A0
 defb	255, 173, 155, 156, '?', 157, '?', 21, '?', '?', 166, 174, 170, '?'
 defb	'?', '?', 248, 241, 253, '?', '?', 230, 20, 250, '?', '?', 167, 175
@@ -377,3 +534,7 @@ defb	'?', '?', '?', '?', '?', '?', '?', 165, '?', '?', '?', '?', 153, '?'
 defb	'?', '?', '?', '?', 154, '?', '?', 225, 133, 160, 131, '?', 132, 134
 defb	145, 135, 138, 130, 136, 137, 141, 161, 140, 139, '?', 164, 149, 162
 defb	147, '?', 148, 246, '?', 151, 163, 150, 129, '?', '?', 152
+
+section ram_uninitialized
+fat32_directory_lfn_checksum:
+defs	1
