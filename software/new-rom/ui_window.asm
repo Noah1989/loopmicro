@@ -15,6 +15,8 @@ extern ui_window_handle_input_propagate
 include "ui.inc"
 
 ui_window_IX_draw:
+	BIT	7, (IX+ui_box_left)
+	RET	NZ
 	LD	L, (IX+ui_window_background_color)
 	LD	H, (IX+ui_window_background_character)
 	CALL	ui_box_IX_fill_color_L_character_H
@@ -45,6 +47,8 @@ ui_window_IX_draw_done:
 	RET
 
 ui_window_IX_handle_input_DE_propagate_NZ:
+	BIT	7, (IX+ui_box_left)
+	RET	NZ
 	LD	L, (IX+ui_window_handle_input)
 	LD	H, (IX+ui_window_handle_input+1)
 	JP	(HL)
@@ -59,6 +63,8 @@ ui_window_handle_input_do_not_propagate:
 	RET
 
 ui_window_IX_handle_vsync:
+	BIT	7, (IX+ui_box_left)
+	RET	NZ
 	LD	L, (IX+ui_window_handle_vsync)
 	LD	H, (IX+ui_window_handle_vsync+1)
 	JP	(HL)

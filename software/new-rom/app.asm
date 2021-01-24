@@ -13,7 +13,6 @@ app_IX_activate:
 	LD	A, E
 	OR	A, D
 	CALL	NZ, app_IX_deactivate
-	; init new app (TODO: only do this once)
 	LD	IX, (app_active)
 	CALL	app_IX_init
 	; copy window list

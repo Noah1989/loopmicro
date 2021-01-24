@@ -36,11 +36,16 @@ include "listing.inc"
 include "video_io.inc"
 
 files_app_init:
+	LD	A, (files_initialized)
+	AND	A, A
+	RET	NZ
 	CALL	sdcard_init
 	CALL	fat32_init
 	LD	L, '/'
 	LD	H, 0
 	LD	(files_listview_title_text_name), HL
+	LD	A, 1
+	LD	(files_initialized), A
 	RET
 
 files_app_activate:
@@ -158,7 +163,7 @@ files_app_handle_input_enter:
 	CALL	listing_IX_read_line_eof_Z
 	LD	IX, fat32_working_directory
 	BIT	4, (IX+directory_current_entry_attributes) ; subdirectory?
-	JP	Z, ui_window_handle_input_do_not_propagate
+	JR	Z, files_app_handle_input_enter_open_file
 	LD	L, (IX+directory_current_entry_cluster_low)
 	LD	H, (IX+directory_current_entry_cluster_low+1)
 	LD	E, (IX+directory_current_entry_cluster_high)
@@ -196,6 +201,13 @@ files_app_handle_input_enter_cluster_ok:
 	LD	(IX+ui_listview_line_cursor_current_line), A
 	LD	(IX+ui_listview_line_cursor_current_line+1), A
 	CALL	ui_widget_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+files_app_handle_input_enter_open_file:
+	LD	IX, files_main_window
+	CALL	ui_box_IX_toggle_visibility ; hide
+	LD	IX, files_editor_window
+	CALL	ui_box_IX_toggle_visibility ; show
+	CALL	ui_window_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 
 files_app_handle_input_delete:
@@ -360,6 +372,7 @@ defw	files_app_deactivate
 defw	files_main_window
 defw	files_menu_window
 defw	files_name_input_window
+defw	files_editor_window
 defw	0
 
 files_menu_window:
@@ -390,6 +403,20 @@ defb	1, 0, 79, 1
 defw	files_name_input_window
 defw	ui_label_IX_draw
 defw	files_name_input_label_text
+
+files_editor_title_panel:
+defb	ui_object_type_widget
+defb	0, 0, 80, 1
+defw	files_editor_window
+defw	ui_panel_IX_draw
+defb	$E0, ' '
+
+files_editor_title_label:
+defb	ui_object_type_widget
+defb	1, 0, 78, 1
+defw	files_editor_title_panel
+defw	ui_label_IX_draw
+defw	files_editor_title_text
 
 section objects_mutable
 
@@ -456,6 +483,18 @@ defb	0, 0, 60, 1
 defw	files_name_input_panel
 defw	files_name_input_cursor_IX_draw
 
+files_editor_window:
+defb	ui_object_type_window
+defb	128, 1, 80, 28
+defb	$1F, ' '
+defw	ui_window_handle_input_propagate
+defw	ui_window_handle_vsync_noop
+defw	files_editor_title_panel
+defw	files_editor_title_label
+;defw	files_editor_listview
+;defw	files_editor_cursor
+defw	0
+
 section strings
 
 section ram_initialized
@@ -469,3 +508,8 @@ files_name_input_buffer:
 defs	60+1
 files_name_input_shift:
 defb	0
+files_initialized:
+defb	0
+files_editor_title_text:
+defb	"Editing file "
+defs	78-13+1
