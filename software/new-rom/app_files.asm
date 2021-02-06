@@ -25,6 +25,10 @@ extern listing_IX_read_line_eof_Z
 
 extern convert_scancode_E_shift_D_to_ascii_char_A_found_NZ
 
+extern editor_listing_IX_seek_line_BC
+extern editor_listing_IX_read_line_eof_Z
+extern editor_file
+
 extern error
 extern debug_io_print_hex_byte_A
 extern debug_io_print_character_A
@@ -34,6 +38,7 @@ include "stream.inc"
 include "fat32.inc"
 include "listing.inc"
 include "video_io.inc"
+include "editor.inc"
 
 files_app_init:
 	LD	A, (files_initialized)
@@ -162,12 +167,12 @@ files_app_handle_input_enter:
 	CALL	listing_IX_seek_line_BC
 	CALL	listing_IX_read_line_eof_Z
 	LD	IX, fat32_working_directory
-	BIT	4, (IX+directory_current_entry_attributes) ; subdirectory?
-	JR	Z, files_app_handle_input_enter_open_file
 	LD	L, (IX+directory_current_entry_cluster_low)
 	LD	H, (IX+directory_current_entry_cluster_low+1)
 	LD	E, (IX+directory_current_entry_cluster_high)
 	LD	D, (IX+directory_current_entry_cluster_high+1)
+	BIT	4, (IX+directory_current_entry_attributes) ; subdirectory?
+	JR	Z, files_app_handle_input_enter_open_file
 	LD	A, L ; ".." pointing to root directory has cluster number 0
 	OR	A, H
 	OR	A, E
@@ -203,6 +208,23 @@ files_app_handle_input_enter_cluster_ok:
 	CALL	ui_widget_IX_draw
 	JP	ui_window_handle_input_do_not_propagate
 files_app_handle_input_enter_open_file:
+	LD	IX, editor_file
+	LD	(IX+chain_first_cluster+0), L
+	LD	(IX+chain_first_cluster+1), H
+	LD	(IX+chain_first_cluster+2), E
+	LD	(IX+chain_first_cluster+3), D
+	LD	IX, fat32_working_directory
+	LD	E, (IX+directory_current_entry_file_size+0)
+	LD	D, (IX+directory_current_entry_file_size+1)
+	LD	C, (IX+directory_current_entry_file_size+2)
+	LD	B, (IX+directory_current_entry_file_size+3)
+	LD	IX, editor_file
+	LD	(IX+file_size+0), E
+	LD	(IX+file_size+1), D
+	LD	(IX+file_size+2), C
+	LD	(IX+file_size+3), B
+	LD	IX, files_editor_listing
+	LD	(IX+editor_listing_file_loaded), 0
 	LD	IX, files_main_window
 	CALL	ui_box_IX_toggle_visibility ; hide
 	LD	IX, files_editor_window
@@ -491,9 +513,28 @@ defw	ui_window_handle_input_propagate
 defw	ui_window_handle_vsync_noop
 defw	files_editor_title_panel
 defw	files_editor_title_label
-;defw	files_editor_listview
+defw	files_editor_listview
 ;defw	files_editor_cursor
 defw	0
+
+files_editor_listview:
+defb	ui_object_type_widget
+defb	0, 1, 80, 27
+defw	files_editor_window  ; parent
+defw	ui_listview_IX_draw  ; draw
+defw	files_editor_listing ; source
+defw	0 ; top line (scroll)
+defw	-1 ; bottom line
+defs	81 ; ui_listview_line_buffer
+
+files_editor_listing:
+defw	editor_listing_IX_seek_line_BC    ;listing_seek_line_BC
+defw	editor_listing_IX_read_line_eof_Z ;listing_read_line_eof_Z
+defb	81	;listing_buffer_size
+defw	files_editor_listview+ui_listview_line_buffer ;listing_buffer_address
+defw	editor_file
+defb	0 ; file_loaded
+defs	2 ; editor_listing_current_line_entry
 
 section strings
 

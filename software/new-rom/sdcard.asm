@@ -243,29 +243,29 @@ sdcard_do_control:
 
 sdcard_send_command_A_argument_DEHL_checksum_B:
 	SET	0, B ; end bit
-	push	af
-	ld	a, 'c'
-	call	debug_io_print_character_A
-	pop	af
-	call	debug_io_print_hex_byte_A
-	push	af
-	ld	a, ':'
-	call	debug_io_print_character_A
-	ld	a, d
-	call	debug_io_print_hex_byte_A
-	ld	a, e
-	call	debug_io_print_hex_byte_A
-	ld	a, h
-	call	debug_io_print_hex_byte_A
-	ld	a, l
-	call	debug_io_print_hex_byte_A
-	ld	a, ':'
-	call	debug_io_print_character_A
-	ld	a, b
-	call	debug_io_print_hex_byte_A
-	ld	a, 10 ; \n
-	call	debug_io_print_character_A
-	pop	af
+	;push	af
+	;ld	a, 'c'
+	;call	debug_io_print_character_A
+	;pop	af
+	;call	debug_io_print_hex_byte_A
+	;push	af
+	;ld	a, ':'
+	;call	debug_io_print_character_A
+	;ld	a, d
+	;call	debug_io_print_hex_byte_A
+	;ld	a, e
+	;call	debug_io_print_hex_byte_A
+	;ld	a, h
+	;call	debug_io_print_hex_byte_A
+	;ld	a, l
+	;call	debug_io_print_hex_byte_A
+	;ld	a, ':'
+	;call	debug_io_print_character_A
+	;ld	a, b
+	;call	debug_io_print_hex_byte_A
+	;ld	a, 10 ; \n
+	;call	debug_io_print_character_A
+	;pop	af
 	LD	C, sdcard_out_transmit
 	OR	A, $40
 	OUT	(C), A
@@ -277,18 +277,18 @@ sdcard_send_command_A_argument_DEHL_checksum_B:
 	RET
 
 sdcard_read_response_A:
-	ld	a, 'r'
-	call	debug_io_print_character_A
+	;ld	a, 'r'
+	;call	debug_io_print_character_A
 	LD	B, 8
-	call	sdcard_read_response_A_loop
-	push	AF
-	ld	A, 10 ; \n
-	call	debug_io_print_character_A
-	pop	AF
-	ret
+	;call	sdcard_read_response_A_loop
+	;push	AF
+	;ld	A, 10 ; \n
+	;call	debug_io_print_character_A
+	;pop	AF
+	;ret
 sdcard_read_response_A_loop:
 	IN	A, (sdcard_in_receive)
-	call	debug_io_print_hex_byte_A
+	;call	debug_io_print_hex_byte_A
 	CP	$FF
 	RET	NZ
 	DJNZ	sdcard_read_response_A_loop

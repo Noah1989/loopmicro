@@ -38,7 +38,7 @@ align $08
 align $10
 	CALL	error
 align $18
-	JP	error
+	CALL	error
 align $20
 	CALL	error
 align $28
@@ -46,7 +46,7 @@ align $28
 align $30
 	CALL	error
 align $38
-	CALL	error
+	JP	error
 align $66
 	CALL	error
 
@@ -172,7 +172,7 @@ section initializer
 initializer:
 
 section ram_initialized
-org $F000
+org $C000
 ram_initialized:
 
 window_list:

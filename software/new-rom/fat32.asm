@@ -2,6 +2,11 @@ public fat32_init
 public fat32_working_directory
 public fat32_fat_begin_lba
 public fat32_fat_number_of_sectors
+public fat32_chain_IX_get_byte_A
+public fat32_chain_IX_put_byte_A
+public fat32_chain_IX_skip_bytes_BC
+public fat32_chain_IX_seek_BCDE
+
 
 extern sdcard_read_block_DEHL_lazy
 extern sdcard_block_buffer

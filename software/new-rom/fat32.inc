@@ -42,3 +42,7 @@ defvars chain {
 	directory_current_entry_file_size ds.b 4
 	directory
 }
+
+defvars chain {
+	file_size ds.b 4
+}

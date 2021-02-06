@@ -7,6 +7,7 @@ sources = \
 	ui_box.asm ui_window.asm ui_widget.asm ui_panel.asm ui_label.asm \
 	ui_hotkey_highlight.asm ui_listview.asm listing.asm \
 	taskbar.asm app.asm app_help.asm app_memory.asm app_files.asm \
+	editor.asm \
 	lorem_ipsum.asm
 
 rom.bin: $(sources:.asm=.o)
