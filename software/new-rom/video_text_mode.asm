@@ -100,7 +100,23 @@ video_text_mode_clear_screen_loop:
 
 section constants
 video_text_mode_colors:
+
+; 0=black, 1=blue, 2=green, 3=cyan, 4=red, 5=purple, 6=yellow, 7=gray
+
+; tweaked RGBI
 defb	$00, $0C, $20, $3C
 defb	$C0, $CC, $E0, $FC
 defb	$03, $0F, $33, $3F
 defb	$C3, $CF, $E3, $FF
+
+; gruvbox
+;defb	$54, $68, $A1, $B8
+;defb	$C1, $87, $E5, $F8
+;defb	$A8, $BC, $F5, $66
+;defb	$D2, $97, $E2, $FA
+
+; tango
+;defb	$55, $1A, $61, $29
+;defb	$C1, $47, $E1, $AB
+;defb	$03, $6D, $63, $2B
+;defb	$C2, $EC, $F2, $FE
