@@ -154,6 +154,10 @@ files_app_handle_input_enter_open_file:
 	LD	(IX+file_size+3), B
 	LD	IX, files_editor_listing
 	LD	(IX+editor_listing_file_loaded), 0
+	LD	IX, files_editor_listview
+	LD	(IX+ui_listview_top_line), 0
+	LD	IX, files_editor_line_cursor
+	LD	(IX+ui_listview_line_cursor_current_line), 0
 	LD	IX, files_main_window
 	CALL	ui_box_IX_toggle_visibility ; hide
 	LD	IX, files_editor_window
@@ -308,6 +312,37 @@ files_name_input_cursor_IX_draw:
 	OUT	(video_table_name_increment), A
 	RET
 
+files_editor_handle_input:
+	BIT	0, D ; ignore key release events
+	JP	NZ, ui_window_handle_input_propagate
+	LD	A, E
+	CP	A, $75 ; up arrow
+	JP	Z, files_editor_handle_input_up_arrow
+	CP	A, $72 ; down arrow
+	JP	Z, files_editor_handle_input_down_arrow
+	CP	A, $76 ; ESC
+	JP	Z, files_editor_quit
+	JP	ui_window_handle_input_propagate
+
+files_editor_handle_input_up_arrow:
+	LD	IX, files_editor_line_cursor
+	CALL	ui_listview_line_cursor_IX_up
+	JP	ui_window_handle_input_do_not_propagate
+
+files_editor_handle_input_down_arrow:
+	LD	IX, files_editor_line_cursor
+	CALL	ui_listview_line_cursor_IX_down
+	JP	ui_window_handle_input_do_not_propagate
+
+files_editor_quit:
+	LD	IX, files_editor_window
+	CALL	ui_box_IX_toggle_visibility ; hide
+	LD	IX, files_main_window
+	CALL	ui_box_IX_toggle_visibility ; show
+	CALL	ui_window_IX_draw
+	JP	ui_window_handle_input_do_not_propagate
+
+
 section constants
 filename_forbidden_chars:
 defb	$5C, '/', ':'
@@ -438,12 +473,12 @@ files_editor_window:
 defb	ui_object_type_window
 defb	128, 1, 80, 28
 defb	$1F, ' '
-defw	ui_window_handle_input_propagate
+defw	files_editor_handle_input
 defw	ui_window_handle_vsync_noop
 defw	files_editor_title_panel
 defw	files_editor_title_label
 defw	files_editor_listview
-;defw	files_editor_cursor
+defw	files_editor_line_cursor
 defw	0
 
 files_editor_listview:
@@ -464,6 +499,15 @@ defw	files_editor_listview+ui_listview_line_buffer ;listing_buffer_address
 defw	editor_file
 defb	0 ; file_loaded
 defs	2 ; editor_listing_current_line_entry
+
+files_editor_line_cursor:
+defb	ui_object_type_widget
+defb	0, 0, 80, 27
+defw	files_editor_listview
+defw	ui_listview_line_cursor_IX_draw
+defb	$80 ; cursor color xor mask
+defw	0 ; current line
+
 
 section strings
 
