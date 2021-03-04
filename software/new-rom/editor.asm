@@ -2,6 +2,8 @@ public editor_listing_IX_seek_line_BC
 public editor_listing_IX_read_line_eof_Z
 public editor_file
 
+extern multiply_DE_A_result_HL_zero_B
+
 extern fat32_chain_IX_get_byte_A
 extern fat32_chain_IX_put_byte_A
 extern stream_IX_read_block_DE_len_BC_bytewise
@@ -56,18 +58,42 @@ editor_listing_IX_read_line_eof_Z:
 	DEC	B
 	PUSH	IX
 	LD	IX, editor_file
+	PUSH	DE
 	PUSH	HL
 	PUSH	BC
 	LD	BC, 0
 	CALL	stream_IX_seek_BCDE
 	POP	BC
 	POP	HL
+	POP	DE
+	LD	C, 0 ; marker for non-edited line
+	LD	A, D ; high byte of line start location / $FF = edited
+	CP	A, $FF
+	JR	NZ, editor_listing_IX_read_line_loop
+	LD	D, 0 ; DE <- index of edited line in buffer
+	PUSH	HL
+	LD	C, B
+	LD	A, editor_max_line_length
+	CALL	multiply_DE_A_result_HL_zero_B
+	LD	B, C
+	LD	DE, editor_changes
+	ADD	HL, DE
+	EX	DE, HL ; DE <- address of changed line in buffer
+	POP	HL
+	LD	C, 1 ; marker for edited line
 editor_listing_IX_read_line_loop:
+	BIT	0, C
+	JR	NZ, editor_listing_IX_read_line_get_byte_edited
 	PUSH	HL
 	PUSH	BC
 	CALL	stream_IX_get_byte_A
 	POP	BC
 	POP	HL
+	JR	editor_listing_IX_read_line_get_byte_done
+editor_listing_IX_read_line_get_byte_edited:
+	LD	A, (DE)
+	INC	DE
+editor_listing_IX_read_line_get_byte_done:
 	LD	(HL), A
 	;call	debug_io_print_character_A
 	CP	A, 10 ; \n
@@ -93,6 +119,7 @@ editor_listing_IX_read_line_done:
 	INC	A ; clear Z (not end of file)
 	RET
 
+
 editor_listing_IX_load_file:
 	PUSH	IX
 	LD	IX, editor_file
@@ -100,6 +127,10 @@ editor_listing_IX_load_file:
 	OR	A, (IX+file_size+3)
 editor_error_file_too_large:
 	CALL	NZ, error
+	LD	A, (IX+file_size+1)
+	CP	A, $FF
+editor_error_file_too_large2:
+	CALL	NC, error
 	LD	BC, 0
 	LD	DE, 0
 	CALL	stream_IX_seek_BCDE

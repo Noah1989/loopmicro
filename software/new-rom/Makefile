@@ -1,5 +1,5 @@
 sources = \
-	rom.asm debug_io.asm error.asm convert.asm \
+	rom.asm debug_io.asm error.asm convert.asm math.asm \
 	video_timing.asm video_text_mode.asm video_vsync.asm \
 	font_terminus.asm \
 	keyboard.asm \
