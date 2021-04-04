@@ -8,7 +8,7 @@ a minmal 8-bit machine that is...
 
 - ... aproachable:
     - simple through reduction
-    - not "dumbed down" by hiding complexity behind brittle abstractions
+    - NO hidden complexity behind brittle abstractions
     - open source and self-documenting
 
 - ... powerful, with it you can:
