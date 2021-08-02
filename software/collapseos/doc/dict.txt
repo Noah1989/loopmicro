@@ -48,6 +48,42 @@ $ - Initialize
 * - Word indirection (pointer to word)
 ? - Is it ...?
 
+Placement of those symbols is important. To the left of the
+words, it refers to inputs and to the right, the output.
+
+# Values and aliases
+
+Values and aliases (see usage.txt) can be handled with those
+words:
+
+TO x     n --         Write n to value or alias x.
+[TO] x   n --         *I*. Same as TO.
+*TO x    n --         Write n to ivalue or ialias x.
+[*TO] x  n --         *I*. Same as *TO.
+VAL!     n a --       Write n to value or alias a.
+*VAL!    n a --       Write n to ivalue or ialias a.
+
+Collapse OS' core has a few *indirect* values and aliases which
+can be manipulated with *TO, [*TO] and *VAL!.
+
+Values:
+
+BLK>     Currently selected Block.
+CURRENT  Address of the last word of the dictionary.
+HERE     Addr of next available space in dict
+IN(      Beginning of the input buffer.
+IN>      Current pos in input buffer.
+NL       1 or 2 chars to spit during NL>, MSB first. If MSB is
+         0, it's ignored.
+
+Aliases (see further below for description):
+
+BLK@*
+BLK!*
+C<
+EMIT
+KEY?
+
 # Entry management
 
 '? x     -- a f   Find x it in dict. If found, f=1 and
@@ -58,25 +94,23 @@ $ - Initialize
 ['] x    --       *I* Like "'", but spits the addr as a number
                   literal. If not found, aborts.
 FIND     w -- a f Like '?, but for w.
-EMPTY    --       Rewind HERE and CURRENT where they were at
-                  system initialization.            
 FORGET   x --     Rewind the dictionary (both CURRENT and HERE)
                   up to x's previous entry.             
-PREV     a -- a   Return a wordref's previous entry.
-WORD(    a -- a   Get wordref's beginning addr.
 
 # Defining words
 
 : x ... ;   --     Define a new word
-:* x        a --   Define a new alias
-:** x       a --   Define a new ialias
+ALIAS x     a --   Define a new alias with a starting value of a
+*ALIAS x    a --   Define a new ialias where the indirection
+                   points to a (actual alias in *a).
 CREATE x    --     Create cell named x. Doesn't allocate a PF.
 [COMPILE] x --     *I* Compile word x and write it to HERE.
                    IMMEDIATE words are *not* executed.
 COMPILE x   --     *I* Meta compiles: write wordrefs that will
                    compile x when executed.
-CONSTANT x  n --   Creates cell x that when called pushes its
+VALUE x  n --      Creates cell x that when called pushes its
                    value.
+CONSTS x    n --   Create a serie of x constants. See usage.txt
 DOES>       --     See primer.txt
 IMMEDIATE   --     Flag the latest defined word as immediate.
 LITN        n --   Write number n as a literal.
@@ -102,17 +136,20 @@ in case of an OF match, *but it is kept if it reaches C*. You
 have to consume it to avoid PSP leak.           
 
 (         --   *I* Comment. Ignore input until ")" is read.
+\         --   *I* Line comment. Ignore input until EOL.
 [         --   *I* Begin interpretative mode. In a definition,
                execute words instead of compiling them.
 ]         --   End interpretative mode.
 ABORT     --   Resets PS and RS and returns to interpreter.
 ABORT" x" --   *I* Compiles a ." followed by a ABORT.
-ERR       a -- Prints a and ABORT. Defined early and used by
-               drivers.
 EXECUTE   a -- Execute wordref at addr a
+ESCAPE!   --   Pop its way through RS until it finds a
+               reference next to a INTERPRET call, then continue
+               from there. In other words, escape current
+               INTERPRET loop.
 INTERPRET --   Main interpret loop.
 LEAVE     --   In a DO..LOOP, exit at the next LOOP call.
-QUIT      --   Return to interpreter prompt immediately.
+QUIT      --   Reset RS, return to interpreter prompt.
 
 # Parameter Stack
 
@@ -138,33 +175,37 @@ I           -- n            Copy RS TOS to PS
 I'          -- n            Copy RS second item to PS
 J           -- n            Copy RS third item to PS
 
+# Stacks meta
+
+'S -- n Current address of PSP
+'R -- n Current address of RSP
+.S --   Prints stack information as well as the contents of PS.
+S0 -- n Start address of PS
+R0 -- n Start address of RS
+
 # Memory
 
 @        a -- n       Set n to value at address a
 !        n a --       Store n in address a
 ,        n --         Write n in HERE and advance it.
-?        a --         Print value of addr a
 []=      a1 a2 u -- f Compare u bytes between a1 and a2. Returns
                       true if equal.
-+!       n a --       Increase value of addr a by n
 C@       a -- c       Set c to byte at address a
 C@+      a -- a+1 c   Fetch c from a and inc a.
 C!       c a --       Store byte c in address a
 C!+      c a -- a+1   Store byte c in a and inc a.
 C,       b --         Write byte b in HERE and advance it.
-*!       a al --      Change alias al's addr to a.
-**!      a sw --      Change ialias sw's addr to a.
 ALLOT    n --         Move HERE by n bytes.
 ALLOT0   n --         ALLOT and fill with zero.
-CURRENT  -- a         Push CURRENT's address
 FILL     a n b --     Fill n bytes at addr a with val b.
-HERE     -- a         Addr of next available space in dict
-H        -- a         HERE's address
 MOVE     a1 a2 u --   Copy u bytes from a1 to a2, starting
                       with a1, going up.
 MOVE-    a1 a2 u --   Copy u bytes from a1 to a2, starting
                       with a1+u, going down.
 MOVE,    a u --       Copy u bytes from a to HERE.
+PAD      -- a         HERE + $20, a safe space for tmp stuff.
+RANGE    a u -- ah al Get low/high bounds of an addr+length
+                      pair. Useful for DO..LOOP.
 
 # Arithmetic / Bits
 
@@ -174,10 +215,13 @@ usage.txt for more details.
 +           a b -- a+b      *C*
 -           a b -- a-b      *C*
 -^          a b -- b-a      *C*
-*           a b -- a*b      *C*
+*           a b -- a*b      
 /           a b -- a/b
-|L          n -- msb lsb    Split n word in 2 bytes, LSB on TOS
-|M          n -- lsb msb    Split n word in 2 bytes, MSB on TOS
+<<          a -- a<<1       *C*
+<<8         a -- a<<8       
+>>          a -- a>>1       *C*
+>>8         a -- a>>8       
+L|M         n -- lsb msb    Split n word in 2 bytes, MSB on TOS
 1+          n -- n+1
 1-          n -- n-1
 CARRY?      -- f            Did last operation carry?
@@ -186,8 +230,8 @@ MOD         a b -- a%b
 AND         a b -- a&b
 OR          a b -- a|b
 XOR         a b -- a^b
-LSHIFT      a u -- a<<u     *C* (last shift is Carry)
-RSHIFT      a u -- a>>u     *C*
+LSHIFT      a u -- a<<u
+RSHIFT      a u -- a>>u
 
 # Logic
 
@@ -208,15 +252,11 @@ by the contents of the string.
 LIT" x" --         Read following characters and write to HERE
                    as a string literal.
 W" x"   --         Feed x literal to the next WORD-reading word.
+SRANGE  s -- ah al Returns a memory range for string s.
 S=      a1 a2 -- f Returns whether string a1 == a2.
 
 # I/O
 
-(parse)  a -- n   Parses string at a as a number and push the
-                  result in n as well as whether parsing was a
-                  success in f (false = failure, true =
-                  success)
-STYPE    a --     EMIT all chars of string at at addr a.
 .        n --     Print n in its decimal form
 .x       n --     Print n's LSB in hex form. Always 2
                   characters.
@@ -228,8 +268,7 @@ STYPE    a --     EMIT all chars of string at at addr a.
                   call to STYPE.
 C<      -- c      Read one char from buffered input.
 EMIT    c --      Spit char c to output stream
-IN>     -- a      Address of variable containing current pos in
-                  input buffer.
+IN)     -- a      End of the input buffer, exclusive.
 IN$     --        Flush input buffer
 KEY?    -- c? f   Polls the keyboard for a key. If a key is
                   pressed, f is true and c is the char. Other-
@@ -237,14 +276,16 @@ KEY?    -- c? f   Polls the keyboard for a key. If a key is
 KEY     -- c      Get char c from direct input.
 KEY>    c --      Put back c for next KEY call to pick up.
 NL>     --        Emit newline
+PARSE    s -- n   Parses string s as a number and push the
+                  result in n. If s can't be parsed, "word not
+                  found" error occurs.
 PC!     c a --    Spit c to port a
 PC@     a -- c    Fetch c from port a
-RDLN    --        Read a line in IN(
 SPC>    --        Emit space character
+STYPE    s --     EMIT all chars of string s.
 WORD    -- a      Read one word from buffered input and push its
-                  addr. Always null terminated. If ASCII EOT is
-                  encountered, a will point to it (it is cons-
-                  idered a word).
+                  addr. That word is a string (begins with a
+                  length byte).
 
 These ASCII consts are defined:
 EOT BS CR LF SPC
@@ -255,9 +296,8 @@ col in protocol.txt). KEY is a loop over KEY?.
 NL> spits CRLF by default, but can be configured to spit an 
 alternate newline char. See impl.txt.
 
-# Disk
+# BLK subsystem (see doc/blk.txt)
 
-BLK>   -- a      Address of the current block variable.
 BLK(   -- a      Beginning addr of blk buf.
 BLK)   -- a      Ending addr of blk buf.
 COPY   s d --    Copy contents of s block to d block.
@@ -275,12 +315,13 @@ WIPE   --        Empties current block
 
 BIN+    n -- a   Returns binary start + n. This is what BIN( was
                  when the current binary was compiled.
+BOOT    --       Boot back to a fresh system.
 CRC16   c b -- c Computes byte b into c, a 16-bit CRC with a
-                 0x1021 polynomial (XMODEM CRC).
+                 $1021 polynomial (XMODEM CRC).
 DUMP    n a --   Prints n bytes at addr a in a hexdump format.
                  Prints in chunks of 8 bytes. Doesn't do partial
                  lines. Output is designed to fit in 32 columns.
-RAM+    n -- a   Return SYSVARS + n for current system.
+NOOP    --       Do nothing.
 TICKS   n --     Wait for approximately 0.1 millisecond. Don't
                  use with n=0.
 
@@ -289,16 +330,6 @@ TICKS   n --     Wait for approximately 0.1 millisecond. Don't
 Some words from the kernel are designed to be internal but
 ended up being used in "userland". Let's document them:
 
-_pdacc  r c -- r f Parse decimal digit c and accumulate into
-                   result r. Flag f is true when c was a valid
-                   digit.
 _bchk   n -- n     Checks whether n is a valid 8-bit signed
                    branching offset, that is, in the range -128
                    to 127. If not, abort with "br ovfl".
-
-# Cross-compilation
-
-These words are only available through B200.
-
-:_      --         Define a new anonymous word.
-_       --         Call the last defined anonymous word.

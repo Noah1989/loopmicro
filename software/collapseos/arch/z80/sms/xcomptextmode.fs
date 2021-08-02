@@ -1,44 +1,42 @@
-( xcomp using the Text Mode if the VDP. Only works on actual
-  SMS. The Megadrive's VDP doesn't have TMS9918 modes in it. )
-( 8K of onboard RAM )
-0xdd00 CONSTANT RS_ADDR
-( Memory register at the end of RAM. Must not overwrite )
-0xddca CONSTANT PS_ADDR
-RS_ADDR 0xb0 - CONSTANT SYSVARS
-0xc000 CONSTANT HERESTART
-0xbf   CONSTANT TMS_CTLPORT
-0xbe   CONSTANT TMS_DATAPORT
-SYSVARS 0xa0 + CONSTANT GRID_MEM
-SYSVARS 0xa3 + CONSTANT CPORT_MEM
-0x3f   CONSTANT CPORT_CTL
-0xdc   CONSTANT CPORT_D1
-0xdd   CONSTANT CPORT_D2
-SYSVARS 0xa4 + CONSTANT PS2_MEM
-1 CONSTANT SDC_DEVID
+\ xcomp using the Text Mode if the VDP. Only works on actual
+\ SMS. The Megadrive's VDP doesn't have TMS9918 modes in it.
+9 VALUES RS_ADDR $dd00 PS_ADDR $ddca HERESTART $c000
+         TMS_CTLPORT $bf TMS_DATAPORT $be
+         CPORT_CTL $3f CPORT_D1 $dc CPORT_D2 $dd
+         SDC_DEVID 1
+RS_ADDR $90 - VALUE SYSVARS
+SYSVARS $80 + VALUE GRID_MEM
+SYSVARS $83 + VALUE CPORT_MEM
+SYSVARS $84 + VALUE PS2_MEM
+120 LOAD \ nC, for PS/2 subsystem
 5 LOAD  ( z80 assembler )
 262 263 LOADR ( font compiler )
 165 LOAD  ( Sega ROM signer )
 280 LOAD  ( boot.z80.decl )
 200 205 LOADR ( xcomp )
 
-DI, 0x100 JP, 0x62 ALLOT0 ( 0x66 )
-RETN, 0x98 ALLOT0 ( 0x100 )
+DI, $100 JP, $62 ALLOT0 ( $66 )
+RETN, $98 ALLOT0 ( $100 )
 ( All set, carry on! )
-CURRENT @ XCURRENT !
-0x100 BIN( !
-281 300 LOADR ( boot.z80 )
-210 231 LOADR ( forth core low )
+CURRENT TO XCURRENT
+$100 TO BIN(
+281 299 LOADR ( boot.z80 )
+210 224 LOADR ( core low )
 CREATE ~FNT CPFNT5x7
 315 317 LOADR ( TMS9918 )
 240 241 LOADR ( Grid )
 348 349 LOADR ( SMS ports )
-340 LOAD ( KBD ) : (ps2kc) (ps2kcA) ; 246 249 LOADR
+340 LOAD ( KBD )
+: (ps2kc) (ps2kcA) ;
+246 249 LOADR \ PS/2
 347 LOAD ( SPI )
 250 258 LOADR ( SDC )
-236 239 LOADR ( forth core high )
-(entry) _ ( Update LATEST ) PC ORG @ 8 + !
-," TMS$ GRID$ PS2$ BLK$ ' SDC@ ' BLK@* **! (im1) " EOT,
-( start/stop range for SMS is a bit special )
-ORG @ 0x100 - DUP ORG !
+X' SDC@ ALIAS (blk@)
+X' SDC! ALIAS (blk!)
+230 233 LOADR \ BLK subsystem
+: INIT TMS$ GRID$ PS2$ BLK$ (im1) ;
+XWRAP INIT
+\ start/stop range for SMS is a bit special
+ORG $100 - DUP TO ORG
 DUP 1 ( 16K ) segasig
-0x4000 + HERE - ALLOT
+$4000 + HERE - ALLOT

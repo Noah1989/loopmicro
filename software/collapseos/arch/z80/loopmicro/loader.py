@@ -1,16 +1,25 @@
 import sys
 import serial
+import pyftdi.serialext
 from intelhex import IntelHex
 
-ser = serial.Serial()
-ser.baudrate = 62500
-ser.port     = '/dev/ttyUSB0'
-ser.stopbits = serial.STOPBITS_ONE
-ser.xonoff   = 0
-ser.rtscts   = 0
-ser.timeout  = 500
+#ser = serial.Serial()
+#ser.baudrate = 62500
+#ser.port     = '/dev/ttyS2'
+#ser.stopbits = serial.STOPBITS_ONE
+#ser.xonoff   = 0
+#ser.rtscts   = 0
+#ser.timeout  = 500
+#ser.open()
 
-ser.open()
+ser = pyftdi.serialext.serial_for_url(
+    'ftdi://ftdi:232:AH02CQGA/1',
+    baudrate=62500,
+    stopbits=serial.STOPBITS_ONE,
+#    xonoff=0,
+    rtscts=0,
+    timeout=500
+)
 
 def reset():
     cmd = f'X'

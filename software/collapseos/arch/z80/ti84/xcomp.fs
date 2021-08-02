@@ -1,69 +1,68 @@
-0xbf00 CONSTANT RS_ADDR
-0xbffa CONSTANT PS_ADDR
-RS_ADDR 0xb0 - CONSTANT SYSVARS
-0x8000 CONSTANT HERESTART
-SYSVARS 0xa0 + CONSTANT LCD_MEM
-SYSVARS 0xa2 + CONSTANT GRID_MEM
-SYSVARS 0xa5 + CONSTANT KBD_MEM
-0x01 CONSTANT KBD_PORT
-5 LOAD  ( z80 assembler )
-262 263 LOADR ( font compiler )
-280 LOAD  ( boot.z80.decl )
-200 205 LOADR ( xcomp )
+4 VALUES RS_ADDR $bf00 PS_ADDR $bffa HERESTART $8000
+         KBD_PORT $01
+RS_ADDR $90 - VALUE SYSVARS
+SYSVARS $80 + VALUE LCD_MEM
+SYSVARS $82 + VALUE GRID_MEM
+SYSVARS $85 + VALUE KBD_MEM
+120 LOAD \ nC, for KBD driver
+5 LOAD  \ z80 assembler
+262 263 LOADR \ font compiler
+280 LOAD  \ boot.z80.decl
+200 205 LOADR \ xcomp
 
 ( TI-84+ requires specific code at specific offsets which
   come in conflict with Collapse OS' stable ABI. We thus
-  offset the binary by 0x100, which is our minimum possible
+  offset the binary by $100, which is our minimum possible
   increment and fill the TI stuff with the code below. )
 
-0x5a JP, 0x15 ALLOT0 ( 0x18 )
-0x5a JP, ( reboot ) 0x1d ALLOT0 ( 0x38 )
+$5a JP, $15 ALLOT0 ( $18 )
+$5a JP, ( reboot ) $1d ALLOT0 ( $38 )
 ( handleInterrupt )
 DI,
 AF PUSH,
     ( did we push the ON button? )
-    0x04 ( PORT_INT_TRIG ) INAi,
+    $04 ( PORT_INT_TRIG ) INAi,
     0 ( INT_TRIG_ON ) A BIT,
     IFNZ,
         ( yes? acknowledge and boot )
-        0x03 ( PORT_INT_MASK ) INAi,
-        0x00 ( INT_MASK_ON ) A RES, ( ack interrupt )
-        0x03 ( PORT_INT_MASK ) OUTiA,
+        $03 ( PORT_INT_MASK ) INAi,
+        $00 ( INT_MASK_ON ) A RES, ( ack interrupt )
+        $03 ( PORT_INT_MASK ) OUTiA,
         AF POP,
         EI,
-        0x100 JP,
+        $100 JP,
     THEN,
 AF POP,
 EI,
 RETI,
 
-0x03 ALLOT0 ( 0x53 )
-0x5a JP, ( 0x56 ) 0xff C, 0xa5 C, 0xff C, ( 0x5a )
+$03 ALLOT0 ( $53 )
+$5a JP, ( $56 ) $ff C, $a5 C, $ff C, ( $5a )
 ( boot )
 DI,
     IM1,
     ( enable the ON key interrupt )
-    0x03 ( PORT_INT_MASK ) INAi,
-    0x00 ( INT_MASK_ON ) A SET,
-    0x03 ( PORT_INT_MASK ) OUTiA,
-    A 0x80 LDri,
-    0x07 ( PORT_BANKB ) OUTiA,
+    $03 ( PORT_INT_MASK ) INAi,
+    $00 ( INT_MASK_ON ) A SET,
+    $03 ( PORT_INT_MASK ) OUTiA,
+    A $80 LDri,
+    $07 ( PORT_BANKB ) OUTiA,
 EI,
 ( LCD off )
-A 0x02 ( LCD_CMD_DISABLE ) LDri,
-0x10 ( LCD_PORT_CMD ) OUTiA,
+A $02 ( LCD_CMD_DISABLE ) LDri,
+$10 ( LCD_PORT_CMD ) OUTiA,
 HALT,
 
-0x95 ALLOT0 ( 0x100 )
+$95 ALLOT0 ( $100 )
 ( All set, carry on! )
 
-0x100 BIN( !
-281 300 LOADR ( boot.z80 )
-210 231 LOADR ( forth core low )
+$100 TO BIN(
+281 299 LOADR ( boot.z80 )
+210 224 LOADR ( core low )
 CREATE ~FNT CPFNT3x5
 350 353 LOADR ( LCD )
 240 241 LOADR ( Grid )
 355 359 LOADR ( KBD )
-236 239 LOADR ( forth core high )
-XWRAP" LCD$ KBD$ GRID$ "
-ORG @ 0x100 - ORG ! ( for staging output )
+: INIT LCD$ KBD$ GRID$ ;
+XWRAP INIT
+ORG $100 - TO ORG ( for staging output )

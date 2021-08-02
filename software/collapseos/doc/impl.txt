@@ -72,27 +72,16 @@ tightly in control, we're screwed anyways, and that, well
 before we reach underflow.
 
 Overflow condition happen when RSP and PSP meet somewhere in
-the middle. That check is made at each "next" call.
+the middle. That condition is not checked because it's too
+expensive for what it's worth.
 
-# Overflow counter
+Overflow happens much less often than underflow. However, when
+it happens, it means that your RS gets overwritten and will
+catastrophically crash your machine.
 
-On some arches, such as the z80, overflow checks are really
-expensive and performing them at each compiled word execution
-is wasteful, when you think about the fact that most of the
-time, we're really far from overflow.
-
-So here's an idea: We do overflow check by looking at the
-difference between PSP and RSP, right? That difference that we
-get is a good indicator of how many executions we have in front
-of us before, theoretically, we can overflow, right? So why not
-save that number and skip checks for this number of times?
-
-That's what we do with this counter. The closer we are to
-overflow, the more often we check.
-
-Not all arches use this counter because it's not worth imple-
-menting this if you have quick access to PSP and RSP arithmetic,
-which isn't the case on the z80.
+When you know you have a deep stack, or before you do fancy
+recursion, make sure you know the state of your stack well.
+You can use .S for this.
 
 # Dictionary entry
 
@@ -100,14 +89,14 @@ A dictionary entry has this structure:
 
 - Xb name. Arbitrary long number of character (but can't be
   bigger than input buffer, of course). not null-terminated
-- 2b prev offset
+- 2b previous entry
 - 1b name size + IMMEDIATE flag (7th bit)
 - A word structure, that is:
   - 1b word type
   - Parameter field (PF)
 
-The prev offset is the number of bytes between the prev field
-and the previous word's type.
+The previous entry field is the address of the previous dict
+entry, which is used when iterating ofer the dict.
 
 The size + flag indicate the size of the name field, with the
 7th bit being the IMMEDIATE flag.
@@ -122,52 +111,67 @@ word" (see bootstrap.txt) is such an example.
 
 # Word types
 
-There are 7 word types in Collapse OS. Whenever you have a
-wordref, it's pointing to a byte with numbers 0 to 6. This
-number is the word type and the word's behavior depends on it.
+There are 8 word types in Collapse OS. Whenever you have a
+wordref, it's pointing to a byte describing that word type.
 
-0: native. This words PFA contains native binary code and is
-jumped to directly.
+When that byte is 0, it's a native word. This words PFA contains
+native binary code and is jumped to directly.
 
-1: compiled. This word's PFA contains a list of wordrefs and its
-execution is described in "Executing a compiled word" below.
+Otherwise, the byte is encoded this way:
 
-2: cell. This word is usually followed by a 2-byte value in its
-PFA. Upon execution, the address of the PFA is pushed to PS.
+7------0
+F000VACX
 
-3: DOES>. This word is created by "DOES>" and is followed
-by a 2-bytes address where "DOES>" was compiled. At that address
-is a wordref list exactly like in a compiled word. Upon
-execution, after having pushed its cell addr to PSP (which is
-2 bytes further than with a regular cell), it executes its
-reference exactly like a compiled word.
+X: eXecution tokens. A "regular" word. This word's PFA contains
+   a list of wordrefs and its execution is described in
+   "Executing a XT word" below.
 
-4: alias. See usage.txt. PFA is like a cell, but instead of
-pushing it to PS, we execute it.
+C: Cell. This word is usually followed by a 2-byte value in its
+   PFA. Upon execution, the address of the PFA is pushed to PS.
 
-5: ialias. Same as alias, but with an added indirection.
+A: Alias. See usage.txt. PFA contains a wordref. We execute this
+   word.
 
-6: constant. like a cell, but with an added indirection. We
-   push the 2b number that PFA points to.
+V: Value. PFA contains a word. We push that word to PS.
 
-# Executing a compiled word
+0: Always 0.
+
+F: alternate Flag. When set, triggers "alternate behavior",
+   which depends on the word. Those behaviors are listed below:
+
+X: DOES>. This word is created by "DOES>" and is followed
+   by a 2-bytes address where "DOES>" was compiled. At that
+   address is a wordref list exactly like in a XT. Upon exec-
+   ution, after having pushed its cell addr to PSP (which is 2
+   bytes further than with a regular cell), it executes its ref-
+   erence exactly like a XT.
+
+C: Nothing.
+
+A: indirect alias. Instead of a wordref, PFA contains a pointer
+   to a wordref.
+
+V: indirect value. Instead of a word, PFA contains a pointer
+   to a word.
+
+# Executing a XT (eXecution Tokens) word
 
 At its core, executing a word is pushing the wordref on PS and
 calling EXECUTE. Then, we let the word do its things. Some
-words are special, but most of them are of the "compiled"
-type, and that's their execution that we describe here.
+words are special, but most of them are of the XT type, and
+that's their execution that we describe here.
 
 First of all, at all time during execution, the Interpreter
 Pointer (IP) points to the wordref we're executing next.
 
-When we execute a compiled word, the first thing we do is push
-IP to the Return Stack (RS). Therefore, RS' top of stack will
-contain a wordref to execute next, after we EXIT.
+When we execute a XT word, the first thing we do is push IP to
+the Return Stack (RS). Therefore, RS' top of stack will contain
+a wordref to execute next, after we EXIT.
 
-At the end of every compiled word is an EXIT. This pops RS, sets
-IP to it, and continues.
+At the end of every XT word is an EXIT. This pops RS, sets IP to
+it, and continues.
 
-A compiled word is simply a list of wordrefs, but not all those
+A XT word is simply a list of wordrefs, but not all those
 wordrefs are 2 bytes in length. Some wordrefs are special. For
 example, a reference to (n) will be followed by an extra 2 bytes
 number. It's the responsibility of the (n) word to advance IP
@@ -181,7 +185,7 @@ implementation. Similar special things happen in (s), (br),
 (?br) and (loop).
 
 For example, the word defined by ": FOO 345 EMIT ;" would have
-an 8 bytes PF: a 2b ref to (n), 2b with 0x0159, a 2b ref to EMIT
+an 8 bytes PF: a 2b ref to (n), 2b with $0159, a 2b ref to EMIT
 and then a 2b ref to EXIT.
 
 When executing this word, we first set IP to PF+2, then exec
@@ -205,7 +209,7 @@ fact, they're mostly referred to directly as their numerical
 offset along with a comment indicating what this offset refers
 to.
 
-SYSVARS occupy 0xa0 bytes in memory in addition to driver mem-
+SYSVARS occupy $80 bytes in memory in addition to driver mem-
 ory, which typically follows SYSVARS.
 
 This system is a bit fragile because every time we change those
@@ -213,33 +217,36 @@ offsets, we have to be careful to adjust all system variables
 offsets, but thankfully, there aren't many system variables.
 Here's a list of them:
 
-SYSVARS   FUTURE USES          +3c       BLK(*
-+02       CURRENT              +3e       FUTURE USES
-+04       HERE                 +41       IOERR
-+06       FUTURE USES          +42       FUTURE USES
-+08       FUTURE USES          +50       NL> character
-+0a       FUTURE USES          +51       KEY> character
-+0c       C<*                  +52       ovfl counter
-+0e       WORDBUF              +53       EMIT ialias
-+2e       MEM<*                +55       KEY? ialias
-+30       IN>                  +57       FUTURE USES
-+32       WORD LIT             +60       INPUT BUFFER
-+34       BLK@*                +a0       DRIVERS
-+36       BLK!*
+SYSVARS
++00       IOERR                
++02       CURRENT              
++04       HERE                 
++06       CARRY? flag          
++08       RESERVED
++0a       NL characters        
++0c       C< ialias            
++0e       EMIT ialias             
++10       KEY? ialias             
++12       RESERVED
++2e       IN(*                 
++30       IN>                  
++32       WORD LIT             
++34       RESERVED
++36       RESERVED
 +38       BLK>
 +3a       BLKDTY
++3c       RESERVED
++40       INBUF
++80       DRIVERS
 
 CURRENT points to the last dict entry.
 
 HERE points to current write offset.
 
-C<* is a C< override. If nonzero, C< calls it. Otherwise, RDLN<
-is called. 
+IN> and INBUF: See "Input Buffer" below.
 
-IN> is the current position in IN(, which is the input buffer.
-
-WORDBUF is a buffer in which we read a word from input stream
-during the execution of "WORD".
+C< ialias generally points to RDLN<, but is overridden during
+LOAD.
 
 WORD LIT is an override for WORD. When this is non-zero, WORD
 returns this address instead of reading a word from input. This
@@ -253,20 +260,15 @@ to indicate an error. For example, the AT28 driver sets this
 when it detects write corruption. Has to be reset to zero man-
 ually after an error.
 
-NL> is a single byte. If zero (default), NL> spits CR/LF. Other-
-wise, it spits the value directly.
-
-KEY> is the 1b "putback" buffer. See usage.txt.
+NL is 2 bytes. NL> spits them, MSB first. If MSB is zero, it's
+ignored. For example, $0d0a spits CR and then LF.
 
 KEY? and EMIT ialiases default to (key?) and (emit) but can be
 overwritten to other routines.
 
-ovfl counter is used as an optimization to minimize the number
-of overflow checks in arches where it's expensive.
-
 DRIVERS section is reserved for recipe-specific drivers.
 
-FUTURE USES sections are unused for now.          
+RESERVED sections are unused for now.          
 
 # Initialization sequence
 
@@ -281,7 +283,7 @@ very few things.
 2. Set CURRENT to value of LATEST field in stable ABI.
 3. Set HERE to HERESTART const if defined, to CURRENT other-
    wise.
-4. Execute the word referred to by 0x04 (BOOT) in stable ABI.
+4. Execute the word referred to by $04 (BOOT) in stable ABI.
 
 In a normal system, BOOT is in core words and does a few things:
 
@@ -291,8 +293,8 @@ In a normal system, BOOT is in core words and does a few things:
      KEY? -> (key?)
      NL>  -> 0 (CR then LF)
 3. Set C<* to MEM< which reads from MEM<* pointer in memory.
-4. Call INTERPRET which interprets boot source code until
-   ASCII EOT (4) is met. This usually initializes drivers.
+4. Call the INIT word which is references in stable ABI $13. 
+   This usually initializes drivers.
 5. Add "_sys" entry for EMPTY to go back to.
 6. Print "Collapse OS"
 7. Calls (main) which:
@@ -309,6 +311,10 @@ If, for some reason, you need to override an ialias at some
 point, you de-override it by re-setting it to the address of
 the word specified at step 2.
 
+EOT quirk: At step 4, EOT *has* to be preceded by a whitespace.
+If it's not, it's going to be missed. XWRAP automatically adds
+that whitespace.
+
 # Stable ABI
 
 The Stable ABI lives at the beginning of the binary and prov-
@@ -316,11 +322,12 @@ ides a way for Collapse OS code to access values that would
 otherwise be difficult to access. Here's the complete list of
 these references:
 
-04 BOOT addr         06 ERR addr         08 LATEST
+04 BOOT addr         06 (uflw) addr      08 LATEST
 0a (main) addr       0c QUIT jump        0f next addr
+11 CURRENT           13 INIT addr
 
-BOOT, (main), and ERR exist because they are referred
-to before those words are defined (in core words). LATEST is a
+BOOT, (main) and (uflw) exist because they are referred to
+before those words are defined (in core words). LATEST is a
 critical part of the initialization sequence.
 
 The QUIT jump is there to provide an easy way to "bail out"
@@ -331,7 +338,31 @@ routine (where we jump at the end of every CODE word). It is
 not used during xcomp, but is needed in "Live Target" mode.
 See doc/asm/intro.txt.
 
+INIT addr is the address of the initialization routine called
+by BOOT just before it creates its _sys marker and prints the
+prompt. This is set by XWRAP. See doc/bootstrap.txt.
+
 All Collapse OS binaries, regardless of architecture, have
 those values at those offsets of them. Some binaries are built
 to run at offset different than zero. This stable ABI lives at
 that offset, not 0.
+
+# Input buffer (INBUF)
+
+As indicated above, the Input Buffer lives in SYSVARS and is
+$40 bytes in length (configured by INSZ, defined in xcomp).
+
+This buffer contains a stream of characters that, unlike
+regular strings, is *not* sized. It is also *not* terminated by
+any kind of character.
+
+Words IN( and IN) indicate its bounds and IN> is a pointer (in
+absolute address) pointing to the current character being read.
+
+This buffer will generally be filled by RDLN and then consumed
+by RDLN<. These words take care of not stepping out of bounds.
+
+When you type characters in the prompt, it's RDLN that handles
+it. When you type CR (or LF), it stops reading and begins
+feeding C<. If you type LNSZ characters without typing CR, an
+additional CR will be fed to C< after INBUF has gone through.
