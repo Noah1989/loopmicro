@@ -3211,22 +3211,21 @@ BEGIN,
 R16 $1 ANDI,
 RET,
 ( ----- 1000 )
-( xcomp unit for loopmicro computer )
-6 VALUES IVEC_ADDR $ff00  RS_ADDR $fe00  PS_ADDR $fefa
-         HERESTART $8000  sioa_ctrl $ff  sioa_data $ff
+8 VALUES IVEC_ADDR $ff00  RS_ADDR $fe00  PS_ADDR $fefa
+         HERESTART $8000  sioa_ctrl $c1  sioa_data $c0
+                          siob_ctrl $c3  siob_data $c2
 RS_ADDR $b0 - VALUE SYSVARS
 SYSVARS $80 + VALUE GRID_MEM   SYSVARS $90 + VALUE PS2_MEM
 PS2_MEM   1 + VALUE kbuf_rptr  PS2_MEM   3 + VALUE kbuf_wptr
 PS2_MEM   5 + VALUE kbuf(      PS2_MEM  32 + VALUE kbuf)
-   5      LOAD  ( Z80 ASM )
+   5      LOAD  ( Z80 ASM )          120      LOAD  ( utils )
  262  263 LOADR ( font compiler )
  280      LOAD  ( Z80 boot decl )    200  205 LOADR ( xcomp )
  281  299 LOADR ( Z80 boot code )    210  224 LOADR ( forth )
 1004      LOAD  ( interrupts )
 1001 1003 LOADR ( video driver )     240  241 LOADR ( grid )
-1005      LOAD  ( keyboard driver )  : (key?) 0 ; ( TODO )
-: INIT VIDEO$ INT$ 128 int_sio_recv DUMP ;
-XWRAP INIT
+1005 1006 LOADR ( keyboard sio )     246  249 LOADR ( ps/2 )
+: INIT VIDEO$ GRID$ INT$ KBD$ PS2$ ; XWRAP INIT
 ( ----- 1001 )
 ( loopmicro video driver )
 18 VALUES VSYNC  $a0  VSCRXL $b0  VSCRYL $b1  VSCRH  $b2
@@ -3256,9 +3255,9 @@ CREATE ~FNT CPFNT7x7
 : SCROLL ( x y -- ) 2 - DUP VSCRYL PC! SWAP 3 - DUP VSCRXL PC!
   ( y' x' ) >>8 $03 AND SWAP
     >> >> >> >> $30 AND OR $40 OR VSCRH PC! ;
-: VIDEO$ VSYNC$ 0 0 SCROLL VPALE$ FNT$
-  3 0 DO 0 [ GRID_MEM LITN ] I + C! LOOP
-  0 VADDR! 8192 0 DO TEXT_ATTR VATTR PC! SPC VNAME+ PC! LOOP ;
+: VIDEO$ VSYNC$ 0 0 SCROLL 0 VADDR! $21 VNAME PC! $4f VATTR PC!
+  VPALE$ FNT$ 0 VADDR! 8192 0 DO
+  TEXT_ATTR VATTR PC! SPC VNAME+ PC! LOOP ;
 ( ----- 1003 )
 : VPOS! ( pos -- ) COLS /MOD 128 * + VADDR! ;
 : CELL! ( c pos -- ) VPOS! VNAME PC! ;
@@ -3277,13 +3276,28 @@ CODE _ A IVEC_ADDR >>8 LDri, LDIA, IM2, EI, ;CODE
 : KBUF(  [ kbuf(     LITN ]   ; : KBUF)  [ kbuf)     LITN ]   ;
 : KBUF$ KBUF( DUP KBUF<! KBUF>! ;
 : (ps2kc) KBUF<@ KBUF>@ = IF 0 EXIT THEN
-          KBUF<@ DUP @ SWAP 1+ ( kc rptr++ )
+          KBUF<@ DUP C@ SWAP 1+ ( kc rptr++ )
           DUP KBUF) = IF DROP KBUF( THEN KBUF<! ;
 CREATE int_sio_recv AF PUSH, HL PUSH, DE PUSH,
     HL kbuf_wptr LDd(i), BEGIN,
     sioa_ctrl INAi, $01 ANDi, JRZ, L1 FWR ( done )
     sioa_data INAi, (HL) A LDrr,
     HL INCd, DE kbuf) LDdi, DE SBCHLd,
-    IFZ, HL DECd, THEN, DE ADDHLd,
+    IFZ, HL kbuf( LDdi, ELSE, DE ADDHLd, THEN,
     JR, AGAIN, ( done: ) L1 FSET kbuf_wptr HL LD(i)d,
     DE POP, HL POP, AF POP, EI, RETI,
+( ----- 1006 )
+CREATE _ ( init data ) $18 C, ( CMD3 )
+    $04 C, ( PTR4 ) $07 C, ( WR4/1x/1stop/oddpar )
+    $03 C, ( PTR3 ) $c1 C, ( WR3/RXon/8char )
+    $05 C, ( PTR5 ) $80 C, ( WR5/TXoff/DTR )
+    $01 C, ( PTR1 ) $18 C, ( WR1/RxINT )
+: SIOA$ _ 9 RANGE DO I C@ [ sioa_ctrl LITN ] PC! LOOP ;
+CREATE _ ( init data ) $18 C, ( CMD3 )
+    $04 C, ( PTR4 ) $07 C, ( WR4/1x/1stop/oddpar )
+    $03 C, ( PTR3 ) $00 C, ( WR3/RXoff )
+    $05 C, ( PTR5 ) $00 C, ( WR5/TXoff )
+    $01 C, ( PTR1 ) $00 C, ( WR1/no INT )
+    $02 C, ( PTR2 ) $00 C, ( INT vector )
+: SIOB$ _ 11 RANGE DO I C@ [ siob_ctrl LITN ] PC! LOOP ;
+: KBD$ KBUF$ SIOA$ SIOB$ int_sio_recv $00 INTREG ;
