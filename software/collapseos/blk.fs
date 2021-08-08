@@ -3228,11 +3228,11 @@ PS2_MEM   5 + VALUE kbuf(      PS2_MEM  32 + VALUE kbuf)
 : INIT VIDEO$ GRID$ INT$ KBD$ PS2$ ; XWRAP INIT
 ( ----- 1001 )
 ( loopmicro video driver )
-18 VALUES VSYNC  $a0  VSCRXL $b0  VSCRYL $b1  VSCRH  $b2
+16 VALUES VSYNC  $a0  VSCRXL $b0  VSCRYL $b1  VSCRH  $b2
           VADDRL $b3  VADDRH $b4  COLS   80   LINES   30
           VNAME  $b8  VATTR  $b9  VPATT  $ba  VPALE  $bb
           VNAME+ $bc  VATTR+ $bd  VPATT+ $be  VPALE+ $bf
-          TEXT_ATTR          $02  CURSOR_ATTR        $a2
+GRID_MEM 3 + VALUE TEXT_ATTR GRID_MEM 4 + VALUE CURSOR_ATTR
 : VADDR! DUP VADDRL PC! 8 RSHIFT VADDRH PC! ;
 CREATE _ ( sync timings ) $d9 C, $39 C, $d4 C, $74 C,
   $f6 C, $7e C, $e4 C, $e2 C, $e1 C, $f4 C, $90 C,
@@ -3255,14 +3255,21 @@ CREATE ~FNT CPFNT7x7
 : SCROLL ( x y -- ) 2 - DUP VSCRYL PC! SWAP 3 - DUP VSCRXL PC!
   ( y' x' ) >>8 $03 AND SWAP
     >> >> >> >> $30 AND OR $40 OR VSCRH PC! ;
-: VIDEO$ VSYNC$ 0 0 SCROLL 0 VADDR! $21 VNAME PC! $4f VATTR PC!
+GRID_MEM 5 + VALUE TOPLINE
+: VIDEO$ VSYNC$ 0 0 SCROLL $02 TEXT_ATTR C! $a2 CURSOR_ATTR C!
+  0 VADDR! $21 VNAME PC! $4f VATTR PC! 0 TOPLINE C!
   VPALE$ FNT$ 0 VADDR! 8192 0 DO
-  TEXT_ATTR VATTR PC! SPC VNAME+ PC! LOOP ;
+  TEXT_ATTR C@ VATTR PC! SPC VNAME+ PC! LOOP ;
 ( ----- 1003 )
-: VPOS! ( pos -- ) COLS /MOD 128 * + VADDR! ;
+: VPOS! ( pos -- ) COLS /MOD TOPLINE C@ + 128 * + VADDR! ;
 : CELL! ( c pos -- ) VPOS! VNAME PC! ;
-: CURSOR! ( new old -- ) VPOS! TEXT_ATTR VATTR PC!
-                         VPOS! CURSOR_ATTR VATTR PC! ;
+: CURSOR! ( new old -- ) VPOS! TEXT_ATTR C@ VATTR PC!
+                         VPOS! CURSOR_ATTR C@ VATTR PC! ;
+: NEWLN ( oldln -- newln ) 1+ DUP LINES = IF
+    1- 0 TOPLINE C@ 1+ 64 MOD DUP TOPLINE C! 8 * SCROLL
+    [ GRID_MEM LITN ] ( XYPOS ) DUP @ COLS - SWAP !
+  THEN DUP COLS * VPOS! COLS 0 DO
+    TEXT_ATTR C@ VATTR PC! SPC VNAME+ PC! LOOP ;
 ( ----- 1004 )
 ( interrupt support routines )
 : INTREG ( handler vec -- ) [ IVEC_ADDR LITN ] + ! ;
