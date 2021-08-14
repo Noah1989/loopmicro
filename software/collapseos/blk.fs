@@ -1546,7 +1546,7 @@ CREATE PS2_CODES $80 nC,
   512 RANGE DO ( crc )
     I C@ ( crc b ) DUP (spix) DROP CRC16 LOOP ( crc )
     DUP >>8 ( crc msb ) (spix) DROP (spix) DROP
-    _wait DROP 0 (spie) ;
+    _wait DROP _ready 0 (spie) ;
 : SDC! ( blkno blk( -- )
   SWAP << ( 2x ) 2DUP ( a b a b ) _
   ( a b ) 1+ SWAP 512 + SWAP _ ;
@@ -3293,22 +3293,31 @@ R16 $1 ANDI,
 RET,
 ( ----- 1000 )
 ( xcomp unit for loopmicro computer )
-8 VALUES IVEC_ADDR $ff00  RS_ADDR $fe00  PS_ADDR $fefa
-         HERESTART $8000  sioa_ctrl $c1  sioa_data $c0
-                          siob_ctrl $c3  siob_data $c2
+CREATE LOOPMICRO
+12 VALUES IVEC_ADDR $ff00  RS_ADDR $fe00  PS_ADDR $fefa
+          SIOA_CTRL   $c1  SIOA_DATA $c0
+          SIOB_CTRL   $c3  SIOB_DATA $c2
+          SDC_DATA    $d0  SDC_CTRL  $d1
+          SDC_DEVID   $10  SDC_SPEED $04
+          HERESTART $8000
 RS_ADDR $b0 - VALUE SYSVARS
 SYSVARS $80 + VALUE GRID_MEM   SYSVARS $90 + VALUE PS2_MEM
 PS2_MEM   1 + VALUE kbuf_rptr  PS2_MEM   3 + VALUE kbuf_wptr
 PS2_MEM   5 + VALUE kbuf(      PS2_MEM  32 + VALUE kbuf)
-: UTILS    120       LOAD  ;  : INTSUB 1006      LOAD  ;
-: VIDEOSUB 1003 1005 LOADR ;  : KBDSUB 1007 1008 LOADR ;
+: UTILS    120       LOAD  ;  : INTSUB 1015      LOAD  ;
+: VIDEOSUB 1010 1012 LOADR ;  : KBDSUB 1020 1021 LOADR ;
+: SDCSUB   1025      LOAD               250  258 LOADR ;
 : BUILD1 UTILS Z80A XCOMPL 1001 LOAD ;
 ( ----- 1001 )
 : BUILD2 FONTC Z80M XCOMPH Z80C COREL
-  INTSUB VIDEOSUB GRIDSUB KBDSUB PS2SUB 1002 LOAD ;
+  INTSUB VIDEOSUB GRIDSUB KBDSUB PS2SUB SDCSUB 1002 LOAD
+  BLKSUB 1003 LOAD ;
 ( ----- 1002 )
-: INIT VIDEO$ GRID$ INT$ KBD$ PS2$ ;
+X' SDC@ ALIAS (blk@)
+X' SDC! ALIAS (blk!)
 ( ----- 1003 )
+: INIT VIDEO$ GRID$ INT$ KBD$ PS2$ BLK$ SDC$ ;
+( ----- 1010 )
 ( loopmicro video driver )
 16 VALUES VSYNC  $a0  VSCRXL $b0  VSCRYL $b1  VSCRH  $b2
           VADDRL $b3  VADDRH $b4  COLS   80   LINES   30
@@ -3325,7 +3334,7 @@ CREATE COLORS $00 C, $0c C, $20 C, $38 C,
               $c3 C, $8f C, $e3 C, $ff C,
 ( at end of block because it overwrites BLK )
 CREATE ~FNT CPFNT7x7
-( ----- 1004 )
+( ----- 1011 )
 : _ ( addr -- addr+4k ) 16 0 DO 16 0 DO DUP
   VADDR! COLORS J + C@ VPALE+ PC! COLORS I + C@ VPALE+ PC!
   16 + LOOP LOOP ;
@@ -3342,7 +3351,7 @@ GRID_MEM 5 + VALUE TOPLINE
   0 VADDR! 'C' VNAME PC! $4f VATTR PC! 0 TOPLINE C!
   VPALE$ FNT$ 0 VADDR! 8192 0 DO
   TEXT_ATTR C@ VATTR PC! SPC VNAME+ PC! LOOP ;
-( ----- 1005 )
+( ----- 1012 )
 : VPOS! ( pos -- ) COLS /MOD TOPLINE C@ + 128 * + VADDR! ;
 : CELL! ( c pos -- ) VPOS! VNAME PC! ;
 : CURSOR! ( new old -- ) VPOS! TEXT_ATTR C@ VATTR PC!
@@ -3352,14 +3361,17 @@ GRID_MEM 5 + VALUE TOPLINE
     [ GRID_MEM LITN ] ( XYPOS ) DUP @ COLS - SWAP !
   THEN DUP COLS * VPOS! COLS 0 DO
     TEXT_ATTR C@ VATTR PC! SPC VNAME+ PC! LOOP ;
-( ----- 1006 )
+: CELLS! ( a pos u -- )
+  ?DUP IF SWAP VPOS! RANGE DO I C@ VNAME+ PC! LOOP
+  ELSE 2DROP THEN ;
+( ----- 1015 )
 ( interrupt support routines )
 $47 OPED LDIA,
 : INTREG ( handler vec -- ) [ IVEC_ADDR LITN ] + ! ;
 CREATE int_noop EI, RETI,
 CODE _ A IVEC_ADDR >>8 LDri, LDIA, IM2, EI, ;CODE
 : INT$ 128 0 DO int_noop I << INTREG LOOP _ ;
-( ----- 1007 )
+( ----- 1020 )
 ( keyboard driver )
 : KBUF<@ [ kbuf_rptr LITN ] @ ; : KBUF<! [ kbuf_rptr LITN ] ! ;
 : KBUF>@ [ kbuf_wptr LITN ] @ ; : KBUF>! [ kbuf_wptr LITN ] ! ;
@@ -3370,24 +3382,27 @@ CODE _ A IVEC_ADDR >>8 LDri, LDIA, IM2, EI, ;CODE
           DUP KBUF) = IF DROP KBUF( THEN KBUF<! ;
 CREATE int_sio_recv AF PUSH, HL PUSH, DE PUSH,
     HL kbuf_wptr LDd(i), BEGIN,
-    sioa_ctrl INAi, $01 ANDi, JRZ, FWR L1 ( done )
-    sioa_data INAi, (HL) A LDrr,
+    SIOA_CTRL INAi, $01 ANDi, JRZ, FWR L1 ( done )
+    SIOA_DATA INAi, (HL) A LDrr,
     HL INCd, DE kbuf) LDdi, DE SBCHLd,
     IFZ, HL kbuf( LDdi, ELSE, DE ADDHLd, THEN,
     JR, AGAIN, ( done: ) FSET L1 kbuf_wptr HL LD(i)d,
     DE POP, HL POP, AF POP, EI, RETI,
-( ----- 1008 )
+( ----- 1021 )
 CREATE _ ( init data ) $18 C, ( CMD3 )
     $04 C, ( PTR4 ) $07 C, ( WR4/1x/1stop/oddpar )
     $03 C, ( PTR3 ) $c1 C, ( WR3/RXon/8char )
     $05 C, ( PTR5 ) $80 C, ( WR5/TXoff/DTR )
     $01 C, ( PTR1 ) $18 C, ( WR1/RxINT )
-: SIOA$ _ 9 RANGE DO I C@ [ sioa_ctrl LITN ] PC! LOOP ;
+: SIOA$ _ 9 RANGE DO I C@ [ SIOA_CTRL LITN ] PC! LOOP ;
 CREATE _ ( init data ) $18 C, ( CMD3 )
     $04 C, ( PTR4 ) $07 C, ( WR4/1x/1stop/oddpar )
     $03 C, ( PTR3 ) $00 C, ( WR3/RXoff )
     $05 C, ( PTR5 ) $00 C, ( WR5/TXoff )
     $01 C, ( PTR1 ) $00 C, ( WR1/no INT )
     $02 C, ( PTR2 ) $00 C, ( INT vector )
-: SIOB$ _ 11 RANGE DO I C@ [ siob_ctrl LITN ] PC! LOOP ;
+: SIOB$ _ 11 RANGE DO I C@ [ SIOB_CTRL LITN ] PC! LOOP ;
 : KBD$ KBUF$ SIOA$ SIOB$ int_sio_recv $00 INTREG ;
+( ----- 1025 )
+: (spix) [ SDC_DATA LITN ] PC! [ SDC_CTRL LITN ] PC@ ;
+: (spie) [ SDC_SPEED LITN ] OR [ SDC_CTRL LITN ] PC! ;
