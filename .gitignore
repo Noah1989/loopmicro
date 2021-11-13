@@ -28,3 +28,4 @@ _autosave-*
 *.xml
 *.csv
 .DS_Store
+*.pyc

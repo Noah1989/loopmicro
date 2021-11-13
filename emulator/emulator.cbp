@@ -4,50 +4,79 @@
 	<Project>
 		<Option title="emulator" />
 		<Option pch_mode="2" />
-		<Option compiler="gcc" />
+		<Option compiler="emscripten" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/emulator" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/emulator.html" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="bin/Debug" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
-				<Option compiler="gcc" />
+				<Option compiler="emscripten" />
 				<Compiler>
 					<Add option="-g" />
-				</Compiler>
-			</Target>
-			<Target title="Release">
-				<Option output="bin/Release/emulator" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Release/" />
-				<Option type="0" />
-				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-O2" />
+					<Add option="-s USE_SDL=2" />
+					<Add option="-s USE_SDL_IMAGE=2" />
+					<Add directory="./" />
 				</Compiler>
 				<Linker>
-					<Add option="-s" />
+					<Add option="-s USE_SDL=2" />
+					<Add option="-s USE_SDL_IMAGE=2" />
+					<Add option="-g" />
+					<Add option="--shell-file shell.html" />
+					<Add option="--preload-file assets" />
+					<Add option="--use-preload-plugins" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/emulator.html" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="bin/Release" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="emscripten" />
+				<Compiler>
+					<Add option="-s USE_SDL=2" />
+					<Add option="-s USE_SDL_IMAGE=2" />
+					<Add directory="./" />
+				</Compiler>
+				<Linker>
+					<Add option="-s USE_SDL=2" />
+					<Add option="-s USE_SDL_IMAGE=2" />
+					<Add option="--shell-file shell.html" />
+					<Add option="--preload-file assets" />
+					<Add option="--use-preload-plugins" />
 				</Linker>
 			</Target>
 		</Build>
-		<Compiler>
-			<Add option="-Wall" />
-			<Add directory="C:/cygwin64/usr/x86_64-w64-mingw32/sys-root/mingw/include" />
-		</Compiler>
-		<Linker>
-			<Add library="mingw32" />
-			<Add library="SDL2main" />
-			<Add library="SDL2.dll" />
-			<Add library="user32" />
-			<Add library="gdi32" />
-			<Add library="winmm" />
-			<Add library="dxguid" />
-			<Add directory="C:/cygwin64/usr/x86_64-w64-mingw32/sys-root/mingw/lib" />
-		</Linker>
-		<ExtraCommands>
-			<Add after="XCOPY $(#sdl2)\bin\*.dll $(TARGET_OUTPUT_DIR) /D /Y" />
-		</ExtraCommands>
-		<Unit filename="main.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Extensions />
+		<Unit filename="actor.cpp" />
+		<Unit filename="actor.h" />
+		<Unit filename="assets/button.png" />
+		<Unit filename="assets/button.svg" />
+		<Unit filename="assets/button_pressed.png" />
+		<Unit filename="assets/button_pressed.svg" />
+		<Unit filename="assets/led.png" />
+		<Unit filename="assets/led_flat_green.png" />
+		<Unit filename="assets/led_flat_green.svg" />
+		<Unit filename="assets/led_flat_green_light.png" />
+		<Unit filename="assets/led_flat_green_light.svg" />
+		<Unit filename="assets/led_flat_red.png" />
+		<Unit filename="assets/led_flat_red.svg" />
+		<Unit filename="assets/led_flat_red_light.png" />
+		<Unit filename="assets/led_flat_red_light.svg" />
+		<Unit filename="assets/led_flat_yellow.png" />
+		<Unit filename="assets/led_flat_yellow.svg" />
+		<Unit filename="assets/led_flat_yellow_light.png" />
+		<Unit filename="assets/led_flat_yellow_light.svg" />
+		<Unit filename="button.cpp" />
+		<Unit filename="button.h" />
+		<Unit filename="context.h" />
+		<Unit filename="led.cpp" />
+		<Unit filename="led.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="scene.cpp" />
+		<Unit filename="scene.h" />
+		<Unit filename="shell.html" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
