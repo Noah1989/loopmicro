@@ -7,8 +7,9 @@ class Actor
 {
     public:
         Actor(SDL_Renderer *renderer, int num_layers);
-        bool is_changed();
         virtual bool handleEvent(SDL_Event *event);
+        virtual void tick();
+        bool is_changed();
         virtual bool render(int layer);
 
     protected:

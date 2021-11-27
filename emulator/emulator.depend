@@ -2,14 +2,14 @@
 1636313502 source:c:\projects\loopmicro\emulator\hello_world.c
 	<stdio.h>
 
-1636829348 source:c:\projects\loopmicro\emulator\main.cpp
-	<SDL2/SDL.h>
-	<emscripten.h>
+1638014427 source:c:\projects\loopmicro\emulator\main.cpp
 	<iostream>
-	<scene.h>
+	<emscripten.h>
+	<SDL2/SDL.h>
+	"scene.hpp"
 
-1636828107 source:c:\projects\loopmicro\emulator\led.cpp
-	"led.h"
+1638018615 source:c:\projects\loopmicro\emulator\led.cpp
+	"led.hpp"
 
 1636824579 c:\projects\loopmicro\emulator\led.h
 	<SDL2/SDL.h>
@@ -17,11 +17,11 @@
 	<string>
 	<actor.h>
 
-1636826749 source:c:\projects\loopmicro\emulator\scene.cpp
-	"scene.h"
-	"led.h"
-	"button.h"
+1638018865 source:c:\projects\loopmicro\emulator\scene.cpp
 	<algorithm>
+	"scene.hpp"
+	"led.hpp"
+	"button.hpp"
 
 1636826658 c:\projects\loopmicro\emulator\scene.h
 	<SDL2/SDL.h>
@@ -33,8 +33,8 @@
 	<list>
 	<actor.h>
 
-1636829005 source:c:\projects\loopmicro\emulator\actor.cpp
-	"actor.h"
+1638014075 source:c:\projects\loopmicro\emulator\actor.cpp
+	"actor.hpp"
 
 1636828890 c:\projects\loopmicro\emulator\actor.h
 	<SDL2/SDL.h>
@@ -42,11 +42,44 @@
 1636828890 c:\projects\loopmicro\emulator\\actor.h
 	<SDL2/SDL.h>
 
-1636828361 source:c:\projects\loopmicro\emulator\button.cpp
-	"button.h"
+1638014245 source:c:\projects\loopmicro\emulator\button.cpp
+	"button.hpp"
 
-1636829442 c:\projects\loopmicro\emulator\button.h
+1636832421 c:\projects\loopmicro\emulator\button.h
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	<actor.h>
+
+1638018659 source:c:\projects\loopmicro\emulator\signal.cpp
+	"signal.hpp"
+
+1638009295 c:\projects\loopmicro\emulator\signal.h
+	<map>
+	<actor.h>
+
+1638012617 c:\projects\loopmicro\emulator\actor.hpp
+	<SDL2/SDL.h>
+
+1638013664 c:\projects\loopmicro\emulator\button.hpp
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	"actor.hpp"
+	"signal.hpp"
+
+1638017044 c:\projects\loopmicro\emulator\signal.hpp
+	<map>
+	"actor.hpp"
+
+1638019105 c:\projects\loopmicro\emulator\led.hpp
+	<string>
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	"actor.hpp"
+	"signal.hpp"
+
+1638014563 c:\projects\loopmicro\emulator\scene.hpp
+	<list>
+	<SDL2/SDL.h>
+	"actor.hpp"
+	"signal.hpp"
 

@@ -1,8 +1,8 @@
-#include <SDL2/SDL.h>
-#include <emscripten.h>
 #include <iostream>
+#include <emscripten.h>
+#include <SDL2/SDL.h>
 
-#include <scene.h>
+#include "scene.hpp"
 
 struct context
 {
@@ -35,6 +35,9 @@ void mainloop(void *arg)
     while (SDL_PollEvent(&event)) {
         ctx->scene->handleEvent(&event);
     }
+
+    // run simulation
+    ctx->scene->tick();
 
     // draw scene
     if (ctx->scene->render()) {

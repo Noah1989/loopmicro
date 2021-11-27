@@ -47,8 +47,11 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Unit filename=".gitignore">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="actor.cpp" />
-		<Unit filename="actor.h" />
+		<Unit filename="actor.hpp" />
 		<Unit filename="assets/button.png" />
 		<Unit filename="assets/button.svg" />
 		<Unit filename="assets/button_pressed.png" />
@@ -67,14 +70,15 @@
 		<Unit filename="assets/led_flat_yellow_light.png" />
 		<Unit filename="assets/led_flat_yellow_light.svg" />
 		<Unit filename="button.cpp" />
-		<Unit filename="button.h" />
-		<Unit filename="context.h" />
+		<Unit filename="button.hpp" />
 		<Unit filename="led.cpp" />
-		<Unit filename="led.h" />
+		<Unit filename="led.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="scene.cpp" />
-		<Unit filename="scene.h" />
+		<Unit filename="scene.hpp" />
 		<Unit filename="shell.html" />
+		<Unit filename="signal.cpp" />
+		<Unit filename="signal.hpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

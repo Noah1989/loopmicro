@@ -1,30 +1,43 @@
-#include "scene.h"
-#include "led.h"
-#include "button.h"
-
 #include <algorithm>
+
+#include "scene.hpp"
+#include "led.hpp"
+#include "button.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 : window(window), renderer(renderer)
 {
-    Led *led1 = new Led(renderer, { .x=50, .y=60 }, "flat_green");
-    Led *led2 = new Led(renderer, { .x=66, .y=60 }, "flat_yellow");
-    Led *led3 = new Led(renderer, { .x=82, .y=60 }, "flat_red");
+    Signal *signal1 = new Signal();
+    Signal *signal2 = new Signal();
+    Signal *signal3 = new Signal();
 
-    led1->set_value(1);
-    led2->set_value(1);
-    led3->set_value(1);
+    Led *led1 = new Led(renderer, { .x=50, .y=60 }, "flat_green",  signal1);
+    Led *led2 = new Led(renderer, { .x=66, .y=60 }, "flat_yellow", signal2);
+    Led *led3 = new Led(renderer, { .x=82, .y=60 }, "flat_red",    signal3);
 
-    Button *btn1 = new Button(renderer, { .x=50, .y=120});
-    Button *btn2 = new Button(renderer, { .x=82, .y=120});
+    Button *btn1 = new Button(renderer, { .x=50, .y=120},
+                              signal1, SignalPull::None, SignalPull::High);
+    Button *btn2 = new Button(renderer, { .x=82, .y=120},
+                              signal2, SignalPull::WeakHigh, SignalPull::Low);
 
     actors = { led1, led2, led3, btn1, btn2 };
+    signals = { signal1, signal2 };
 }
 
 void Scene::handleEvent(SDL_Event *event)
 {
     for (Actor *actor : actors) {
         if (actor->handleEvent(event)) break;
+    }
+}
+
+void Scene::tick()
+{
+    for (Actor *actor : actors) {
+        actor->tick();
+    }
+    for (Signal *signal: signals) {
+        signal->tick();
     }
 }
 
