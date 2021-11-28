@@ -14,17 +14,10 @@
 				<Option compiler="emscripten" />
 				<Compiler>
 					<Add option="-g" />
-					<Add option="-s USE_SDL=2" />
-					<Add option="-s USE_SDL_IMAGE=2" />
 					<Add directory="./" />
 				</Compiler>
 				<Linker>
-					<Add option="-s USE_SDL=2" />
-					<Add option="-s USE_SDL_IMAGE=2" />
 					<Add option="-g" />
-					<Add option="--shell-file shell.html" />
-					<Add option="--preload-file assets" />
-					<Add option="--use-preload-plugins" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -34,24 +27,32 @@
 				<Option type="1" />
 				<Option compiler="emscripten" />
 				<Compiler>
-					<Add option="-s USE_SDL=2" />
-					<Add option="-s USE_SDL_IMAGE=2" />
+					<Add option="-O4" />
+					<Add option="-Werror" />
 					<Add directory="./" />
 				</Compiler>
-				<Linker>
-					<Add option="-s USE_SDL=2" />
-					<Add option="-s USE_SDL_IMAGE=2" />
-					<Add option="--shell-file shell.html" />
-					<Add option="--preload-file assets" />
-					<Add option="--use-preload-plugins" />
-				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-s USE_SDL=2" />
+			<Add option="-s USE_SDL_IMAGE=2" />
+			<Add option="-s USE_SDL_TTF=2" />
+		</Compiler>
+		<Linker>
+			<Add option="-s USE_SDL=2" />
+			<Add option="-s USE_SDL_IMAGE=2" />
+			<Add option="-s USE_SDL_TTF=2" />
+			<Add option="--shell-file shell.html" />
+			<Add option="--preload-file assets" />
+			<Add option="--use-preload-plugins" />
+		</Linker>
 		<Unit filename=".gitignore">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="actor.cpp" />
 		<Unit filename="actor.hpp" />
+		<Unit filename="assets/Dosis-ExtraLight.ttf" />
 		<Unit filename="assets/button.png" />
 		<Unit filename="assets/button.svg" />
 		<Unit filename="assets/button_pressed.png" />
@@ -71,6 +72,8 @@
 		<Unit filename="assets/led_flat_yellow_light.svg" />
 		<Unit filename="button.cpp" />
 		<Unit filename="button.hpp" />
+		<Unit filename="label.cpp" />
+		<Unit filename="label.hpp" />
 		<Unit filename="led.cpp" />
 		<Unit filename="led.hpp" />
 		<Unit filename="main.cpp" />

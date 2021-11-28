@@ -2,30 +2,32 @@
 #define BUTTON_H
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
 #include "actor.hpp"
 #include "signal.hpp"
+#include "label.hpp"
 
 class Button : public Actor
 {
     public:
-        Button(SDL_Renderer *renderer, SDL_Point pos,
+        Button(SDL_Renderer *renderer, SDL_Point pos, const char *label_text,
                Signal *output, SignalPull offPull, SignalPull onPull);
+
         bool handleEvent(SDL_Event *event);
         void tick();
         bool render(int layer);
 
     private:
-        bool pressed;
-        SDL_Rect rect;
-        SDL_Texture *base_image;
-        SDL_Texture *pressed_image;
-        SDL_Cursor *default_cursor;
-        SDL_Cursor *hand_cursor;
-        Signal *output;
-        SignalPull offPull;
-        SignalPull onPull;
+        bool         pressed;
+        SDL_Rect     rect;
+        SDL_Texture *baseImage;
+        SDL_Texture *pressedImage;
+        Label       *label;
+        SDL_Cursor  *defaultCursor;
+        SDL_Cursor  *handCursor;
+        Signal      *output;
+        SignalPull   offPull;
+        SignalPull   onPull;
 };
 
 #endif // BUTTON_H

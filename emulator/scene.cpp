@@ -11,13 +11,16 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Signal *signal2 = new Signal();
     Signal *signal3 = new Signal();
 
-    Led *led1 = new Led(renderer, { .x=50, .y=60 }, "flat_green",  signal1);
-    Led *led2 = new Led(renderer, { .x=66, .y=60 }, "flat_yellow", signal2);
-    Led *led3 = new Led(renderer, { .x=82, .y=60 }, "flat_red",    signal3);
+    Led *led1 = new Led(renderer, { .x=50, .y=60 },
+                        "A0", "flat_green",  signal1);
+    Led *led2 = new Led(renderer, { .x=66, .y=60 },
+                        "D2", "flat_yellow", signal2);
+    Led *led3 = new Led(renderer, { .x=82, .y=60 },
+                        "M1", "flat_red",    signal3);
 
-    Button *btn1 = new Button(renderer, { .x=50, .y=120},
+    Button *btn1 = new Button(renderer, { .x=50, .y=120 }, "CLK",
                               signal1, SignalPull::None, SignalPull::High);
-    Button *btn2 = new Button(renderer, { .x=82, .y=120},
+    Button *btn2 = new Button(renderer, { .x=82, .y=120 }, "RES",
                               signal2, SignalPull::WeakHigh, SignalPull::Low);
 
     actors = { led1, led2, led3, btn1, btn2 };

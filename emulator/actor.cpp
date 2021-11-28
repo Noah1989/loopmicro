@@ -1,7 +1,7 @@
 #include "actor.hpp"
 
-Actor::Actor(SDL_Renderer *renderer, int num_layers)
-: renderer(renderer), num_layers(num_layers), changed(true)
+Actor::Actor(SDL_Renderer *renderer, int numLayers)
+: renderer(renderer), changed(true), numLayers(numLayers)
 {
 }
 
@@ -21,7 +21,7 @@ bool Actor::is_changed()
 
 bool Actor::render(int layer)
 {
-    if (layer == num_layers) {
+    if (layer >= numLayers) {
         changed = false;
         return false;
     }

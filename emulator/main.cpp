@@ -1,6 +1,7 @@
 #include <iostream>
 #include <emscripten.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "scene.hpp"
 
@@ -48,6 +49,7 @@ void mainloop(void *arg)
 int main()
 {
     SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
 
     context ctx = {};
 

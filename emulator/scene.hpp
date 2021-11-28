@@ -11,14 +11,15 @@ class Scene
 {
     public:
         Scene(SDL_Window *window, SDL_Renderer *renderer);
+
         void handleEvent(SDL_Event *event);
         void tick();
         bool render();
 
     private:
-        SDL_Window *window;
-        SDL_Renderer *renderer;
-        std::list<Actor*> actors;
+        SDL_Window        *window;
+        SDL_Renderer      *renderer;
+        std::list<Actor*>  actors;
         std::list<Signal*> signals;
 };
 

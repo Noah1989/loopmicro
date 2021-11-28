@@ -2,13 +2,14 @@
 1636313502 source:c:\projects\loopmicro\emulator\hello_world.c
 	<stdio.h>
 
-1638014427 source:c:\projects\loopmicro\emulator\main.cpp
+1638049641 source:c:\projects\loopmicro\emulator\main.cpp
 	<iostream>
 	<emscripten.h>
 	<SDL2/SDL.h>
+	<SDL2/SDL_ttf.h>
 	"scene.hpp"
 
-1638018615 source:c:\projects\loopmicro\emulator\led.cpp
+1638098351 source:c:\projects\loopmicro\emulator\led.cpp
 	"led.hpp"
 
 1636824579 c:\projects\loopmicro\emulator\led.h
@@ -17,7 +18,7 @@
 	<string>
 	<actor.h>
 
-1638018865 source:c:\projects\loopmicro\emulator\scene.cpp
+1638050892 source:c:\projects\loopmicro\emulator\scene.cpp
 	<algorithm>
 	"scene.hpp"
 	"led.hpp"
@@ -33,7 +34,7 @@
 	<list>
 	<actor.h>
 
-1638014075 source:c:\projects\loopmicro\emulator\actor.cpp
+1638048329 source:c:\projects\loopmicro\emulator\actor.cpp
 	"actor.hpp"
 
 1636828890 c:\projects\loopmicro\emulator\actor.h
@@ -42,7 +43,9 @@
 1636828890 c:\projects\loopmicro\emulator\\actor.h
 	<SDL2/SDL.h>
 
-1638014245 source:c:\projects\loopmicro\emulator\button.cpp
+1638098112 source:c:\projects\loopmicro\emulator\button.cpp
+	<iostream>
+	<SDL2/SDL_image.h>
 	"button.hpp"
 
 1636832421 c:\projects\loopmicro\emulator\button.h
@@ -57,29 +60,37 @@
 	<map>
 	<actor.h>
 
-1638012617 c:\projects\loopmicro\emulator\actor.hpp
+1638047799 c:\projects\loopmicro\emulator\actor.hpp
 	<SDL2/SDL.h>
 
-1638013664 c:\projects\loopmicro\emulator\button.hpp
+1638098231 c:\projects\loopmicro\emulator\button.hpp
 	<SDL2/SDL.h>
-	<SDL2/SDL_image.h>
 	"actor.hpp"
 	"signal.hpp"
+	"label.hpp"
 
-1638017044 c:\projects\loopmicro\emulator\signal.hpp
+1638047799 c:\projects\loopmicro\emulator\signal.hpp
 	<map>
 	"actor.hpp"
 
-1638019105 c:\projects\loopmicro\emulator\led.hpp
+1638098351 c:\projects\loopmicro\emulator\led.hpp
 	<string>
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	"actor.hpp"
 	"signal.hpp"
+	"label.hpp"
 
-1638014563 c:\projects\loopmicro\emulator\scene.hpp
+1638047799 c:\projects\loopmicro\emulator\scene.hpp
 	<list>
 	<SDL2/SDL.h>
 	"actor.hpp"
 	"signal.hpp"
+
+1638098075 source:c:\projects\loopmicro\emulator\label.cpp
+	"label.hpp"
+	<SDL2/SDL_ttf.h>
+
+1638098018 c:\projects\loopmicro\emulator\label.hpp
+	<SDL2/SDL.h>
 
