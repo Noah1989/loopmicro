@@ -1,5 +1,5 @@
-#ifndef LED_H
-#define LED_H
+#ifndef LED_HPP
+#define LED_HPP
 
 #include <string>
 #include <SDL2/SDL.h>
@@ -29,4 +29,4 @@ class Led : public Actor
         void set_value(float value);
 };
 
-#endif // LED_H
+#endif // LED_HPP

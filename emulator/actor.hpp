@@ -1,5 +1,5 @@
-#ifndef ACTOR_H
-#define ACTOR_H
+#ifndef ACTOR_HPP
+#define ACTOR_HPP
 
 #include <SDL2/SDL.h>
 
@@ -21,4 +21,4 @@ class Actor
         int numLayers;
 };
 
-#endif // ACTOR_H
+#endif // ACTOR_HPP

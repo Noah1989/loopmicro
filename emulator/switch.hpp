@@ -1,5 +1,5 @@
-#ifndef BUTTON_HPP
-#define BUTTON_HPP
+#ifndef SWITCH_HPP
+#define SWITCH_HPP
 
 #include <SDL2/SDL.h>
 
@@ -7,10 +7,10 @@
 #include "signal.hpp"
 #include "label.hpp"
 
-class Button : public Actor
+class Switch : public Actor
 {
     public:
-        Button(SDL_Renderer *renderer, SDL_Point pos, const char *label_text,
+        Switch(SDL_Renderer *renderer, SDL_Point pos, const char *label_text,
                Signal *output, SignalPull offPull, SignalPull onPull);
 
         bool handleEvent(SDL_Event *event);
@@ -18,10 +18,10 @@ class Button : public Actor
         bool render(int layer);
 
     private:
-        bool         pressed;
+        bool         state;
         SDL_Rect     rect;
         SDL_Texture *baseImage;
-        SDL_Texture *pressedImage;
+        SDL_Texture *onImage;
         Label       *label;
         SDL_Cursor  *defaultCursor;
         SDL_Cursor  *handCursor;
@@ -30,4 +30,4 @@ class Button : public Actor
         SignalPull   onPull;
 };
 
-#endif // BUTTON_HPP
+#endif // SWITCH_HPP

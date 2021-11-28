@@ -1,5 +1,5 @@
-#ifndef SIGNAL_H
-#define SIGNAL_H
+#ifndef SIGNAL_HPP
+#define SIGNAL_HPP
 
 #include <map>
 
@@ -34,4 +34,4 @@ class Signal
         std::map<Actor*, SignalPull> pullers;
 };
 
-#endif // SIGNAL_H
+#endif // SIGNAL_HPP

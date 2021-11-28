@@ -9,7 +9,7 @@
 	<SDL2/SDL_ttf.h>
 	"scene.hpp"
 
-1638098351 source:c:\projects\loopmicro\emulator\led.cpp
+1638100417 source:c:\projects\loopmicro\emulator\led.cpp
 	"led.hpp"
 
 1636824579 c:\projects\loopmicro\emulator\led.h
@@ -18,9 +18,9 @@
 	<string>
 	<actor.h>
 
-1638050892 source:c:\projects\loopmicro\emulator\scene.cpp
-	<algorithm>
+1638100417 source:c:\projects\loopmicro\emulator\scene.cpp
 	"scene.hpp"
+	<algorithm>
 	"led.hpp"
 	"button.hpp"
 
@@ -43,10 +43,9 @@
 1636828890 c:\projects\loopmicro\emulator\\actor.h
 	<SDL2/SDL.h>
 
-1638098112 source:c:\projects\loopmicro\emulator\button.cpp
-	<iostream>
-	<SDL2/SDL_image.h>
+1638100389 source:c:\projects\loopmicro\emulator\button.cpp
 	"button.hpp"
+	<SDL2/SDL_image.h>
 
 1636832421 c:\projects\loopmicro\emulator\button.h
 	<SDL2/SDL.h>
@@ -60,20 +59,20 @@
 	<map>
 	<actor.h>
 
-1638047799 c:\projects\loopmicro\emulator\actor.hpp
+1638100027 c:\projects\loopmicro\emulator\actor.hpp
 	<SDL2/SDL.h>
 
-1638098231 c:\projects\loopmicro\emulator\button.hpp
+1638100027 c:\projects\loopmicro\emulator\button.hpp
 	<SDL2/SDL.h>
 	"actor.hpp"
 	"signal.hpp"
 	"label.hpp"
 
-1638047799 c:\projects\loopmicro\emulator\signal.hpp
+1638100027 c:\projects\loopmicro\emulator\signal.hpp
 	<map>
 	"actor.hpp"
 
-1638098351 c:\projects\loopmicro\emulator\led.hpp
+1638100027 c:\projects\loopmicro\emulator\led.hpp
 	<string>
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
@@ -81,7 +80,7 @@
 	"signal.hpp"
 	"label.hpp"
 
-1638047799 c:\projects\loopmicro\emulator\scene.hpp
+1638100027 c:\projects\loopmicro\emulator\scene.hpp
 	<list>
 	<SDL2/SDL.h>
 	"actor.hpp"
@@ -91,6 +90,16 @@
 	"label.hpp"
 	<SDL2/SDL_ttf.h>
 
-1638098018 c:\projects\loopmicro\emulator\label.hpp
+1638100027 c:\projects\loopmicro\emulator\label.hpp
 	<SDL2/SDL.h>
+
+1638100492 source:c:\projects\loopmicro\emulator\switch.cpp
+	"switch.hpp"
+	<SDL2/SDL_image.h>
+
+1638100342 c:\projects\loopmicro\emulator\switch.hpp
+	<SDL2/SDL.h>
+	"actor.hpp"
+	"signal.hpp"
+	"label.hpp"
 

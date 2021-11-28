@@ -1,5 +1,5 @@
-#ifndef LABEL_H
-#define LABEL_H
+#ifndef LABEL_HPP
+#define LABEL_HPP
 
 #include <SDL2/SDL.h>
 
@@ -16,4 +16,4 @@ class Label
         SDL_Texture  *labelImage;
 };
 
-#endif // LABEL_H
+#endif // LABEL_HPP

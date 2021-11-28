@@ -82,6 +82,8 @@
 		<Unit filename="shell.html" />
 		<Unit filename="signal.cpp" />
 		<Unit filename="signal.hpp" />
+		<Unit filename="switch.cpp" />
+		<Unit filename="switch.hpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

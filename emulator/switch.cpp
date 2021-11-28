@@ -1,17 +1,17 @@
-#include "button.hpp"
+#include "switch.hpp"
 
 #include <SDL2/SDL_image.h>
 
-Button::Button(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
+Switch::Switch(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
                Signal *output, SignalPull offPull, SignalPull onPull)
-: Actor(renderer, 1), pressed(false),
+: Actor(renderer, 1), state(false),
   output(output), offPull(offPull), onPull(onPull)
 {
-    baseImage = IMG_LoadTexture(renderer, "assets/button.png");
+    baseImage = IMG_LoadTexture(renderer, "assets/switch.png");
     rect.x = pos.x;
     rect.y = pos.y;
     SDL_QueryTexture(baseImage, NULL, NULL, &rect.w, &rect.h);
-    pressedImage = IMG_LoadTexture(renderer, "assets/button_pressed.png");
+    onImage = IMG_LoadTexture(renderer, "assets/switch_on.png");
 
     label = new Label(renderer, &rect, labelText);
 
@@ -19,21 +19,15 @@ Button::Button(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
     handCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
 }
 
-bool Button::handleEvent(SDL_Event *event)
+
+bool Switch::handleEvent(SDL_Event *event)
 {
     SDL_Point pos;
     switch (event->type) {
     case SDL_MOUSEBUTTONDOWN:
         pos = { .x=event->button.x, .y=event->button.y };
         if (SDL_PointInRect(&pos, &rect)) {
-            pressed = true;
-            changed = true;
-            return true;
-        }
-        return false;
-    case SDL_MOUSEBUTTONUP:
-        if (pressed) {
-            pressed = false;
+            state = !state;
             changed = true;
             return true;
         }
@@ -55,22 +49,22 @@ bool Button::handleEvent(SDL_Event *event)
     return false;
 }
 
-void Button::tick()
+void Switch::tick()
 {
-    if (pressed) {
+    if (state) {
         output->pull(this, onPull);
     } else {
         output->pull(this, offPull);
     }
 }
 
-bool Button::render(int layer)
+bool Switch::render(int layer)
 {
     if (!Actor::render(layer)) return false;
     switch (layer) {
     case 0:
-        if (pressed) {
-            SDL_RenderCopy(renderer, pressedImage,  NULL, &rect);
+        if (state) {
+            SDL_RenderCopy(renderer, onImage,  NULL, &rect);
         } else {
             SDL_RenderCopy(renderer, baseImage,  NULL, &rect);
         }

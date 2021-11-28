@@ -1,4 +1,5 @@
 #include "led.hpp"
+
 Led::Led(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
          const std::string& imageName, Signal* input)
 : Actor(renderer, 2), input(input), currentValue(-1)

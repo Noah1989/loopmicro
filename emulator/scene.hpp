@@ -1,5 +1,5 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef SCENE_HPP
+#define SCENE_HPP
 
 #include <list>
 #include <SDL2/SDL.h>
@@ -23,4 +23,4 @@ class Scene
         std::list<Signal*> signals;
 };
 
-#endif // SCENE_H
+#endif // SCENE_HPP

@@ -1,8 +1,10 @@
+#include "scene.hpp"
+
 #include <algorithm>
 
-#include "scene.hpp"
 #include "led.hpp"
 #include "button.hpp"
+#include "switch.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 : window(window), renderer(renderer)
@@ -23,8 +25,12 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Button *btn2 = new Button(renderer, { .x=82, .y=120 }, "RES",
                               signal2, SignalPull::WeakHigh, SignalPull::Low);
 
-    actors = { led1, led2, led3, btn1, btn2 };
-    signals = { signal1, signal2 };
+
+    Switch *sw1 = new Switch(renderer, { .x=114, .y=120 }, "BUSRQ",
+                             signal3, SignalPull::Low, SignalPull::High);
+
+    actors = { led1, led2, led3, btn1, btn2, sw1 };
+    signals = { signal1, signal2, signal3 };
 }
 
 void Scene::handleEvent(SDL_Event *event)
