@@ -18,11 +18,12 @@
 	<string>
 	<actor.h>
 
-1638100417 source:c:\projects\loopmicro\emulator\scene.cpp
+1638100659 source:c:\projects\loopmicro\emulator\scene.cpp
 	"scene.hpp"
 	<algorithm>
 	"led.hpp"
 	"button.hpp"
+	"switch.hpp"
 
 1636826658 c:\projects\loopmicro\emulator\scene.h
 	<SDL2/SDL.h>
@@ -102,4 +103,226 @@
 	"actor.hpp"
 	"signal.hpp"
 	"label.hpp"
+
+1638048329 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\actor.cpp
+	"actor.hpp"
+
+1638100027 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\actor.hpp
+	<SDL2/SDL.h>
+
+1638100389 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\button.cpp
+	"button.hpp"
+	<SDL2/SDL_image.h>
+
+1638100027 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\button.hpp
+	<SDL2/SDL.h>
+	"actor.hpp"
+	"signal.hpp"
+	"label.hpp"
+
+1638100027 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\signal.hpp
+	<map>
+	"actor.hpp"
+
+1639844662 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\label.hpp
+	<SDL2/SDL.h>
+
+1638102394 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\label.cpp
+	"label.hpp"
+	<SDL2/SDL_ttf.h>
+
+1639845118 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\led.cpp
+	"led.hpp"
+
+1639845118 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\led.hpp
+	<string>
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	"actor.hpp"
+	"signal.hpp"
+	"label.hpp"
+
+1638049641 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\main.cpp
+	<iostream>
+	<emscripten.h>
+	<SDL2/SDL.h>
+	<SDL2/SDL_ttf.h>
+	"scene.hpp"
+
+1638100027 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.hpp
+	<list>
+	<SDL2/SDL.h>
+	"actor.hpp"
+	"signal.hpp"
+
+1639845048 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
+	"scene.hpp"
+	<algorithm>
+	"led.hpp"
+	"button.hpp"
+	"switch.hpp"
+	"cpu.hpp"
+
+1638100342 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\switch.hpp
+	<SDL2/SDL.h>
+	"actor.hpp"
+	"signal.hpp"
+	"label.hpp"
+
+1638018659 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\signal.cpp
+	"signal.hpp"
+
+1638100492 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\switch.cpp
+	"switch.hpp"
+	<SDL2/SDL_image.h>
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80.cpp
+	"Z80.h"
+	"Z80__Syms.h"
+
+1639835250 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80.h
+	"verilated.h"
+
+1639832385 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated.h
+	"verilatedos.h"
+	"verilated_sc.h"
+	<algorithm>
+	<array>
+	<cassert>
+	<cmath>
+	<cstdarg>
+	<cstdio>
+	<cstdlib>
+	<cstring>
+	<deque>
+	<map>
+	<memory>
+	<set>
+	<string>
+	<unordered_set>
+	<vector>
+	<atomic>
+	<mutex>
+	<thread>
+	"verilated_types.h"
+	"verilated_funcs.h"
+
+1639832385 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilatedos.h
+	<stdint.h>
+	<sys/types.h>
+	<unistd.h>
+	<inttypes.h>
+	<stdint.h>
+	<sys/types.h>
+	<unistd.h>
+	"Windows.h"
+
+1639833034 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated_types.h
+
+1639833034 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated_funcs.h
+
+1639835250 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80__syms.h
+	"verilated.h"
+	"Z80.h"
+	"Z80___024root.h"
+
+1639835250 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root.h
+	"verilated.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__0.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__0__slow.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__1.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__1__slow.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__2.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__2__slow.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__3.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__3__slow.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__4.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__4__slow.cpp
+	"verilated.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__slow.cpp
+	"verilated.h"
+	"Z80__Syms.h"
+	"Z80___024root.h"
+
+1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80__syms.cpp
+	"Z80__Syms.h"
+	"Z80.h"
+	"Z80___024root.h"
+
+1639843186 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.cpp
+	"cpu.hpp"
+
+1639842874 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.hpp
+	"Z80/Z80.h"
+	"actor.hpp"
+	"signal.hpp"
+
+1639832385 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated.cpp
+	"verilatedos.h"
+	"verilated_imp.h"
+	"verilated_config.h"
+	<algorithm>
+	<cctype>
+	<cerrno>
+	<sstream>
+	<sys/stat.h>
+	<list>
+	<limits>
+	<utility>
+	<direct.h>
+
+1639832385 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated_imp.h
+	"verilatedos.h"
+	"verilated.h"
+	"verilated_syms.h"
+	<deque>
+	<set>
+	<vector>
+	<numeric>
+	<functional>
+	<queue>
+
+1639832385 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated_syms.h
+	"verilatedos.h"
+	"verilated.h"
+	"verilated_sym_props.h"
+	<map>
+	<unordered_map>
+	<vector>
+
+1639832385 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated_sym_props.h
+	"verilatedos.h"
+	<vector>
+
+1639833088 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated_config.h
 

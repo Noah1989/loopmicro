@@ -13,7 +13,7 @@ class Led : public Actor
 {
     public:
         Led(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
-            const std::string& image_name, Signal *input);
+            const std::string &image_name, Signal *input, bool inverted = false);
 
         void tick();
         bool render(int layer);
@@ -24,6 +24,8 @@ class Led : public Actor
         SDL_Texture *lightImage;
         Signal      *input;
         Label       *label;
+        float        lowValue;
+        float        highValue;
         float        currentValue;
 
         void set_value(float value);

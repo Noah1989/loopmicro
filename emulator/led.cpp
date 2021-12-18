@@ -1,7 +1,7 @@
 #include "led.hpp"
 
 Led::Led(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
-         const std::string& imageName, Signal* input)
+         const std::string &imageName, Signal* input, bool inverted)
 : Actor(renderer, 2), input(input), currentValue(-1)
 {
     std::string baseImagePath = "assets/led_"+ imageName + ".png";
@@ -15,7 +15,15 @@ Led::Led(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
     std::string lightImagePath = "assets/led_"+ imageName + "_light.png";
     lightImage = IMG_LoadTexture(renderer, lightImagePath.c_str());
     SDL_SetTextureBlendMode(lightImage, SDL_BLENDMODE_ADD);
-    set_value(0);
+
+    if (inverted) {
+        lowValue  = 1;
+        highValue = 0;
+    } else {
+        lowValue  = 0;
+        highValue = 1;
+    }
+    set_value(lowValue);
 }
 
 void Led::set_value(float value)
@@ -31,13 +39,13 @@ void Led::tick()
     switch (input->get_state()) {
     case SignalState::Floating:
     case SignalState::Low:
-        set_value(0);
+        set_value(lowValue);
         break;
     case SignalState::High:
-        set_value(1);
+        set_value(highValue);
         break;
     case SignalState::Contending:
-        set_value(0.5);
+        set_value((lowValue + highValue)/2);
         break;
     }
 }

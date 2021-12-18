@@ -5,32 +5,31 @@
 #include "led.hpp"
 #include "button.hpp"
 #include "switch.hpp"
+#include "cpu.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 : window(window), renderer(renderer)
 {
-    Signal *signal1 = new Signal();
-    Signal *signal2 = new Signal();
-    Signal *signal3 = new Signal();
+    Signal *clk    = new Signal();
+    Signal *nReset = new Signal();
+    Signal *nM1    = new Signal();
 
-    Led *led1 = new Led(renderer, { .x=50, .y=60 },
-                        "A0", "flat_green",  signal1);
-    Led *led2 = new Led(renderer, { .x=66, .y=60 },
-                        "D2", "flat_yellow", signal2);
-    Led *led3 = new Led(renderer, { .x=82, .y=60 },
-                        "M1", "flat_red",    signal3);
+    Led *led1 = new Led(renderer, { .x=50, .y=60 }, "CLK", "flat_red",
+                        clk);
+    Led *led2 = new Led(renderer, { .x=74, .y=60 }, "RES", "flat_red",
+                        nReset, /*inverted=*/true);
+    Led *led3 = new Led(renderer, { .x=98, .y=60 }, "M1",  "flat_red",
+                        nM1,    /*inverted=*/true);
 
     Button *btn1 = new Button(renderer, { .x=50, .y=120 }, "CLK",
-                              signal1, SignalPull::None, SignalPull::High);
-    Button *btn2 = new Button(renderer, { .x=82, .y=120 }, "RES",
-                              signal2, SignalPull::WeakHigh, SignalPull::Low);
+                              clk, SignalPull::Low, SignalPull::High);
+    Switch *sw1 = new Switch(renderer, { .x=82, .y=120 }, "RES",
+                             nReset, SignalPull::High, SignalPull::Low);
 
+    Cpu *cpu = new Cpu(clk, nReset, nM1);
 
-    Switch *sw1 = new Switch(renderer, { .x=114, .y=120 }, "BUSRQ",
-                             signal3, SignalPull::Low, SignalPull::High);
-
-    actors = { led1, led2, led3, btn1, btn2, sw1 };
-    signals = { signal1, signal2, signal3 };
+    actors = { led1, led2, led3, btn1, sw1, cpu };
+    signals = { clk, nReset, nM1 };
 }
 
 void Scene::handleEvent(SDL_Event *event)
