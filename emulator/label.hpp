@@ -6,7 +6,7 @@
 class Label
 {
     public:
-        Label(SDL_Renderer *renderer, SDL_Rect *alignToRect, const char *text);
+        Label(SDL_Renderer *renderer, SDL_Rect alignToRect, const char *text);
 
         void render();
 

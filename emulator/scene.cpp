@@ -6,6 +6,7 @@
 #include "button.hpp"
 #include "switch.hpp"
 #include "cpu.hpp"
+#include "ledrow.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 : window(window), renderer(renderer)
@@ -14,6 +15,9 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Signal *nReset = new Signal();
     Signal *nM1    = new Signal();
 
+    Bus *addr = new Bus();
+    Bus *data = new Bus();
+
     Led *led1 = new Led(renderer, { .x=50, .y=60 }, "CLK", "flat_red",
                         clk);
     Led *led2 = new Led(renderer, { .x=74, .y=60 }, "RES", "flat_red",
@@ -21,15 +25,19 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Led *led3 = new Led(renderer, { .x=98, .y=60 }, "M1",  "flat_red",
                         nM1,    /*inverted=*/true);
 
+    LedRow *addrLeds = new LedRow(renderer, { .x=150, .y=60 },
+                                  "ADDRESS BUS", "flat_green", addr, 16);
+
     Button *btn1 = new Button(renderer, { .x=50, .y=120 }, "CLK",
                               clk, SignalPull::Low, SignalPull::High);
     Switch *sw1 = new Switch(renderer, { .x=82, .y=120 }, "RES",
                              nReset, SignalPull::High, SignalPull::Low);
 
-    Cpu *cpu = new Cpu(clk, nReset, nM1);
+    Cpu *cpu = new Cpu(clk, nReset, nM1, addr, data);
 
-    actors = { led1, led2, led3, btn1, sw1, cpu };
+    actors = { led1, led2, led3, btn1, sw1, cpu, addrLeds };
     signals = { clk, nReset, nM1 };
+    buses = { addr, data };
 }
 
 void Scene::handleEvent(SDL_Event *event)
@@ -46,6 +54,9 @@ void Scene::tick()
     }
     for (Signal *signal: signals) {
         signal->tick();
+    }
+    for (Bus *bus: buses) {
+        bus->tick();
     }
 }
 

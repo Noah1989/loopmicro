@@ -110,7 +110,7 @@
 1638100027 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\actor.hpp
 	<SDL2/SDL.h>
 
-1638100389 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\button.cpp
+1639866144 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\button.cpp
 	"button.hpp"
 	<SDL2/SDL_image.h>
 
@@ -124,14 +124,14 @@
 	<map>
 	"actor.hpp"
 
-1639844662 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\label.hpp
+1639866128 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\label.hpp
 	<SDL2/SDL.h>
 
-1638102394 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\label.cpp
+1639866125 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\label.cpp
 	"label.hpp"
 	<SDL2/SDL_ttf.h>
 
-1639845118 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\led.cpp
+1639866135 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\led.cpp
 	"led.hpp"
 
 1639845118 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\led.hpp
@@ -142,26 +142,28 @@
 	"signal.hpp"
 	"label.hpp"
 
-1638049641 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\main.cpp
+1639861401 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\main.cpp
 	<iostream>
 	<emscripten.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_ttf.h>
 	"scene.hpp"
 
-1638100027 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.hpp
+1639867892 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.hpp
 	<list>
 	<SDL2/SDL.h>
 	"actor.hpp"
 	"signal.hpp"
+	"bus.hpp"
 
-1639845048 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
+1639868338 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
 	"scene.hpp"
 	<algorithm>
 	"led.hpp"
 	"button.hpp"
 	"switch.hpp"
 	"cpu.hpp"
+	"ledrow.hpp"
 
 1638100342 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\switch.hpp
 	<SDL2/SDL.h>
@@ -172,7 +174,7 @@
 1638018659 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\signal.cpp
 	"signal.hpp"
 
-1638100492 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\switch.cpp
+1639866162 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\switch.cpp
 	"switch.hpp"
 	<SDL2/SDL_image.h>
 
@@ -279,13 +281,14 @@
 	"Z80.h"
 	"Z80___024root.h"
 
-1639843186 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.cpp
+1639868336 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.cpp
 	"cpu.hpp"
 
-1639842874 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.hpp
+1639867723 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.hpp
 	"Z80/Z80.h"
 	"actor.hpp"
 	"signal.hpp"
+	"bus.hpp"
 
 1639832385 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated.cpp
 	"verilatedos.h"
@@ -325,4 +328,24 @@
 	<vector>
 
 1639833088 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated_config.h
+
+1639867189 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\bus.cpp
+	"bus.hpp"
+
+1639867182 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\bus.hpp
+	<map>
+	"actor.hpp"
+	"signal.hpp"
+
+1639868744 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\ledrow.cpp
+	"ledrow.hpp"
+
+1639867198 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\ledrow.hpp
+	<string>
+	<vector>
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	"actor.hpp"
+	"bus.hpp"
+	"label.hpp"
 

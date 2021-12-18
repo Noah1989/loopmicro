@@ -95,6 +95,8 @@
 		<Unit filename="assets/led_flat_yellow.svg" />
 		<Unit filename="assets/led_flat_yellow_light.png" />
 		<Unit filename="assets/led_flat_yellow_light.svg" />
+		<Unit filename="bus.cpp" />
+		<Unit filename="bus.hpp" />
 		<Unit filename="button.cpp" />
 		<Unit filename="button.hpp" />
 		<Unit filename="cpu.cpp" />
@@ -103,6 +105,8 @@
 		<Unit filename="label.hpp" />
 		<Unit filename="led.cpp" />
 		<Unit filename="led.hpp" />
+		<Unit filename="ledrow.cpp" />
+		<Unit filename="ledrow.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="scene.cpp" />
 		<Unit filename="scene.hpp" />

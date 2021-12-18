@@ -10,7 +10,7 @@ Led::Led(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
     rect.y = pos.y;
     SDL_QueryTexture(baseImage, NULL, NULL, &rect.w, &rect.h);
 
-    label = new Label(renderer, &rect, labelText);
+    label = new Label(renderer, rect, labelText);
 
     std::string lightImagePath = "assets/led_"+ imageName + "_light.png";
     lightImage = IMG_LoadTexture(renderer, lightImagePath.c_str());

@@ -13,7 +13,7 @@ Button::Button(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
     SDL_QueryTexture(baseImage, NULL, NULL, &rect.w, &rect.h);
     pressedImage = IMG_LoadTexture(renderer, "assets/button_pressed.png");
 
-    label = new Label(renderer, &rect, labelText);
+    label = new Label(renderer, rect, labelText);
 
     defaultCursor = SDL_GetCursor();
     handCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);

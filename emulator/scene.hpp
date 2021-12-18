@@ -6,6 +6,7 @@
 
 #include "actor.hpp"
 #include "signal.hpp"
+#include "bus.hpp"
 
 class Scene
 {
@@ -21,6 +22,7 @@ class Scene
         SDL_Renderer      *renderer;
         std::list<Actor*>  actors;
         std::list<Signal*> signals;
+        std::list<Bus*>    buses;
 };
 
 #endif // SCENE_HPP

@@ -1,7 +1,7 @@
 #include "cpu.hpp"
 
-Cpu::Cpu(Signal *clk, Signal *nReset, Signal *nM1)
-: Actor(NULL, 0), clk(clk), nReset(nReset), nM1(nM1)
+Cpu::Cpu(Signal *clk, Signal *nReset, Signal *nM1, Bus *addr, Bus *data)
+: Actor(NULL, 0), clk(clk), nReset(nReset), nM1(nM1), addr(addr), data(data)
 {
     z80 = new Z80;
 }
@@ -14,6 +14,9 @@ void Cpu::tick()
     z80->nINT   = 1;
     z80->nNMI   = 1;
     z80->nBUSRQ = 1;
+
     z80->eval();
+
     nM1->pull(this, z80->nM1 ? SignalPull::High : SignalPull::Low);
+    addr->drive(this, z80->A);
 }
