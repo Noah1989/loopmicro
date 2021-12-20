@@ -248,40 +248,48 @@
 	"verilated_dpi.h"
 	"Z80___024root.h"
 
-1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__1__slow.cpp
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__1__slow.cpp
 	"verilated.h"
+	"verilated_dpi.h"
 	"Z80___024root.h"
 
-1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__2.cpp
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__2.cpp
 	"verilated.h"
+	"verilated_dpi.h"
 	"Z80___024root.h"
 
-1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__2__slow.cpp
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__2__slow.cpp
 	"verilated.h"
+	"verilated_dpi.h"
 	"Z80___024root.h"
 
-1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__3.cpp
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__3.cpp
 	"verilated.h"
+	"verilated_dpi.h"
 	"Z80___024root.h"
 
-1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__3__slow.cpp
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__3__slow.cpp
 	"verilated.h"
+	"verilated_dpi.h"
 	"Z80___024root.h"
 
-1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__4.cpp
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__4.cpp
 	"verilated.h"
+	"verilated_dpi.h"
 	"Z80___024root.h"
 
-1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__4__slow.cpp
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__depset_h394bf213__4__slow.cpp
 	"verilated.h"
+	"verilated_dpi.h"
 	"Z80___024root.h"
 
-1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__slow.cpp
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80___024root__slow.cpp
 	"verilated.h"
+	"verilated_dpi.h"
 	"Z80__Syms.h"
 	"Z80___024root.h"
 
-1639835250 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80__syms.cpp
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80__syms.cpp
 	"Z80__Syms.h"
 	"Z80.h"
 	"Z80___024root.h"
@@ -355,7 +363,8 @@
 	"bus.hpp"
 	"label.hpp"
 
-1639832385 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\svdpi.h
+1640039674 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\svdpi.h
+	<stdint.h>
 	<stdint.h>
 	<stdint.h>
 	<inttypes.h>
@@ -365,5 +374,18 @@
 	"verilatedos.h"
 	"verilated.h"
 	"verilated_sym_props.h"
+	"svdpi.h"
+
+1640038890 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\verilated_dpi.cpp
+	"verilatedos.h"
+	"verilated_dpi.h"
+	"verilated_imp.h"
+	"svdpi.h"
+
+1640037721 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80__dpi.cpp
+	"Z80__Dpi.h"
+	"Z80.h"
+
+1640037721 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80__dpi.h
 	"svdpi.h"
 

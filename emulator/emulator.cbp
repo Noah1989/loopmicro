@@ -52,6 +52,8 @@
 		</Unit>
 		<Unit filename="Z80/Z80.cpp" />
 		<Unit filename="Z80/Z80.h" />
+		<Unit filename="Z80/Z80__Dpi.cpp" />
+		<Unit filename="Z80/Z80__Dpi.h" />
 		<Unit filename="Z80/Z80__Syms.cpp" />
 		<Unit filename="Z80/Z80__Syms.h" />
 		<Unit filename="Z80/Z80___024root.h" />
@@ -66,9 +68,12 @@
 		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__4.cpp" />
 		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__4__Slow.cpp" />
 		<Unit filename="Z80/Z80___024root__Slow.cpp" />
+		<Unit filename="Z80/svdpi.h" />
 		<Unit filename="Z80/verilated.cpp" />
 		<Unit filename="Z80/verilated.h" />
 		<Unit filename="Z80/verilated_config.h" />
+		<Unit filename="Z80/verilated_dpi.cpp" />
+		<Unit filename="Z80/verilated_dpi.h" />
 		<Unit filename="Z80/verilated_funcs.h" />
 		<Unit filename="Z80/verilated_imp.h" />
 		<Unit filename="Z80/verilated_sym_props.h" />
