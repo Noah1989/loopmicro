@@ -3,6 +3,7 @@
 // See Z80.h for the primary calling header
 
 #include "verilated.h"
+#include "verilated_dpi.h"
 
 #include "Z80___024root.h"
 
@@ -12,7 +13,6 @@ VL_INLINE_OPT void Z80___024root___combo__TOP__29(Z80___024root* vlSelf) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Z80___024root___combo__TOP__29\n"); );
     // Init
     CData/*0:0*/ z80_top_direct_n__DOT__ctl_flags_hf_cpl;
-    CData/*0:0*/ z80_top_direct_n__DOT__bus_db_pin_oe;
     CData/*0:0*/ z80_top_direct_n__DOT__alu_shift_in;
     CData/*0:0*/ z80_top_direct_n__DOT__alu_shift_right;
     CData/*0:0*/ z80_top_direct_n__DOT__alu_shift_left;
@@ -1263,13 +1263,14 @@ VL_INLINE_OPT void Z80___024root___combo__TOP__29(Z80___024root* vlSelf) {
                    & (~ (((IData)(vlSelf->z80_top_direct_n__DOT__memory_ifc___DOT__iorq) 
                           & (IData)(vlSelf->z80_top_direct_n__DOT__fIOWrite)) 
                          | (IData)(vlSelf->z80_top_direct_n__DOT__memory_ifc___DOT__mwr_wr))));
-    z80_top_direct_n__DOT__bus_db_pin_oe = (((((IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T2_ff) 
-                                               | (IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T3_ff)) 
-                                              | (IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T4_ff)) 
-                                             & (IData)(vlSelf->z80_top_direct_n__DOT__fIOWrite)) 
-                                            | ((IData)(vlSelf->z80_top_direct_n__DOT__fMWrite) 
-                                               & ((IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T3_ff) 
-                                                  | (IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T2_ff))));
+    vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe = 
+        (((((IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T2_ff) 
+            | (IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T3_ff)) 
+           | (IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T4_ff)) 
+          & (IData)(vlSelf->z80_top_direct_n__DOT__fIOWrite)) 
+         | ((IData)(vlSelf->z80_top_direct_n__DOT__fMWrite) 
+            & ((IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T3_ff) 
+               | (IData)(vlSelf->z80_top_direct_n__DOT__sequencer___DOT__DFFE_T2_ff))));
     vlSelf->z80_top_direct_n__DOT__alu___DOT__db_low__out2 
         = ((3U & (IData)(vlSelf->z80_top_direct_n__DOT__alu___DOT__db_low__out2)) 
            | (0xcU & (((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__ctl_alu_op2_oe))) 
@@ -1645,31 +1646,31 @@ VL_INLINE_OPT void Z80___024root___combo__TOP__29(Z80___024root* vlSelf) {
         = (1U & (~ ((IData)(z80_top_direct_n__DOT__alu_shift_right) 
                     | (IData)(z80_top_direct_n__DOT__alu_shift_left))));
     z80_top_direct_n__DOT__D__en15 = (0xffU & ((((0xc0U 
-                                                  & ((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+                                                  & ((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                                                      << 6U)) 
                                                  | (0x30U 
-                                                    & ((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+                                                    & ((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                                                        << 4U))) 
                                                 | (0xcU 
-                                                   & ((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+                                                   & ((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                                                       << 2U))) 
                                                | (3U 
-                                                  & (- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))))));
+                                                  & (- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))))));
     vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out0 
         = ((0x3fU & (IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out0)) 
-           | (0xc0U & (((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+           | (0xc0U & (((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                         << 6U) & (IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__dout))));
     vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out1 
         = ((0xcfU & (IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out1)) 
-           | (0x30U & (((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+           | (0x30U & (((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                         << 4U) & (IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__dout))));
     vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out2 
         = ((0xf3U & (IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out2)) 
-           | (0xcU & (((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+           | (0xcU & (((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                        << 2U) & (IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__dout))));
     vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out3 
         = ((0xfcU & (IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out3)) 
-           | (3U & ((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+           | (3U & ((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                     & (IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__dout))));
     z80_top_direct_n__DOT__db_up__en11 = ((((IData)(z80_top_direct_n__DOT__sw1___DOT__db_up__out__en0) 
                                             | (IData)(z80_top_direct_n__DOT__sw1___DOT__db_up__out__en1)) 
@@ -1876,16 +1877,16 @@ VL_INLINE_OPT void Z80___024root___combo__TOP__29(Z80___024root* vlSelf) {
            | (3U & ((- (IData)((IData)(z80_top_direct_n__DOT__alu_control___DOT__SYNTHESIZED_WIRE_2))) 
                     & (IData)(vlSelf->z80_top_direct_n__DOT__alu_control___DOT__out))));
     vlSelf->D = ((((((0xc0U & ((IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out0) 
-                               & ((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+                               & ((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                                   << 6U))) | (0x30U 
                                               & ((IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out1) 
-                                                 & ((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+                                                 & ((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                                                     << 4U)))) 
                     | (0xcU & ((IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out2) 
-                               & ((- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe))) 
+                               & ((- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe))) 
                                   << 2U)))) | (3U & 
                                                ((IData)(vlSelf->z80_top_direct_n__DOT__data_pins___DOT__D__out__out3) 
-                                                & (- (IData)((IData)(z80_top_direct_n__DOT__bus_db_pin_oe)))))) 
+                                                & (- (IData)((IData)(vlSelf->z80_top_direct_n__DOT__bus_db_pin_oe)))))) 
                   & (IData)(z80_top_direct_n__DOT__D__en15)) 
                  & (IData)(z80_top_direct_n__DOT__D__en15));
     z80_top_direct_n__DOT__sw1___DOT__db_down__out__en7 

@@ -138,14 +138,15 @@ VL_MODULE(Z80___024root) {
         CData/*0:0*/ z80_top_direct_n__DOT__im1;
         CData/*0:0*/ z80_top_direct_n__DOT__im2;
         CData/*7:0*/ z80_top_direct_n__DOT__opcode;
+        CData/*0:0*/ z80_top_direct_n__DOT__bus_db_pin_oe;
         CData/*0:0*/ z80_top_direct_n__DOT__bus_db_pin_re;
         CData/*0:0*/ z80_top_direct_n__DOT__M5;
         CData/*0:0*/ z80_top_direct_n__DOT__T6;
         CData/*0:0*/ z80_top_direct_n__DOT__flags_cond_true;
         CData/*0:0*/ z80_top_direct_n__DOT__flags_hf2;
-        CData/*0:0*/ z80_top_direct_n__DOT__alu_parity_out;
     };
     struct {
+        CData/*0:0*/ z80_top_direct_n__DOT__alu_parity_out;
         CData/*0:0*/ z80_top_direct_n__DOT__alu_low_gt_9;
         CData/*0:0*/ z80_top_direct_n__DOT__reg_sel_bc;
         CData/*0:0*/ z80_top_direct_n__DOT__reg_sel_bc2;
@@ -209,9 +210,9 @@ VL_MODULE(Z80___024root) {
         CData/*0:0*/ z80_top_direct_n__DOT__memory_ifc___DOT__mrd_mreq;
         CData/*0:0*/ z80_top_direct_n__DOT__memory_ifc___DOT__mwr_wr;
         CData/*0:0*/ z80_top_direct_n__DOT__memory_ifc___DOT__q1;
-        CData/*0:0*/ z80_top_direct_n__DOT__memory_ifc___DOT__q2;
     };
     struct {
+        CData/*0:0*/ z80_top_direct_n__DOT__memory_ifc___DOT__q2;
         CData/*0:0*/ z80_top_direct_n__DOT__memory_ifc___DOT__wait_iorq;
         CData/*0:0*/ z80_top_direct_n__DOT__memory_ifc___DOT__wait_iorqinta;
         CData/*0:0*/ z80_top_direct_n__DOT__memory_ifc___DOT__wait_m_ALTERA_SYNTHESIZED1;
@@ -275,9 +276,9 @@ VL_MODULE(Z80___024root) {
         CData/*3:0*/ z80_top_direct_n__DOT__alu___DOT__result_lo;
         CData/*3:0*/ z80_top_direct_n__DOT__alu___DOT__db_low__out0;
         CData/*3:0*/ z80_top_direct_n__DOT__alu___DOT__db_low__out1;
-        CData/*3:0*/ z80_top_direct_n__DOT__alu___DOT__db_low__out2;
     };
     struct {
+        CData/*3:0*/ z80_top_direct_n__DOT__alu___DOT__db_low__out2;
         CData/*3:0*/ z80_top_direct_n__DOT__alu___DOT__db_low__out3;
         CData/*3:0*/ z80_top_direct_n__DOT__alu___DOT__db_low__out4;
         CData/*3:0*/ z80_top_direct_n__DOT__alu___DOT__db_low__out5;
@@ -341,9 +342,9 @@ VL_MODULE(Z80___024root) {
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__db_lo_ds__out__out85;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__db_lo_ds__out__out86;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__db_lo_ds__out__out87;
-        CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_af2_hi__DOT__latch;
     };
     struct {
+        CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_af2_hi__DOT__latch;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_af2_hi__DOT__db__out__out0;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_af2_hi__DOT__db__out__out1;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_af2_hi__DOT__db__out__out2;
@@ -407,9 +408,9 @@ VL_MODULE(Z80___024root) {
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_hl2_hi__DOT__db__out__out0;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_hl2_hi__DOT__db__out__out1;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_hl2_hi__DOT__db__out__out2;
-        CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_hl2_hi__DOT__db__out__out3;
     };
     struct {
+        CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_hl2_hi__DOT__db__out__out3;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_hl2_lo__DOT__latch;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_hl2_lo__DOT__db__out__out0;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_hl2_lo__DOT__db__out__out1;
@@ -473,9 +474,9 @@ VL_MODULE(Z80___024root) {
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_sp_lo__DOT__latch;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_sp_lo__DOT__db__out__out0;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_sp_lo__DOT__db__out__out1;
-        CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_sp_lo__DOT__db__out__out2;
     };
     struct {
+        CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_sp_lo__DOT__db__out__out2;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_sp_lo__DOT__db__out__out3;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_wz_hi__DOT__latch;
         CData/*7:0*/ z80_top_direct_n__DOT__reg_file___DOT__b2v_latch_wz_hi__DOT__db__out__out0;
@@ -539,9 +540,9 @@ VL_MODULE(Z80___024root) {
         CData/*6:0*/ __Vchglast__TOP__z80_top_direct_n__DOT__prefix;
         CData/*7:0*/ __Vchglast__TOP__z80_top_direct_n__DOT__db_lo_as__en5;
         CData/*7:0*/ __Vchglast__TOP__z80_top_direct_n__DOT__db_lo_ds__en6;
-        CData/*7:0*/ __Vchglast__TOP__z80_top_direct_n__DOT__db_up__en9;
     };
     struct {
+        CData/*7:0*/ __Vchglast__TOP__z80_top_direct_n__DOT__db_up__en9;
         CData/*7:0*/ __Vchglast__TOP__z80_top_direct_n__DOT__db_down__en12;
         CData/*0:0*/ __Vchglast__TOP__z80_top_direct_n__DOT__interrupts___DOT__SYNTHESIZED_WIRE_21;
         CData/*0:0*/ __Vchglast__TOP__z80_top_direct_n__DOT__interrupts___DOT__SYNTHESIZED_WIRE_9;

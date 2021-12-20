@@ -9,6 +9,7 @@
 #define VERILATED_Z80_H_  // guard
 
 #include "verilated.h"
+#include "svdpi.h"
 
 class Z80__Syms;
 class Z80___024root;

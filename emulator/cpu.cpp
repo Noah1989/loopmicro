@@ -1,5 +1,7 @@
 #include "cpu.hpp"
 
+#include "Z80/Z80___024root.h"
+
 Cpu::Cpu(Signal *clk, Signal *nReset, Signal *nM1, Bus *addr, Bus *data)
 : Actor(NULL, 0), clk(clk), nReset(nReset), nM1(nM1), addr(addr), data(data)
 {
@@ -18,5 +20,16 @@ void Cpu::tick()
     z80->eval();
 
     nM1->pull(this, z80->nM1 ? SignalPull::High : SignalPull::Low);
-    addr->drive(this, z80->A);
+
+    if (z80->rootp->z80_top_direct_n__DOT__pin_control_oe) {
+        addr->drive(this, z80->A);
+    } else {
+        addr->release(this);
+    }
+
+    if (z80->rootp->z80_top_direct_n__DOT__bus_db_pin_oe) {
+        data->drive(this, z80->D);
+    } else {
+        addr->release(this);
+    }
 }

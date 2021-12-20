@@ -3,6 +3,7 @@
 
 #include "Z80.h"
 #include "Z80__Syms.h"
+#include "verilated_dpi.h"
 
 //============================================================
 // Constructors
