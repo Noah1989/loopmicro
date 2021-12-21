@@ -30,6 +30,6 @@ void Cpu::tick()
     if (z80->rootp->z80_top_direct_n__DOT__bus_db_pin_oe) {
         data->drive(this, z80->D);
     } else {
-        addr->release(this);
+        data->release(this);
     }
 }
