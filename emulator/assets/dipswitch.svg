@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="12"
+   height="32"
+   viewBox="0 0 3.175 8.4666669"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="dipswitch.svg"
+   inkscape:export-filename="C:\Users\Stefan Paul Noack\OneDrive - noack.software\Documents\GitHub\loopmicro\emulator\assets\dip_l.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="false"
+     inkscape:document-units="mm"
+     showgrid="true"
+     units="px"
+     inkscape:zoom="10.583032"
+     inkscape:cx="12.047588"
+     inkscape:cy="16.016205"
+     inkscape:window-width="1280"
+     inkscape:window-height="657"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     borderlayer="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid1124"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Taso 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#0066ff;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1067"
+       width="8.2020836"
+       height="7.6729169"
+       x="-0.92604166"
+       y="0.39687482" />
+    <rect
+       style="fill:#b3b3b3;stroke:#808080;stroke-width:0.264582;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1579"
+       width="1.8520846"
+       height="5.0270848"
+       x="0.66145784"
+       y="1.7197911" />
+    <rect
+       style="fill:#b3b3b3;stroke:#808080;stroke-width:0.264582;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1579-2"
+       width="1.8520846"
+       height="5.0270848"
+       x="3.8364577"
+       y="1.7197911" />
+    <rect
+       style="fill:#ffffff;stroke:none;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1961"
+       width="1.5875001"
+       height="2.3812499"
+       x="0.79375011"
+       y="4.2333331" />
+    <rect
+       style="fill:#ffffff;stroke:none;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1961-1"
+       width="1.5875001"
+       height="2.3812499"
+       x="3.96875"
+       y="1.8520833" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.38125px;line-height:1.25;font-family:Bahnschrift;-inkscape-font-specification:Bahnschrift;stroke-width:0.264583"
+       x="0.93056303"
+       y="6.2709994"
+       id="text4281"><tspan
+         sodipodi:role="line"
+         id="tspan4279"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.38125px;font-family:Bahnschrift;-inkscape-font-specification:Bahnschrift;stroke-width:0.264583"
+         x="0.93056303"
+         y="6.2709994">0</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.38125px;line-height:1.25;font-family:Bahnschrift;-inkscape-font-specification:Bahnschrift;stroke-width:0.264583"
+       x="4.4189162"
+       y="3.8880055"
+       id="text4281-0"><tspan
+         sodipodi:role="line"
+         id="tspan4279-7"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.38125px;font-family:Bahnschrift;-inkscape-font-specification:Bahnschrift;stroke-width:0.264583"
+         x="4.4189162"
+         y="3.8880055">1</tspan></text>
+  </g>
+</svg>

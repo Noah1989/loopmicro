@@ -5,6 +5,7 @@
 #include "led.hpp"
 #include "button.hpp"
 #include "switch.hpp"
+#include "dipswitch.hpp"
 #include "cpu.hpp"
 #include "ledrow.hpp"
 
@@ -17,6 +18,9 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 
     Bus *addr = new Bus();
     Bus *data = new Bus();
+
+    Bus *addrFP = new Bus();
+    Bus *dataFP = new Bus();
 
     Led *led1 = new Led(renderer, { .x=50, .y=60 }, "CLK", "flat_red",
                         clk);
@@ -33,11 +37,14 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Switch *sw1 = new Switch(renderer, { .x=82, .y=120 }, "RES",
                              nReset, SignalPull::High, SignalPull::Low);
 
+    DipSwitch *dipAddr = new DipSwitch(renderer, { .x= 150, .y = 120 },
+                                       "ADDRESS INPUT", addrFP, 16);
+
     Cpu *cpu = new Cpu(clk, nReset, nM1, addr, data);
 
-    actors = { led1, led2, led3, btn1, sw1, cpu, addrLeds };
+    actors = { led1, led2, led3, btn1, sw1, cpu, addrLeds, dipAddr };
     signals = { clk, nReset, nM1 };
-    buses = { addr, data };
+    buses = { addr, data, addrFP, dataFP };
 }
 
 void Scene::handleEvent(SDL_Event *event)
