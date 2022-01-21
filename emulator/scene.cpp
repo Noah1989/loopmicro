@@ -2,12 +2,13 @@
 
 #include <algorithm>
 
+#include "resistor.hpp"
 #include "led.hpp"
+#include "ledrow.hpp"
 #include "button.hpp"
 #include "switch.hpp"
 #include "dipswitch.hpp"
 #include "cpu.hpp"
-#include "ledrow.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 : window(window), renderer(renderer)
@@ -15,36 +16,89 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Signal *clk    = new Signal();
     Signal *nReset = new Signal();
     Signal *nM1    = new Signal();
+    Signal *nMreq  = new Signal();
+    Signal *nIorq  = new Signal();
+    Signal *nRd    = new Signal();
+    Signal *nWr    = new Signal();
+    Signal *nRfsh  = new Signal();
+    Signal *nHalt  = new Signal();
+    Signal *nWait  = new Signal();
+    Signal *nInt   = new Signal();
+    Signal *nNmi   = new Signal();
+    Signal *nBusrq = new Signal();
+    Signal *nBusak = new Signal();
 
     Bus *addr = new Bus();
     Bus *data = new Bus();
 
-    Bus *addrFP = new Bus();
-    Bus *dataFP = new Bus();
+    Bus *addrFp = new Bus();
+    Bus *dataFp = new Bus();
 
-    Led *led1 = new Led(renderer, { .x=50, .y=60 }, "CLK", "flat_red",
-                        clk);
-    Led *led2 = new Led(renderer, { .x=74, .y=60 }, "RES", "flat_red",
-                        nReset, /*inverted=*/true);
-    Led *led3 = new Led(renderer, { .x=98, .y=60 }, "M1",  "flat_red",
-                        nM1,    /*inverted=*/true);
+    Led *led1  = new Led(renderer, { .x= 50, .y=60 },   "CLK", "flat_red",
+                         clk);
+    Led *led2  = new Led(renderer, { .x= 80, .y=60 }, "RESET", "flat_red",
+                         nReset, /*inverted=*/true);
+    Led *led3  = new Led(renderer, { .x=110, .y=60 },    "M1",  "flat_red",
+                         nM1,    /*inverted=*/true);
+    Led *led4  = new Led(renderer, { .x=140, .y=60 },  "MREQ",  "flat_red",
+                         nMreq,  /*inverted=*/true);
+    Led *led5  = new Led(renderer, { .x=170, .y=60 },  "IORQ",  "flat_red",
+                         nIorq,  /*inverted=*/true);
+    Led *led6  = new Led(renderer, { .x=200, .y=60 },    "RD",  "flat_red",
+                         nRd,    /*inverted=*/true);
+    Led *led7  = new Led(renderer, { .x=230, .y=60 },    "WR",  "flat_red",
+                         nWr,    /*inverted=*/true);
+    Led *led8  = new Led(renderer, { .x=260, .y=60 },  "RFSH",  "flat_red",
+                         nRfsh,  /*inverted=*/true);
+    Led *led9  = new Led(renderer, { .x=290, .y=60 },  "HALT",  "flat_red",
+                         nHalt,  /*inverted=*/true);
+    Led *led10 = new Led(renderer, { .x=320, .y=60 },  "WAIT",  "flat_red",
+                         nWait,  /*inverted=*/true);
+    Led *led11 = new Led(renderer, { .x=350, .y=60 },   "INT",  "flat_red",
+                         nInt,   /*inverted=*/true);
+    Led *led12 = new Led(renderer, { .x=380, .y=60 },   "NMI",  "flat_red",
+                         nNmi,   /*inverted=*/true);
+    Led *led13 = new Led(renderer, { .x=410, .y=60 }, "BUSRQ",  "flat_red",
+                         nBusrq, /*inverted=*/true);
+    Led *led14 = new Led(renderer, { .x=155, .y=120 }, "BUSAK",  "flat_red",
+                         nBusak, /*inverted=*/true);
 
-    LedRow *addrLeds = new LedRow(renderer, { .x=150, .y=60 },
+    LedRow *addrLeds = new LedRow(renderer, { .x=450, .y=60 },
                                   "ADDRESS BUS", "flat_green", addr, 16);
+
+    LedRow *dataLeds = new LedRow(renderer, { .x=720, .y=60 },
+                                  "DATA BUS", "flat_yellow", data, 8);
 
     Button *btn1 = new Button(renderer, { .x=50, .y=120 }, "CLK",
                               clk, SignalPull::Low, SignalPull::High);
-    Switch *sw1 = new Switch(renderer, { .x=82, .y=120 }, "RES",
+    Switch *sw1 = new Switch(renderer, { .x=85, .y=120 }, "RESET",
                              nReset, SignalPull::High, SignalPull::Low);
+    Switch *sw2 = new Switch(renderer, { .x=120, .y=120 }, "BUSRQ",
+                             nBusrq, SignalPull::High, SignalPull::Low);
 
-    DipSwitch *dipAddr = new DipSwitch(renderer, { .x= 150, .y = 120 },
-                                       "ADDRESS INPUT", addrFP, 16);
+    DipSwitch *dipAddr = new DipSwitch(renderer, { .x= 200, .y = 120 },
+                                       "ADDRESS INPUT", addrFp, 16);
 
-    Cpu *cpu = new Cpu(clk, nReset, nM1, addr, data);
+    Resistor *pullup1 = new Resistor(nMreq, SignalPull::WeakHigh);
+    Resistor *pullup2 = new Resistor(nIorq, SignalPull::WeakHigh);
+    Resistor *pullup3 = new Resistor(nRd,   SignalPull::WeakHigh);
+    Resistor *pullup4 = new Resistor(nWr,   SignalPull::WeakHigh);
+    Resistor *pullup5 = new Resistor(nWait, SignalPull::WeakHigh);
+    Resistor *pullup6 = new Resistor(nInt,  SignalPull::WeakHigh);
+    Resistor *pullup7 = new Resistor(nNmi,  SignalPull::WeakHigh);
 
-    actors = { led1, led2, led3, btn1, sw1, cpu, addrLeds, dipAddr };
-    signals = { clk, nReset, nM1 };
-    buses = { addr, data, addrFP, dataFP };
+    Cpu *cpu = new Cpu(clk,   nReset, nM1,   nMreq, nIorq, nRd,    nWr,
+                       nRfsh, nHalt,  nWait, nInt,  nNmi,  nBusrq, nBusak,
+                       addr,  data);
+
+    actors = { led1, led2, led3, led4, led5, led6, led7, led8, led9, led10,
+               led11, led12, led13, led14, addrLeds, dataLeds,
+               btn1, sw1, sw2, dipAddr,
+               pullup1, pullup2, pullup3, pullup4, pullup5, pullup6, pullup7,
+               cpu, };
+    signals = { clk,   nReset, nM1,   nMreq, nIorq, nRd,    nWr,
+                nRfsh, nHalt,  nWait, nInt,  nNmi,  nBusrq, nBusak };
+    buses = { addr, data, addrFp, dataFp };
 }
 
 void Scene::handleEvent(SDL_Event *event)

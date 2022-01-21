@@ -131,6 +131,8 @@
 		<Unit filename="ledrow.cpp" />
 		<Unit filename="ledrow.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="resistor.cpp" />
+		<Unit filename="resistor.hpp" />
 		<Unit filename="scene.cpp" />
 		<Unit filename="scene.hpp" />
 		<Unit filename="shell.html" />

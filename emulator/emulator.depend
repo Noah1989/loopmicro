@@ -156,15 +156,16 @@
 	"signal.hpp"
 	"bus.hpp"
 
-1642442349 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
+1642799549 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
 	"scene.hpp"
 	<algorithm>
+	"resistor.hpp"
 	"led.hpp"
+	"ledrow.hpp"
 	"button.hpp"
 	"switch.hpp"
 	"dipswitch.hpp"
 	"cpu.hpp"
-	"ledrow.hpp"
 
 1638100342 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\switch.hpp
 	<SDL2/SDL.h>
@@ -295,11 +296,11 @@
 	"Z80.h"
 	"Z80___024root.h"
 
-1640044760 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.cpp
+1642797951 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.cpp
 	"cpu.hpp"
 	"Z80/Z80___024root.h"
 
-1639867723 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.hpp
+1642797518 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.hpp
 	"Z80/Z80.h"
 	"actor.hpp"
 	"signal.hpp"
@@ -390,7 +391,7 @@
 1640037721 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\z80\z80__dpi.h
 	"svdpi.h"
 
-1642442071 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\dipswitch.cpp
+1642443160 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\dipswitch.cpp
 	"dipswitch.hpp"
 
 1642442763 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\dipswitch.hpp
@@ -400,4 +401,11 @@
 	"actor.hpp"
 	"bus.hpp"
 	"label.hpp"
+
+1642798431 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\resistor.cpp
+	"resistor.hpp"
+
+1642799046 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\resistor.hpp
+	"actor.hpp"
+	"signal.hpp"
 

@@ -10,7 +10,11 @@
 class Cpu : public Actor
 {
     public:
-        Cpu(Signal *clk, Signal *nReset, Signal *nM1, Bus *addr, Bus *data);
+        Cpu(Signal *clk,   Signal *nReset, Signal *nM1,
+            Signal *nMreq, Signal *nIorq,  Signal *nRd,    Signal *nWr,
+            Signal *nRfsh, Signal *nHalt,  Signal *nWait,
+            Signal *nInt,  Signal *nNmi,   Signal *nBusrq, Signal *nBusak,
+            Bus    *addr,  Bus    *data);
         void tick();
 
     private:
@@ -18,6 +22,17 @@ class Cpu : public Actor
         Signal *clk;
         Signal *nReset;
         Signal *nM1;
+        Signal *nMreq;
+        Signal *nIorq;
+        Signal *nRd;
+        Signal *nWr;
+        Signal *nRfsh;
+        Signal *nHalt;
+        Signal *nWait;
+        Signal *nInt;
+        Signal *nNmi;
+        Signal *nBusrq;
+        Signal *nBusak;
         Bus    *addr;
         Bus    *data;
 };
