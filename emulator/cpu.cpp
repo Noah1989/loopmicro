@@ -54,5 +54,6 @@ void Cpu::tick()
         data->drive(this, z80->D);
     } else {
         data->release(this);
+        z80->D = data->get_value();
     }
 }

@@ -3,7 +3,6 @@
 
 #include "actor.hpp"
 #include "signal.hpp"
-#include "bus.hpp"
 
 class SignalGate : public Actor
 {

@@ -156,7 +156,7 @@
 	"signal.hpp"
 	"bus.hpp"
 
-1642856469 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
+1642867761 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
 	"scene.hpp"
 	<algorithm>
 	"resistor.hpp"
@@ -169,6 +169,7 @@
 	"busgate.hpp"
 	"orgate.hpp"
 	"cpu.hpp"
+	"memory.hpp"
 
 1638100342 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\switch.hpp
 	<SDL2/SDL.h>
@@ -420,18 +421,26 @@
 1642846239 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\busgate.cpp
 	"busgate.hpp"
 
-1642855827 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\signalgate.hpp
+1642864733 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\signalgate.hpp
 	"actor.hpp"
 	"signal.hpp"
-	"bus.hpp"
 
 1642855742 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\signalgate.cpp
 	"signalgate.hpp"
 
-1642856028 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\orgate.cpp
+1642856569 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\orgate.cpp
 	"orgate.hpp"
 
 1642855991 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\orgate.hpp
 	"actor.hpp"
 	"signal.hpp"
+
+1642867738 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\memory.cpp
+	"memory.hpp"
+
+1642867245 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\memory.hpp
+	<vector>
+	"actor.hpp"
+	"signal.hpp"
+	"bus.hpp"
 

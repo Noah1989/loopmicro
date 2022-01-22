@@ -12,6 +12,7 @@
 #include "busgate.hpp"
 #include "orgate.hpp"
 #include "cpu.hpp"
+#include "memory.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 : window(window), renderer(renderer)
@@ -42,6 +43,7 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 
     Bus *addrFp = new Bus();
     Bus *dataFp = new Bus();
+    Bus *wrEn   = new Bus();
 
     Led *led1  = new Led(renderer, { .x= 50, .y=60 },   "CLK", "flat_red",
                          clk);
@@ -98,6 +100,8 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
                                        "ADDRESS INPUT", addrFp, 16);
     DipSwitch *dipData = new DipSwitch(renderer, { .x= 420, .y = 120 },
                                        "DATA INPUT", dataFp, 8);
+    DipSwitch *dipWrEn = new DipSwitch(renderer, { .x= 700, .y = 120 },
+                                       "WRITE ENABLE", wrEn, 8);
 
     Resistor *pullup1 = new Resistor(nMreq, SignalPull::WeakHigh);
     Resistor *pullup2 = new Resistor(nIorq, SignalPull::WeakHigh);
@@ -121,19 +125,21 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
                        nRfsh, nHalt,  nWait, nInt,  nNmi,  nBusrq, nBusak,
                        addr,  data);
 
+    Memory *memory = new Memory(addr, data, nMreq, nRd, nWr, wrEn, 32768, 12);
+
     actors = { led1, led2, led3, led4, led5, led6, led7, led8, led9, led10,
                led11, led12, led13, led14, addrLeds, dataLeds,
-               btn1, btn2, btn3, sw1, sw2, sw3, sw4, dipAddr, dipData,
+               btn1, btn2, btn3, sw1, sw2, sw3, sw4, dipAddr, dipData, dipWrEn,
                nMreqGate, nIorqGate, nRdGate, nWrGate, nBusakWrLogic,
                addrGate, dataGate,
                pullup1, pullup2, pullup3, pullup4, pullup5, pullup6, pullup7,
-               cpu, };
+               cpu, memory };
     signals = { clk,     nReset,  nM1,
                 nMreq,   nIorq,   nRd,   nWr,
                 nRfsh,   nHalt,   nWait, nInt,
                 nNmi,    nBusrq,  nBusak,
                 nMreqFp, nIorqFp, nRdFp, nWrFp, nBusakWr };
-    buses = { addr, data, addrFp, dataFp };
+    buses = { addr, data, addrFp, dataFp, wrEn };
 }
 
 void Scene::handleEvent(SDL_Event *event)

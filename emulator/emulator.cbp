@@ -133,6 +133,8 @@
 		<Unit filename="ledrow.cpp" />
 		<Unit filename="ledrow.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="memory.cpp" />
+		<Unit filename="memory.hpp" />
 		<Unit filename="orgate.cpp" />
 		<Unit filename="orgate.hpp" />
 		<Unit filename="resistor.cpp" />
