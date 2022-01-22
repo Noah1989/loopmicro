@@ -15,6 +15,7 @@ class Cpu : public Actor
             Signal *nRfsh, Signal *nHalt,  Signal *nWait,
             Signal *nInt,  Signal *nNmi,   Signal *nBusrq, Signal *nBusak,
             Bus    *addr,  Bus    *data);
+
         void tick();
 
     private:

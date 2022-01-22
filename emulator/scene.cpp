@@ -8,6 +8,9 @@
 #include "button.hpp"
 #include "switch.hpp"
 #include "dipswitch.hpp"
+#include "signalgate.hpp"
+#include "busgate.hpp"
+#include "orgate.hpp"
 #include "cpu.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
@@ -30,6 +33,12 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 
     Bus *addr = new Bus();
     Bus *data = new Bus();
+
+    Signal *nRdFp    = new Signal();
+    Signal *nWrFp    = new Signal();
+    Signal *nMreqFp  = new Signal();
+    Signal *nIorqFp  = new Signal();
+    Signal *nBusakWr = new Signal();
 
     Bus *addrFp = new Bus();
     Bus *dataFp = new Bus();
@@ -71,13 +80,24 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 
     Button *btn1 = new Button(renderer, { .x=50, .y=120 }, "CLK",
                               clk, SignalPull::Low, SignalPull::High);
+    Button *btn2 = new Button(renderer, { .x=610, .y=120 }, "RD",
+                              nRdFp, SignalPull::High, SignalPull::Low);
+    Button *btn3 = new Button(renderer, { .x=640, .y=120 }, "WR",
+                              nWrFp, SignalPull::High, SignalPull::Low);
+
     Switch *sw1 = new Switch(renderer, { .x=85, .y=120 }, "RESET",
                              nReset, SignalPull::High, SignalPull::Low);
     Switch *sw2 = new Switch(renderer, { .x=120, .y=120 }, "BUSRQ",
                              nBusrq, SignalPull::High, SignalPull::Low);
+    Switch *sw3 = new Switch(renderer, { .x=550, .y=120 }, "MREQ",
+                             nMreqFp, SignalPull::High, SignalPull::Low);
+    Switch *sw4 = new Switch(renderer, { .x=580, .y=120 }, "IORQ",
+                             nIorqFp, SignalPull::High, SignalPull::Low);
 
     DipSwitch *dipAddr = new DipSwitch(renderer, { .x= 200, .y = 120 },
                                        "ADDRESS INPUT", addrFp, 16);
+    DipSwitch *dipData = new DipSwitch(renderer, { .x= 420, .y = 120 },
+                                       "DATA INPUT", dataFp, 8);
 
     Resistor *pullup1 = new Resistor(nMreq, SignalPull::WeakHigh);
     Resistor *pullup2 = new Resistor(nIorq, SignalPull::WeakHigh);
@@ -87,17 +107,32 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Resistor *pullup6 = new Resistor(nInt,  SignalPull::WeakHigh);
     Resistor *pullup7 = new Resistor(nNmi,  SignalPull::WeakHigh);
 
+    SignalGate *nMreqGate = new SignalGate(nMreqFp, nMreq, nBusak);
+    SignalGate *nIorqGate = new SignalGate(nIorqFp, nIorq, nBusak);
+    SignalGate *nRdGate   = new SignalGate(nRdFp,   nRd,   nBusak);
+    SignalGate *nWrGate   = new SignalGate(nWrFp,   nWr,   nBusak);
+
+    OrGate *nBusakWrLogic = new OrGate(nBusak, nWr, nBusakWr);
+
+    BusGate *addrGate = new BusGate(addrFp, addr, nBusak);
+    BusGate *dataGate = new BusGate(dataFp, data, nBusakWr);
+
     Cpu *cpu = new Cpu(clk,   nReset, nM1,   nMreq, nIorq, nRd,    nWr,
                        nRfsh, nHalt,  nWait, nInt,  nNmi,  nBusrq, nBusak,
                        addr,  data);
 
     actors = { led1, led2, led3, led4, led5, led6, led7, led8, led9, led10,
                led11, led12, led13, led14, addrLeds, dataLeds,
-               btn1, sw1, sw2, dipAddr,
+               btn1, btn2, btn3, sw1, sw2, sw3, sw4, dipAddr, dipData,
+               nMreqGate, nIorqGate, nRdGate, nWrGate, nBusakWrLogic,
+               addrGate, dataGate,
                pullup1, pullup2, pullup3, pullup4, pullup5, pullup6, pullup7,
                cpu, };
-    signals = { clk,   nReset, nM1,   nMreq, nIorq, nRd,    nWr,
-                nRfsh, nHalt,  nWait, nInt,  nNmi,  nBusrq, nBusak };
+    signals = { clk,     nReset,  nM1,
+                nMreq,   nIorq,   nRd,   nWr,
+                nRfsh,   nHalt,   nWait, nInt,
+                nNmi,    nBusrq,  nBusak,
+                nMreqFp, nIorqFp, nRdFp, nWrFp, nBusakWr };
     buses = { addr, data, addrFp, dataFp };
 }
 

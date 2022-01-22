@@ -118,6 +118,8 @@
 		<Unit filename="assets/switch_on.svg" />
 		<Unit filename="bus.cpp" />
 		<Unit filename="bus.hpp" />
+		<Unit filename="busgate.cpp" />
+		<Unit filename="busgate.hpp" />
 		<Unit filename="button.cpp" />
 		<Unit filename="button.hpp" />
 		<Unit filename="cpu.cpp" />
@@ -131,6 +133,8 @@
 		<Unit filename="ledrow.cpp" />
 		<Unit filename="ledrow.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="orgate.cpp" />
+		<Unit filename="orgate.hpp" />
 		<Unit filename="resistor.cpp" />
 		<Unit filename="resistor.hpp" />
 		<Unit filename="scene.cpp" />
@@ -138,6 +142,8 @@
 		<Unit filename="shell.html" />
 		<Unit filename="signal.cpp" />
 		<Unit filename="signal.hpp" />
+		<Unit filename="signalgate.cpp" />
+		<Unit filename="signalgate.hpp" />
 		<Unit filename="switch.cpp" />
 		<Unit filename="switch.hpp" />
 		<Extensions>

@@ -156,7 +156,7 @@
 	"signal.hpp"
 	"bus.hpp"
 
-1642799549 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
+1642856469 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
 	"scene.hpp"
 	<algorithm>
 	"resistor.hpp"
@@ -165,6 +165,9 @@
 	"button.hpp"
 	"switch.hpp"
 	"dipswitch.hpp"
+	"signalgate.hpp"
+	"busgate.hpp"
+	"orgate.hpp"
 	"cpu.hpp"
 
 1638100342 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\switch.hpp
@@ -296,11 +299,11 @@
 	"Z80.h"
 	"Z80___024root.h"
 
-1642797951 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.cpp
+1642802803 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.cpp
 	"cpu.hpp"
 	"Z80/Z80___024root.h"
 
-1642797518 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.hpp
+1642845426 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\cpu.hpp
 	"Z80/Z80.h"
 	"actor.hpp"
 	"signal.hpp"
@@ -406,6 +409,29 @@
 	"resistor.hpp"
 
 1642799046 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\resistor.hpp
+	"actor.hpp"
+	"signal.hpp"
+
+1642845429 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\busgate.hpp
+	"actor.hpp"
+	"signal.hpp"
+	"bus.hpp"
+
+1642846239 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\busgate.cpp
+	"busgate.hpp"
+
+1642855827 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\signalgate.hpp
+	"actor.hpp"
+	"signal.hpp"
+	"bus.hpp"
+
+1642855742 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\signalgate.cpp
+	"signalgate.hpp"
+
+1642856028 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\orgate.cpp
+	"orgate.hpp"
+
+1642855991 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\orgate.hpp
 	"actor.hpp"
 	"signal.hpp"
 
