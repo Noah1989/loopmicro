@@ -47,14 +47,13 @@
 			<Add option="--shell-file shell.html" />
 			<Add option="--preload-file assets" />
 			<Add option="--use-preload-plugins" />
+			<Add option="-s ALLOW_MEMORY_GROWTH=1" />
 		</Linker>
 		<Unit filename=".gitignore">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="Z80/Z80.cpp" />
 		<Unit filename="Z80/Z80.h" />
-		<Unit filename="Z80/Z80__Dpi.cpp" />
-		<Unit filename="Z80/Z80__Dpi.h" />
 		<Unit filename="Z80/Z80__Syms.cpp" />
 		<Unit filename="Z80/Z80__Syms.h" />
 		<Unit filename="Z80/Z80___024root.h" />
@@ -62,12 +61,6 @@
 		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__0__Slow.cpp" />
 		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__1.cpp" />
 		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__1__Slow.cpp" />
-		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__2.cpp" />
-		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__2__Slow.cpp" />
-		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__3.cpp" />
-		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__3__Slow.cpp" />
-		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__4.cpp" />
-		<Unit filename="Z80/Z80___024root__DepSet_h394bf213__4__Slow.cpp" />
 		<Unit filename="Z80/Z80___024root__Slow.cpp" />
 		<Unit filename="Z80/svdpi.h" />
 		<Unit filename="Z80/verilated.cpp" />

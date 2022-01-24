@@ -3,28 +3,28 @@
 
 #include "Z80.h"
 #include "Z80__Syms.h"
-#include "verilated_dpi.h"
 
 //============================================================
 // Constructors
 
 Z80::Z80(VerilatedContext* _vcontextp__, const char* _vcname__)
     : vlSymsp{new Z80__Syms(_vcontextp__, _vcname__, this)}
-    , CLK{vlSymsp->TOP.CLK}
-    , nM1{vlSymsp->TOP.nM1}
-    , nMREQ{vlSymsp->TOP.nMREQ}
-    , nIORQ{vlSymsp->TOP.nIORQ}
-    , nRD{vlSymsp->TOP.nRD}
-    , nWR{vlSymsp->TOP.nWR}
-    , nRFSH{vlSymsp->TOP.nRFSH}
-    , nHALT{vlSymsp->TOP.nHALT}
-    , nBUSACK{vlSymsp->TOP.nBUSACK}
-    , nWAIT{vlSymsp->TOP.nWAIT}
-    , nINT{vlSymsp->TOP.nINT}
-    , nNMI{vlSymsp->TOP.nNMI}
-    , nRESET{vlSymsp->TOP.nRESET}
-    , nBUSRQ{vlSymsp->TOP.nBUSRQ}
-    , D{vlSymsp->TOP.D}
+    , reset_n{vlSymsp->TOP.reset_n}
+    , clk{vlSymsp->TOP.clk}
+    , wait_n{vlSymsp->TOP.wait_n}
+    , int_n{vlSymsp->TOP.int_n}
+    , nmi_n{vlSymsp->TOP.nmi_n}
+    , busrq_n{vlSymsp->TOP.busrq_n}
+    , m1_n{vlSymsp->TOP.m1_n}
+    , mreq_n{vlSymsp->TOP.mreq_n}
+    , iorq_n{vlSymsp->TOP.iorq_n}
+    , rd_n{vlSymsp->TOP.rd_n}
+    , wr_n{vlSymsp->TOP.wr_n}
+    , rfsh_n{vlSymsp->TOP.rfsh_n}
+    , halt_n{vlSymsp->TOP.halt_n}
+    , busak_n{vlSymsp->TOP.busak_n}
+    , di{vlSymsp->TOP.di}
+    , dout{vlSymsp->TOP.dout}
     , A{vlSymsp->TOP.A}
     , rootp{&(vlSymsp->TOP)}
 {
@@ -48,7 +48,6 @@ Z80::~Z80() {
 void Z80___024root___eval_initial(Z80___024root* vlSelf);
 void Z80___024root___eval_settle(Z80___024root* vlSelf);
 void Z80___024root___eval(Z80___024root* vlSelf);
-QData Z80___024root___change_request(Z80___024root* vlSelf);
 #ifdef VL_DEBUG
 void Z80___024root___eval_debug_assertions(Z80___024root* vlSelf);
 #endif  // VL_DEBUG
@@ -58,26 +57,11 @@ static void _eval_initial_loop(Z80__Syms* __restrict vlSymsp) {
     vlSymsp->__Vm_didInit = true;
     Z80___024root___eval_initial(&(vlSymsp->TOP));
     // Evaluate till stable
-    int __VclockLoop = 0;
-    QData __Vchange = 1;
     do {
         VL_DEBUG_IF(VL_DBG_MSGF("+ Initial loop\n"););
         Z80___024root___eval_settle(&(vlSymsp->TOP));
         Z80___024root___eval(&(vlSymsp->TOP));
-        if (VL_UNLIKELY(++__VclockLoop > 100)) {
-            // About to fail, so enable debug to see what's not settling.
-            // Note you must run make with OPT=-DVL_DEBUG for debug prints.
-            int __Vsaved_debug = Verilated::debug();
-            Verilated::debug(1);
-            __Vchange = Z80___024root___change_request(&(vlSymsp->TOP));
-            Verilated::debug(__Vsaved_debug);
-            VL_FATAL_MT("z80_top_direct_n.v", 19, "",
-                "Verilated model didn't DC converge\n"
-                "- See https://verilator.org/warn/DIDNOTCONVERGE");
-        } else {
-            __Vchange = Z80___024root___change_request(&(vlSymsp->TOP));
-        }
-    } while (VL_UNLIKELY(__Vchange));
+    } while (0);
 }
 
 void Z80::eval_step() {
@@ -89,25 +73,10 @@ void Z80::eval_step() {
     // Initialize
     if (VL_UNLIKELY(!vlSymsp->__Vm_didInit)) _eval_initial_loop(vlSymsp);
     // Evaluate till stable
-    int __VclockLoop = 0;
-    QData __Vchange = 1;
     do {
         VL_DEBUG_IF(VL_DBG_MSGF("+ Clock loop\n"););
         Z80___024root___eval(&(vlSymsp->TOP));
-        if (VL_UNLIKELY(++__VclockLoop > 100)) {
-            // About to fail, so enable debug to see what's not settling.
-            // Note you must run make with OPT=-DVL_DEBUG for debug prints.
-            int __Vsaved_debug = Verilated::debug();
-            Verilated::debug(1);
-            __Vchange = Z80___024root___change_request(&(vlSymsp->TOP));
-            Verilated::debug(__Vsaved_debug);
-            VL_FATAL_MT("z80_top_direct_n.v", 19, "",
-                "Verilated model didn't converge\n"
-                "- See https://verilator.org/warn/DIDNOTCONVERGE");
-        } else {
-            __Vchange = Z80___024root___change_request(&(vlSymsp->TOP));
-        }
-    } while (VL_UNLIKELY(__Vchange));
+    } while (0);
     // Evaluate cleanup
 }
 

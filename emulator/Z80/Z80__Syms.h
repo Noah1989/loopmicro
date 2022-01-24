@@ -16,8 +16,6 @@
 // INCLUDE MODULE CLASSES
 #include "Z80___024root.h"
 
-// DPI TYPES for DPI Export callbacks (Internal use)
-
 // SYMS CLASS (contains all model state)
 class Z80__Syms final : public VerilatedSyms {
   public:
@@ -27,9 +25,6 @@ class Z80__Syms final : public VerilatedSyms {
 
     // MODULE INSTANCE STATE
     Z80___024root                  TOP;
-
-    // SCOPE NAMES
-    VerilatedScope __Vscope_z80_top_direct_n;
 
     // CONSTRUCTORS
     Z80__Syms(VerilatedContext* contextp, const char* namep, Z80* modelp);

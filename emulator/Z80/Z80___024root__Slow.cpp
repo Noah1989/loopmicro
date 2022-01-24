@@ -3,7 +3,6 @@
 // See Z80.h for the primary calling header
 
 #include "verilated.h"
-#include "verilated_dpi.h"
 
 #include "Z80__Syms.h"
 #include "Z80___024root.h"

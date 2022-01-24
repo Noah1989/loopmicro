@@ -19,28 +19,32 @@ Cpu::Cpu(Signal *clk,   Signal *nReset, Signal *nM1,
 
 void Cpu::tick()
 {
-    z80->CLK    = clk   ->get_state() == SignalState::High;
-    z80->nRESET = nReset->get_state() == SignalState::High;
-    z80->nWAIT  = nWait ->get_state() == SignalState::High;
-    z80->nINT   = nInt  ->get_state() == SignalState::High;
-    z80->nNMI   = nNmi  ->get_state() == SignalState::High;
-    z80->nBUSRQ = nBusrq->get_state() == SignalState::High;
+    z80->contextp()->timeInc(1);
+
+    z80->reset_n = nReset->get_state() == SignalState::High;
+    z80->wait_n  = nWait ->get_state() == SignalState::High;
+    z80->int_n   = nInt  ->get_state() == SignalState::High;
+    z80->nmi_n   = nNmi  ->get_state() == SignalState::High;
+    z80->busrq_n = nBusrq->get_state() == SignalState::High;
+
+    if (!z80->rd_n) {
+        z80->di = data->get_value();
+    }
+
+    z80->clk = clk->get_state() == SignalState::High;
 
     z80->eval();
 
-    //workaround for https://github.com/gdevic/A-Z80/issues/2
-    bool z80_real_nM1 = z80->nM1 || !z80->nBUSACK;
+    nM1   ->pull(this, z80->m1_n    ? SignalPull::High : SignalPull::Low);
+    nRfsh ->pull(this, z80->rfsh_n  ? SignalPull::High : SignalPull::Low);
+    nHalt ->pull(this, z80->halt_n  ? SignalPull::High : SignalPull::Low);
+    nBusak->pull(this, z80->busak_n ? SignalPull::High : SignalPull::Low);
 
-    nM1   ->pull(this, z80_real_nM1 ? SignalPull::High : SignalPull::Low);
-    nRfsh ->pull(this, z80->nRFSH   ? SignalPull::High : SignalPull::Low);
-    nHalt ->pull(this, z80->nHALT   ? SignalPull::High : SignalPull::Low);
-    nBusak->pull(this, z80->nBUSACK ? SignalPull::High : SignalPull::Low);
-
-    if (z80->rootp->z80_top_direct_n__DOT__pin_control_oe) {
-        nMreq->pull (this, z80->nMREQ ? SignalPull::High : SignalPull::Low);
-        nIorq->pull (this, z80->nIORQ ? SignalPull::High : SignalPull::Low);
-        nRd  ->pull (this, z80->nRD   ? SignalPull::High : SignalPull::Low);
-        nWr  ->pull (this, z80->nWR   ? SignalPull::High : SignalPull::Low);
+    if (z80->rootp->busak_n) {
+        nMreq->pull (this, z80->mreq_n ? SignalPull::High : SignalPull::Low);
+        nIorq->pull (this, z80->iorq_n ? SignalPull::High : SignalPull::Low);
+        nRd  ->pull (this, z80->rd_n   ? SignalPull::High : SignalPull::Low);
+        nWr  ->pull (this, z80->wr_n   ? SignalPull::High : SignalPull::Low);
         addr ->drive(this, z80->A);
     } else {
         nMreq->pull   (this, SignalPull::None);
@@ -50,10 +54,10 @@ void Cpu::tick()
         addr ->release(this);
     }
 
-    if (z80->rootp->z80_top_direct_n__DOT__bus_db_pin_oe) {
-        data->drive(this, z80->D);
+    if (!z80->rootp->wr_n) {
+        data->drive(this, z80->rootp->dout);
     } else {
         data->release(this);
-        z80->D = data->get_value();
     }
+
 }

@@ -9,7 +9,6 @@
 #define VERILATED_Z80_H_  // guard
 
 #include "verilated.h"
-#include "svdpi.h"
 
 class Z80__Syms;
 class Z80___024root;
@@ -25,21 +24,22 @@ class Z80 VL_NOT_FINAL {
     // PORTS
     // The application code writes and reads these signals to
     // propagate new values into/out from the Verilated model.
-    VL_IN8(&CLK,0,0);
-    VL_OUT8(&nM1,0,0);
-    VL_OUT8(&nMREQ,0,0);
-    VL_OUT8(&nIORQ,0,0);
-    VL_OUT8(&nRD,0,0);
-    VL_OUT8(&nWR,0,0);
-    VL_OUT8(&nRFSH,0,0);
-    VL_OUT8(&nHALT,0,0);
-    VL_OUT8(&nBUSACK,0,0);
-    VL_IN8(&nWAIT,0,0);
-    VL_IN8(&nINT,0,0);
-    VL_IN8(&nNMI,0,0);
-    VL_IN8(&nRESET,0,0);
-    VL_IN8(&nBUSRQ,0,0);
-    VL_INOUT8(&D,7,0);
+    VL_IN8(&reset_n,0,0);
+    VL_IN8(&clk,0,0);
+    VL_IN8(&wait_n,0,0);
+    VL_IN8(&int_n,0,0);
+    VL_IN8(&nmi_n,0,0);
+    VL_IN8(&busrq_n,0,0);
+    VL_OUT8(&m1_n,0,0);
+    VL_OUT8(&mreq_n,0,0);
+    VL_OUT8(&iorq_n,0,0);
+    VL_OUT8(&rd_n,0,0);
+    VL_OUT8(&wr_n,0,0);
+    VL_OUT8(&rfsh_n,0,0);
+    VL_OUT8(&halt_n,0,0);
+    VL_OUT8(&busak_n,0,0);
+    VL_IN8(&di,7,0);
+    VL_OUT8(&dout,7,0);
     VL_OUT16(&A,15,0);
 
     // CELLS
