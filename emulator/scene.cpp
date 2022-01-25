@@ -125,7 +125,7 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
                        nRfsh, nHalt,  nWait, nInt,  nNmi,  nBusrq, nBusak,
                        addr,  data);
 
-    Memory *memory = new Memory(addr, data, nMreq, nRd, nWr, wrEn, 32768, 12);
+    memory = new Memory(addr, data, nMreq, nRd, nWr, wrEn, 32768, 12);
 
     actors = { led1, led2, led3, led4, led5, led6, led7, led8, led9, led10,
                led11, led12, led13, led14, addrLeds, dataLeds,

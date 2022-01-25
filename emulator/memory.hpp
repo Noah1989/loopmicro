@@ -13,7 +13,9 @@ class Memory : public Actor
         Memory(Bus *addr, Bus *data, Signal *nMreq, Signal *nRd, Signal *nWr,
                Bus *wrEn, unsigned int memorySize, unsigned int blockBits);
 
-        void tick();
+        void          tick();
+        unsigned int  memorySize;
+        char         *buffer;
 
     private:
         Bus              *addr;
@@ -22,7 +24,6 @@ class Memory : public Actor
         Signal           *nRd;
         Signal           *nWr;
         Bus              *wrEn;
-        std::vector<char> memory;
         unsigned int      blockBits;
 };
 
