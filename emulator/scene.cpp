@@ -13,6 +13,7 @@
 #include "orgate.hpp"
 #include "cpu.hpp"
 #include "memory.hpp"
+#include "lcd.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 : window(window), renderer(renderer)
@@ -114,9 +115,9 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     SignalGate *nMreqGate = new SignalGate(nMreqFp, nMreq, nBusak);
     SignalGate *nIorqGate = new SignalGate(nIorqFp, nIorq, nBusak);
     SignalGate *nRdGate   = new SignalGate(nRdFp,   nRd,   nBusak);
-    SignalGate *nWrGate   = new SignalGate(nWrFp,   nWr,   nBusak);
+    SignalGate *nWrGate   = new SignalGate(nWrFp,   nWr,   nBusakWr);
 
-    OrGate *nBusakWrLogic = new OrGate(nBusak, nWr, nBusakWr);
+    OrGate *nBusakWrLogic = new OrGate(nBusak, nWrFp, nBusakWr);
 
     BusGate *addrGate = new BusGate(addrFp, addr, nBusak);
     BusGate *dataGate = new BusGate(dataFp, data, nBusakWr);
@@ -127,13 +128,16 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 
     memory = new Memory(addr, data, nMreq, nRd, nWr, wrEn, 32768, 12);
 
+    Lcd *lcd = new Lcd(renderer, { .x=50, .y=180 },
+                       nIorq, nRd, nWr, addr, data);
+
     actors = { led1, led2, led3, led4, led5, led6, led7, led8, led9, led10,
                led11, led12, led13, led14, addrLeds, dataLeds,
                btn1, btn2, btn3, sw1, sw2, sw3, sw4, dipAddr, dipData, dipWrEn,
                nMreqGate, nIorqGate, nRdGate, nWrGate, nBusakWrLogic,
                addrGate, dataGate,
                pullup1, pullup2, pullup3, pullup4, pullup5, pullup6, pullup7,
-               cpu, memory };
+               cpu, memory, lcd };
     signals = { clk,     nReset,  nM1,
                 nMreq,   nIorq,   nRd,   nWr,
                 nRfsh,   nHalt,   nWait, nInt,

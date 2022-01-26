@@ -53,6 +53,10 @@
 		<Unit filename=".gitignore">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="LCD/vrEmuLcd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="LCD/vrEmuLcd.h" />
 		<Unit filename="Z80/Z80.cpp" />
 		<Unit filename="Z80/Z80.h" />
 		<Unit filename="Z80/Z80__Syms.cpp" />
@@ -122,6 +126,8 @@
 		<Unit filename="dipswitch.hpp" />
 		<Unit filename="label.cpp" />
 		<Unit filename="label.hpp" />
+		<Unit filename="lcd.cpp" />
+		<Unit filename="lcd.hpp" />
 		<Unit filename="led.cpp" />
 		<Unit filename="led.hpp" />
 		<Unit filename="ledrow.cpp" />
