@@ -137,6 +137,8 @@
 		<Unit filename="memory.hpp" />
 		<Unit filename="orgate.cpp" />
 		<Unit filename="orgate.hpp" />
+		<Unit filename="oscillator.cpp" />
+		<Unit filename="oscillator.hpp" />
 		<Unit filename="resistor.cpp" />
 		<Unit filename="resistor.hpp" />
 		<Unit filename="scene.cpp" />

@@ -22,7 +22,7 @@ void Memory::tick()
         data->release(this);
     } else if (nWr->get_state() == SignalState::Low) {
         data->release(this);
-        if (wrEn->get_value() & (1 << (address>>blockBits))) {
+        if ((wrEn->get_value()|0xff00) & (1 << (address>>blockBits))) {
             buffer[address] = data->get_value();
         }
     } else if (nRd->get_state() == SignalState::Low) {

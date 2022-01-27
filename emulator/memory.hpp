@@ -14,6 +14,7 @@ class Memory : public Actor
                Bus *wrEn, unsigned int memorySize, unsigned int blockBits);
 
         void          tick();
+
         unsigned int  memorySize;
         char         *buffer;
 

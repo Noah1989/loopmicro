@@ -14,6 +14,7 @@
 #include "cpu.hpp"
 #include "memory.hpp"
 #include "lcd.hpp"
+#include "oscillator.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 : window(window), renderer(renderer)
@@ -41,6 +42,7 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Signal *nMreqFp  = new Signal();
     Signal *nIorqFp  = new Signal();
     Signal *nBusakWr = new Signal();
+    Signal *oscEn    = new Signal();
 
     Bus *addrFp = new Bus();
     Bus *dataFp = new Bus();
@@ -82,7 +84,7 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
                                   "DATA BUS", "flat_yellow", data, 8);
 
     Button *btn1 = new Button(renderer, { .x=50, .y=120 }, "CLK",
-                              clk, SignalPull::Low, SignalPull::High);
+                              clk, SignalPull::WeakLow, SignalPull::WeakHigh);
     Button *btn2 = new Button(renderer, { .x=610, .y=120 }, "RD",
                               nRdFp, SignalPull::High, SignalPull::Low);
     Button *btn3 = new Button(renderer, { .x=640, .y=120 }, "WR",
@@ -96,12 +98,14 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
                              nMreqFp, SignalPull::High, SignalPull::Low);
     Switch *sw4 = new Switch(renderer, { .x=580, .y=120 }, "IORQ",
                              nIorqFp, SignalPull::High, SignalPull::Low);
+    Switch *sw5 = new Switch(renderer, { .x=820, .y=120 }, "OSC",
+                             oscEn, SignalPull::Low, SignalPull::High);
 
     DipSwitch *dipAddr = new DipSwitch(renderer, { .x= 200, .y = 120 },
                                        "ADDRESS INPUT", addrFp, 16);
     DipSwitch *dipData = new DipSwitch(renderer, { .x= 420, .y = 120 },
                                        "DATA INPUT", dataFp, 8);
-    DipSwitch *dipWrEn = new DipSwitch(renderer, { .x= 700, .y = 120 },
+    DipSwitch *dipWrEn = new DipSwitch(renderer, { .x= 680, .y = 120 },
                                        "WRITE ENABLE", wrEn, 8);
 
     Resistor *pullup1 = new Resistor(nMreq, SignalPull::WeakHigh);
@@ -126,23 +130,26 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
                        nRfsh, nHalt,  nWait, nInt,  nNmi,  nBusrq, nBusak,
                        addr,  data);
 
-    memory = new Memory(addr, data, nMreq, nRd, nWr, wrEn, 32768, 12);
+    memory = new Memory(addr, data, nMreq, nRd, nWr, wrEn, 65536, 12);
 
     Lcd *lcd = new Lcd(renderer, { .x=50, .y=180 },
                        nIorq, nRd, nWr, addr, data);
 
+    Oscillator *osc = new Oscillator(oscEn, clk);
+
     actors = { led1, led2, led3, led4, led5, led6, led7, led8, led9, led10,
                led11, led12, led13, led14, addrLeds, dataLeds,
-               btn1, btn2, btn3, sw1, sw2, sw3, sw4, dipAddr, dipData, dipWrEn,
+               btn1, btn2, btn3, sw1, sw2, sw3, sw4, sw5,
+               dipAddr, dipData, dipWrEn,
                nMreqGate, nIorqGate, nRdGate, nWrGate, nBusakWrLogic,
                addrGate, dataGate,
                pullup1, pullup2, pullup3, pullup4, pullup5, pullup6, pullup7,
-               cpu, memory, lcd };
+               cpu, memory, lcd, osc };
     signals = { clk,     nReset,  nM1,
                 nMreq,   nIorq,   nRd,   nWr,
                 nRfsh,   nHalt,   nWait, nInt,
                 nNmi,    nBusrq,  nBusak,
-                nMreqFp, nIorqFp, nRdFp, nWrFp, nBusakWr };
+                nMreqFp, nIorqFp, nRdFp, nWrFp, nBusakWr, oscEn };
     buses = { addr, data, addrFp, dataFp, wrEn };
 }
 

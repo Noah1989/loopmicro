@@ -24,11 +24,9 @@ class Led : public Actor
         SDL_Texture *lightImage;
         Signal      *input;
         Label       *label;
-        float        lowValue;
-        float        highValue;
-        float        currentValue;
-
-        void set_value(float value);
+        bool        inverted;
+        int         valueSum;
+        int         valueCount;
 };
 
 #endif // LED_HPP

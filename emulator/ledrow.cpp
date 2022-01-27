@@ -2,8 +2,8 @@
 
 LedRow::LedRow(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
                const std::string &imageName, Bus *input, int numLeds)
-: Actor(renderer, 2), numLeds(numLeds), rects(numLeds), lightImages(numLeds),
-  input(input), currentValues(numLeds, -1)
+: Actor(renderer, 2), numLeds(numLeds), rects(numLeds),
+  input(input), valueSums(numLeds, 0), valueCount(0)
 {
     int width, height;
     std::string baseImagePath = "assets/led_"+ imageName + ".png";
@@ -23,22 +23,8 @@ LedRow::LedRow(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
                       labelText);
 
     std::string lightImagePath = "assets/led_"+ imageName + "_light.png";
-    for (int i = 0; i < numLeds; i++) {
-        lightImages[i] = IMG_LoadTexture(renderer, lightImagePath.c_str());
-        SDL_SetTextureBlendMode(lightImages[i], SDL_BLENDMODE_ADD);
-    }
-
-    for (int i = 0; i < numLeds; i++) {
-        set_value(0, i);
-    }
-}
-
-void LedRow::set_value(float value, int bit)
-{
-    if (value == currentValues[bit]) return;
-    SDL_SetTextureAlphaMod(lightImages[bit], 255*value);
-    changed = true;
-    currentValues[bit] = value;
+    lightImage = IMG_LoadTexture(renderer, lightImagePath.c_str());
+    SDL_SetTextureBlendMode(lightImage, SDL_BLENDMODE_ADD);
 }
 
 void LedRow::tick()
@@ -47,16 +33,17 @@ void LedRow::tick()
         switch (input->get_state(i)) {
         case SignalState::Floating:
         case SignalState::Low:
-            set_value(0, i);
             break;
         case SignalState::High:
-            set_value(1, i);
+            valueSums[i] += 2;
             break;
         case SignalState::Contending:
-            set_value(0.5, i);
+            valueSums[i] += 1;
             break;
         }
     }
+    valueCount +=2;
+    changed = true;
 }
 
 
@@ -72,8 +59,11 @@ bool LedRow::render(int layer)
         break;
     case 1:
         for (int i = 0; i < numLeds; i++) {
-            SDL_RenderCopy(renderer, lightImages[i], NULL, &rects[i]);
+            SDL_SetTextureAlphaMod(lightImage, 255*valueSums[i]/valueCount);
+            SDL_RenderCopy(renderer, lightImage, NULL, &rects[i]);
+            valueSums[i] = 0;
         }
+        valueCount = 0;
         break;
     }
     return true;

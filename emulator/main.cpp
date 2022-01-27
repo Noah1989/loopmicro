@@ -7,6 +7,13 @@
 
 #include "scene.hpp"
 
+// 100%
+//const int ticksPerFrame = 327673; // prime number
+// 10%
+//const int ticksPerFrame = 32771; // prime number
+// 1%
+const int ticksPerFrame = 3271; // prime number
+
 struct context
 {
     bool initialized = false;
@@ -75,7 +82,9 @@ void mainloop(void *arg)
     }
 
     // run simulation
-    ctx->scene->tick();
+    for (int i = 0; i < ticksPerFrame; i++) {
+        ctx->scene->tick();
+    }
 
     // draw scene
     if (ctx->scene->render()) {

@@ -2,7 +2,8 @@
 
 Led::Led(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
          const std::string &imageName, Signal* input, bool inverted)
-: Actor(renderer, 2), input(input), currentValue(-1)
+: Actor(renderer, 2), input(input), inverted(inverted),
+  valueSum(0), valueCount(0)
 {
     std::string baseImagePath = "assets/led_"+ imageName + ".png";
     baseImage = IMG_LoadTexture(renderer, baseImagePath.c_str());
@@ -15,39 +16,29 @@ Led::Led(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
     std::string lightImagePath = "assets/led_"+ imageName + "_light.png";
     lightImage = IMG_LoadTexture(renderer, lightImagePath.c_str());
     SDL_SetTextureBlendMode(lightImage, SDL_BLENDMODE_ADD);
-
-    if (inverted) {
-        lowValue  = 1;
-        highValue = 0;
-    } else {
-        lowValue  = 0;
-        highValue = 1;
-    }
-    set_value(lowValue);
 }
 
-void Led::set_value(float value)
-{
-    if (value == currentValue) return;
-    SDL_SetTextureAlphaMod(lightImage, 255*value);
-    changed = true;
-    currentValue = value;
-}
 
 void Led::tick()
 {
     switch (input->get_state()) {
     case SignalState::Floating:
     case SignalState::Low:
-        set_value(lowValue);
+        if (inverted) {
+            valueSum += 2;
+        }
         break;
     case SignalState::High:
-        set_value(highValue);
+        if (!inverted) {
+            valueSum += 2;
+        }
         break;
     case SignalState::Contending:
-        set_value((lowValue + highValue)/2);
+        valueSum += 1;
         break;
     }
+    valueCount += 2;
+    changed = true;
 }
 
 bool Led::render(int layer)
@@ -59,7 +50,10 @@ bool Led::render(int layer)
         label->render();
         break;
     case 1:
+        SDL_SetTextureAlphaMod(lightImage, 255*valueSum/valueCount);
         SDL_RenderCopy(renderer, lightImage, NULL, &rect);
+        valueSum = 0;
+        valueCount = 0;
         break;
     }
     return true;

@@ -23,12 +23,11 @@ class LedRow : public Actor
         int                        numLeds;
         std::vector<SDL_Rect>      rects;
         SDL_Texture               *baseImage;
-        std::vector<SDL_Texture*>  lightImages;
+        SDL_Texture               *lightImage;
         Bus                       *input;
         Label                     *label;
-        std::vector<float>         currentValues;
-
-        void set_value(float value, int bit);
+        std::vector<int>           valueSums;
+        int                        valueCount;
 };
 
 #endif // LEDROW_HPP
