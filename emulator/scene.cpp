@@ -15,6 +15,7 @@
 #include "memory.hpp"
 #include "lcd.hpp"
 #include "oscillator.hpp"
+#include "sio.hpp"
 
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 : window(window), renderer(renderer)
@@ -85,18 +86,18 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 
     Button *btn1 = new Button(renderer, { .x=50, .y=120 }, "CLK",
                               clk, SignalPull::WeakLow, SignalPull::WeakHigh);
-    Button *btn2 = new Button(renderer, { .x=610, .y=120 }, "RD",
+    Switch *btn2 = new Switch(renderer, { .x=610, .y=120 }, "RD",
                               nRdFp, SignalPull::High, SignalPull::Low);
-    Button *btn3 = new Button(renderer, { .x=640, .y=120 }, "WR",
+    Switch *btn3 = new Switch(renderer, { .x=640, .y=120 }, "WR",
                               nWrFp, SignalPull::High, SignalPull::Low);
 
     Switch *sw1 = new Switch(renderer, { .x=85, .y=120 }, "RESET",
                              nReset, SignalPull::High, SignalPull::Low);
     Switch *sw2 = new Switch(renderer, { .x=120, .y=120 }, "BUSRQ",
                              nBusrq, SignalPull::High, SignalPull::Low);
-    Switch *sw3 = new Switch(renderer, { .x=550, .y=120 }, "MREQ",
+    Button *sw3 = new Button(renderer, { .x=550, .y=120 }, "MREQ",
                              nMreqFp, SignalPull::High, SignalPull::Low);
-    Switch *sw4 = new Switch(renderer, { .x=580, .y=120 }, "IORQ",
+    Button *sw4 = new Button(renderer, { .x=580, .y=120 }, "IORQ",
                              nIorqFp, SignalPull::High, SignalPull::Low);
     Switch *sw5 = new Switch(renderer, { .x=820, .y=120 }, "OSC",
                              oscEn, SignalPull::Low, SignalPull::High);
@@ -137,6 +138,8 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 
     Oscillator *osc = new Oscillator(oscEn, clk);
 
+    Sio *sio = new Sio(nReset, nM1, nIorq, nRd, nInt, clk, addr, data);
+
     actors = { led1, led2, led3, led4, led5, led6, led7, led8, led9, led10,
                led11, led12, led13, led14, addrLeds, dataLeds,
                btn1, btn2, btn3, sw1, sw2, sw3, sw4, sw5,
@@ -144,7 +147,7 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
                nMreqGate, nIorqGate, nRdGate, nWrGate, nBusakWrLogic,
                addrGate, dataGate,
                pullup1, pullup2, pullup3, pullup4, pullup5, pullup6, pullup7,
-               cpu, memory, lcd, osc };
+               cpu, memory, lcd, osc, sio };
     signals = { clk,     nReset,  nM1,
                 nMreq,   nIorq,   nRd,   nWr,
                 nRfsh,   nHalt,   nWait, nInt,

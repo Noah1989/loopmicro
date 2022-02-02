@@ -143,11 +143,17 @@
 		<Unit filename="resistor.hpp" />
 		<Unit filename="scene.cpp" />
 		<Unit filename="scene.hpp" />
+		<Unit filename="sdl-ps2/sdl-ps2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sdl-ps2/sdl-ps2.h" />
 		<Unit filename="shell.html" />
 		<Unit filename="signal.cpp" />
 		<Unit filename="signal.hpp" />
 		<Unit filename="signalgate.cpp" />
 		<Unit filename="signalgate.hpp" />
+		<Unit filename="sio.cpp" />
+		<Unit filename="sio.hpp" />
 		<Unit filename="switch.cpp" />
 		<Unit filename="switch.hpp" />
 		<Extensions>

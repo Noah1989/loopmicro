@@ -142,7 +142,7 @@
 	"signal.hpp"
 	"label.hpp"
 
-1643243133 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\main.cpp
+1643835512 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\main.cpp
 	<iostream>
 	<emscripten.h>
 	<SDL2/SDL.h>
@@ -158,7 +158,7 @@
 	"bus.hpp"
 	"memory.hpp"
 
-1643239354 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
+1643835261 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\scene.cpp
 	"scene.hpp"
 	<algorithm>
 	"resistor.hpp"
@@ -174,6 +174,7 @@
 	"memory.hpp"
 	"lcd.hpp"
 	"oscillator.hpp"
+	"sio.hpp"
 
 1638100342 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\switch.hpp
 	<SDL2/SDL.h>
@@ -471,4 +472,23 @@
 1643237895 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\oscillator.hpp
 	"actor.hpp"
 	"signal.hpp"
+
+1643834911 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\sdl-ps2\sdl-ps2.c
+	<SDL.h>
+	"sdl-ps2.h"
+
+1643834911 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\sdl-ps2\sdl-ps2.h
+	<stdbool.h>
+	<stdint.h>
+
+1643835261 source:c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\sio.cpp
+	"sio.hpp"
+	"sdl-ps2/sdl-ps2.h"
+
+1643834922 c:\users\stefan paul noack\onedrive - noack.software\documents\github\loopmicro\emulator\sio.hpp
+	<SDL2/SDL.h>
+	<queue>
+	"actor.hpp"
+	"signal.hpp"
+	"bus.hpp"
 

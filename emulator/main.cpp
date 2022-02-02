@@ -13,6 +13,12 @@
 //const int ticksPerFrame = 32771; // prime number
 // 1%
 const int ticksPerFrame = 3271; // prime number
+// 0.1%
+//const int ticksPerFrame = 331; // prime number
+// 0.01%
+//const int ticksPerFrame = 31; // prime number
+// slowest
+//const int ticksPerFrame = 1;
 
 struct context
 {
