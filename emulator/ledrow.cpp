@@ -11,14 +11,16 @@ LedRow::LedRow(SDL_Renderer *renderer, SDL_Point pos, const char *labelText,
     SDL_QueryTexture(baseImage, NULL, NULL, &width, &height);
 
     for (int i = 0; i < numLeds; i++) {
-        rects[i].x = pos.x + (numLeds-1-i)*(width/2);
+        rects[i].x = pos.x + (numLeds-1-i)  *(width/2)
+                           + (numLeds-1-i)/4*(width/8);
         rects[i].y = pos.y;
         rects[i].w = width;
         rects[i].h = height;
     }
 
     label = new Label(renderer, { .x=pos.x, .y=pos.y,
-                                  .w=width + (numLeds-1)*(width/2),
+                                  .w=width + (numLeds   - 1)*(width/2)
+                                           + (numLeds/4 - 1)*(width/8),
                                   .h=height },
                       labelText);
 

@@ -5,7 +5,7 @@
 Label::Label(SDL_Renderer *renderer, SDL_Rect alignToRect, const char *text)
 : renderer(renderer)
 {
-    SDL_Color color = { 0, 0, 0, 255 };
+    SDL_Color color = { 192, 192, 192, 255 };
     TTF_Font *font = TTF_OpenFont("assets/Dosis-Regular.ttf", 12);
     SDL_Surface *surface = TTF_RenderText_Blended(font, text, color);
     labelRect.x = alignToRect.x + (alignToRect.w - surface->w)/2;

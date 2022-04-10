@@ -78,7 +78,7 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Led *led14 = new Led(renderer, { .x=155, .y=120 }, "BUSAK",  "flat_red",
                          nBusak, /*inverted=*/true);
 
-    LedRow *addrLeds = new LedRow(renderer, { .x=450, .y=60 },
+    LedRow *addrLeds = new LedRow(renderer, { .x=440, .y=60 },
                                   "ADDRESS BUS", "flat_green", addr, 16);
 
     LedRow *dataLeds = new LedRow(renderer, { .x=720, .y=60 },
@@ -184,7 +184,7 @@ bool Scene::render()
     }
 
     // gray background
-    SDL_SetRenderDrawColor(renderer, 192, 192, 192, 255);
+    SDL_SetRenderDrawColor(renderer, 32, 32, 32, 255);
     SDL_RenderClear(renderer);
 
     int layer = 0;
