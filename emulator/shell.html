@@ -4,8 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Emscripten-Generated Code</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/comic-mono@0.0.1/index.css">
     <style>
-      body { width: 1024px; margin: auto; box-shadow: 0 0 10px black; background: #181818; color: #ccc }
+      body { background: #181818; color: #ccc }
+      .main { width: 1080px; margin: auto; box-shadow: 0 0 10px black; background: #222 }
       .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
       div.emscripten { text-align: center; }
       /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
@@ -43,9 +45,62 @@
         to {transform: rotate(360deg);}
       }
 
+      .book {
+        width: 1024px;
+        height: 720px;
+        margin: 16px auto;
+        background: #286;
+        border-radius: 8px;
+        box-shadow: 0 0 10px black;
+      }
+
+      .page {
+        width: 503px;
+        height: 704px;
+        background-color: #fed;
+        margin: 8px;border-radius: 4px;
+        box-shadow: 0 0 4px black;
+        padding: 16px;
+        box-sizing: border-box;
+      }
+
+      .page.left {
+        float: left;
+        margin-right: 1px;
+      }
+
+      .spine {
+          height: 700px;
+          width: 2px;
+          float: left;
+          margin: 10px -1px;
+          box-shadow: 0 0 3px #876;
+          background: #765;
+          position: relative;
+      }
+
+      .page.right {
+        float: right;
+        margin-left: 1px;
+      }
+
+      .page .content {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, #fed 17px, transparent 1%) center, linear-gradient(#fed 17px, transparent 1%) center, #cba;
+        background-size: 19px 19px;
+        color: #345;
+        white-space: pre;
+        line-height: 19px;
+        padding: 3px 1px;
+        font-family: "Comic Mono", monospace;
+        box-sizing: border-box;
+        font-size: 20px;
+      }
+
     </style>
   </head>
-  <body>
+  <body><div class='main'>
     <figure style="overflow:visible;" id="spinner"><div class="spinner"></div><center style="margin-top:0.5em"><strong>emscripten</strong></center></figure>
     <div class="emscripten" id="status">Downloading...</div>
     <div class="emscripten">
@@ -115,8 +170,6 @@
         monitorRunDependencies: function(left) {
           this.totalDependencies = Math.max(this.totalDependencies, left);
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
-        },
-        onRuntimeInitialized: function() {
         }
       };
       Module.setStatus('Downloading...');
@@ -129,6 +182,17 @@
       };
     </script>
     {{{ SCRIPT }}}
-    <button onclick="Module.poke('rd',1);">TEST</button>
-  </body>
+    <div class="book">
+      <div class="page left"><div class="content">RST TABLE
+
+*0000 310000CD LD SP, 0 / CALL ...
+ 0004 8000FF76 START / RST 0x30 / HALT
+      </div></div>
+      <div class="spine"></div>
+      <div class="page right"><div class="content">
+
+      </div></div>
+    </div>
+    <button onclick="Module.write(4711, 23);">TEST</button>
+  </div></body>
 </html>

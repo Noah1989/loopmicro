@@ -184,7 +184,7 @@ bool Scene::render()
     }
 
     // gray background
-    SDL_SetRenderDrawColor(renderer, 32, 32, 32, 255);
+    SDL_SetRenderDrawColor(renderer, 0x22, 0x22, 0x22, 255);
     SDL_RenderClear(renderer);
 
     int layer = 0;
