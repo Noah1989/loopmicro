@@ -5,11 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Emscripten-Generated Code</title>
     <style>
-      body { margin: 0 }
+      body { width: 1024px; margin: auto; box-shadow: 0 0 10px black; background: #181818; color: #ccc }
       .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
       div.emscripten { text-align: center; }
       /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-      canvas.emscripten { border: 0px none; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: -1}
+      canvas.emscripten { border: 0px none; width: 1024px; height: 384px; z-index: -1}
 
       .spinner {
         height: 50px;
@@ -115,6 +115,8 @@
         monitorRunDependencies: function(left) {
           this.totalDependencies = Math.max(this.totalDependencies, left);
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+        },
+        onRuntimeInitialized: function() {
         }
       };
       Module.setStatus('Downloading...');
@@ -127,5 +129,6 @@
       };
     </script>
     {{{ SCRIPT }}}
+    <button onclick="Module.poke('rd',1);">TEST</button>
   </body>
 </html>

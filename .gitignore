@@ -16,6 +16,8 @@ _autosave-*
 #*-rescue.lib
 *-save.pro
 *-save.kicad_pcb
+*- Kopie*
+*-DESKTOP-*
 
 # Netlist files (exported from Eeschema)
 *.net

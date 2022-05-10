@@ -17,8 +17,9 @@ class Switch : public Actor
         void tick();
         bool render(int layer);
 
+        bool state;
+
     private:
-        bool         state;
         SDL_Rect     rect;
         SDL_Texture *baseImage;
         SDL_Texture *onImage;

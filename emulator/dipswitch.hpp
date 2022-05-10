@@ -19,10 +19,11 @@ class DipSwitch : public Actor
         void tick();
         bool render(int layer);
 
+        unsigned int value;
+
     private:
         int                    numSwitches;
         std::vector<SDL_Rect>  rects;
-        unsigned int           value;
         Bus                   *output;
         SDL_Texture           *leftImage;
         SDL_Texture           *offImage;

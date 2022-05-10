@@ -49,6 +49,7 @@
 			<Add option="--use-preload-plugins" />
 			<Add option="-s ALLOW_MEMORY_GROWTH=1" />
 			<Add option="-lidbfs.js" />
+			<Add option="-lembind" />
 		</Linker>
 		<Unit filename=".gitignore">
 			<Option target="&lt;{~None~}&gt;" />

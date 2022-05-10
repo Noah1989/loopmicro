@@ -23,20 +23,20 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
     Signal *clk    = new Signal();
     Signal *nReset = new Signal();
     Signal *nM1    = new Signal();
-    Signal *nMreq  = new Signal();
-    Signal *nIorq  = new Signal();
-    Signal *nRd    = new Signal();
-    Signal *nWr    = new Signal();
+            nMreq  = new Signal();
+            nIorq  = new Signal();
+            nRd    = new Signal();
+            nWr    = new Signal();
     Signal *nRfsh  = new Signal();
     Signal *nHalt  = new Signal();
     Signal *nWait  = new Signal();
     Signal *nInt   = new Signal();
     Signal *nNmi   = new Signal();
     Signal *nBusrq = new Signal();
-    Signal *nBusak = new Signal();
+            nBusak = new Signal();
 
-    Bus *addr = new Bus();
-    Bus *data = new Bus();
+    addr = new Bus();
+    data = new Bus();
 
     Signal *nRdFp    = new Signal();
     Signal *nWrFp    = new Signal();
@@ -86,25 +86,25 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 
     Button *btn1 = new Button(renderer, { .x=50, .y=120 }, "CLK",
                               clk, SignalPull::WeakLow, SignalPull::WeakHigh);
-    Switch *btn2 = new Switch(renderer, { .x=610, .y=120 }, "RD",
+            swRd = new Switch(renderer, { .x=610, .y=120 }, "RD",
                               nRdFp, SignalPull::High, SignalPull::Low);
-    Switch *btn3 = new Switch(renderer, { .x=640, .y=120 }, "WR",
+            swWr = new Switch(renderer, { .x=640, .y=120 }, "WR",
                               nWrFp, SignalPull::High, SignalPull::Low);
 
     Switch *sw1 = new Switch(renderer, { .x=85, .y=120 }, "RESET",
                              nReset, SignalPull::High, SignalPull::Low);
     Switch *sw2 = new Switch(renderer, { .x=120, .y=120 }, "BUSRQ",
                              nBusrq, SignalPull::High, SignalPull::Low);
-    Button *sw3 = new Button(renderer, { .x=550, .y=120 }, "MREQ",
+         swMreq = new Switch(renderer, { .x=550, .y=120 }, "MREQ",
                              nMreqFp, SignalPull::High, SignalPull::Low);
-    Button *sw4 = new Button(renderer, { .x=580, .y=120 }, "IORQ",
+         swIorq = new Switch(renderer, { .x=580, .y=120 }, "IORQ",
                              nIorqFp, SignalPull::High, SignalPull::Low);
     Switch *sw5 = new Switch(renderer, { .x=820, .y=120 }, "OSC",
                              oscEn, SignalPull::Low, SignalPull::High);
 
-    DipSwitch *dipAddr = new DipSwitch(renderer, { .x= 200, .y = 120 },
+               dipAddr = new DipSwitch(renderer, { .x= 200, .y = 120 },
                                        "ADDRESS INPUT", addrFp, 16);
-    DipSwitch *dipData = new DipSwitch(renderer, { .x= 420, .y = 120 },
+               dipData = new DipSwitch(renderer, { .x= 420, .y = 120 },
                                        "DATA INPUT", dataFp, 8);
     DipSwitch *dipWrEn = new DipSwitch(renderer, { .x= 680, .y = 120 },
                                        "WRITE ENABLE", wrEn, 8);
@@ -140,20 +140,20 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
 
     Sio *sio = new Sio(nReset, nM1, nIorq, nRd, nInt, clk, addr, data);
 
-    actors = { led1, led2, led3, led4, led5, led6, led7, led8, led9, led10,
-               led11, led12, led13, led14, addrLeds, dataLeds,
-               btn1, btn2, btn3, sw1, sw2, sw3, sw4, sw5,
-               dipAddr, dipData, dipWrEn,
-               nMreqGate, nIorqGate, nRdGate, nWrGate, nBusakWrLogic,
-               addrGate, dataGate,
-               pullup1, pullup2, pullup3, pullup4, pullup5, pullup6, pullup7,
-               cpu, memory, lcd, osc, sio };
+    actors  = { led1, led2, led3, led4, led5, led6, led7, led8, led9, led10,
+                led11, led12, led13, led14, addrLeds, dataLeds,
+                btn1, swRd, swWr, sw1, sw2, swMreq, swIorq, sw5,
+                dipAddr, dipData, dipWrEn,
+                nMreqGate, nIorqGate, nRdGate, nWrGate, nBusakWrLogic,
+                addrGate, dataGate,
+                pullup1, pullup2, pullup3, pullup4, pullup5, pullup6, pullup7,
+                cpu, memory, lcd, osc, sio };
     signals = { clk,     nReset,  nM1,
                 nMreq,   nIorq,   nRd,   nWr,
                 nRfsh,   nHalt,   nWait, nInt,
                 nNmi,    nBusrq,  nBusak,
                 nMreqFp, nIorqFp, nRdFp, nWrFp, nBusakWr, oscEn };
-    buses = { addr, data, addrFp, dataFp, wrEn };
+    buses   = { addr, data, addrFp, dataFp, wrEn };
 }
 
 void Scene::handleEvent(SDL_Event *event)
