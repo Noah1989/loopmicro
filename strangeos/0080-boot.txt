@@ -1,0 +1,27 @@
+Startup code ( -- )
+@0080 +18 0A*00 00  jr +10 (no previous word)
+@0084 |62 6f 6f 54  "boot
+@0088 V00            "
+Initialize return stack
+@008c  31 00 00     ld sp, 0x0000
+Initialize ix data stack.
+@0090  DD 21 00 FF  ld ix, 0xff00
+Initialize dictionary (newest pointer @fd04)
+@0094  21 ?? ??     ld hl, check (@????)
+@0098  11 00 00     ld de, 0
+@009c  ED 63 04 fd  ld (newest), hl
+@00a0  ED 53 06 fd  ld (newest+2), de
+
+Greet user with OS name
+@00a4  CD 00 01     call hello (@0100)
+
+Main Loop:
+       Read Line (buffer: @fe00..feff)
+@00a8 >CD 00 02     call readln (@0200)
+      |Run Interpreter (source pointer @fd00)
+@00ac |21 00 fe     ld hl, buffer
+@00b0 |11 00 00     ld de, 0
+@00b4 |ED 63 00 fd  ld (source), hl
+@00b8 |ED 53 02 fd  ld (source+2), de
+@00bc |CD 00 04     call interpret @0400
+@00c0 +18 E6*       jr -26

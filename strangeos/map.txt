@@ -1,0 +1,17 @@
+0000..7fff   non-volatile memory
+`0000..0fff   code
+|`0000         reset, rst, nmi
+|`0080         startup, main loop
+|`0100         hello
+|`0180         string iterator
+|`0200         readline
+|`0400         interpreter
+`1000..7fff   unused
+ 
+8000..ffff   volatile memory
+`8000..ffcf   unused
+`fd00..ffdf   system variables
+|`fd00         pointer to source
+|`fd04         pointer to newest word
+`fe00..feff   readline buffer
+`ff00..ffff   stacks

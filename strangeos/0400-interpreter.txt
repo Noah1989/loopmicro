@@ -1,0 +1,86 @@
+interpret ( * -- * )
+Parse and execute words from source until 0x00 is found.
+@0400  18 0A*00 02  jr +10 (previous: readln @0200)
+@0404               "inte
+@040c                rpre
+                     t"
+                    ld hl, (source)
+                    ld a, (hl)
+                    and a, a
+                    ret Z
+                    call word ( -- name$ )
+                    call exec ( addr -- * )
+                    call check
+                    jr -??
+
+eval ( name$ -- )
+// Find and execute word from interpreter dictionary
+def eval { find exec check }
+                    call find
+                    call exec
+                    call check
+                    ret
+
+word ( -- name$ )
+Consume word from source
+@???? +18 0A*00 04  jr +10 (previous: interpret @0400)
+      |             "word
+      V              "
+Find beginning of next word from source.
+                    ld hl, (source)
+      >             ld a, (hl)
+      |             cp a, 0x21 // check for whitespace
+      |           + jr NC, +?? // ok, continue
+      |           | inc hl // skip whitespace
+@???? +           V jr -?? // try again
+Push pointer to located word on data stack.
+                    ld de, 0
+                    rst 0x18 data<-dehl
+Advance source pointer to after the word.
+      >             inc hl
+      |             ld a, (hl)
+      |             cp a, 0x21
+      +             jr NC, -??
+Mark end of word with null byte, if necessary.
+                    and a, a
+      +   0A*       jr z, +10
+      |             ld (hl), 0
+      |             inc hl
+      >             ld (source), hl
+                    ret
+
+find ( name$ -- addr )
+// Find word by name in dictionary.
+def find let { newest while { dup name it cmp$ } previous }
+@???? +18 0A*?? ??  jr +10 (previous: word @????)
+      |66 69 6E 65  "find
+      |00            "
+      >E7           rst 0x20 data->dehl // let
+       D5 E5        push dehl
+                                        // {
+       ED 6B 04 fd  ld hl, (newest)     //  newest ( @fd04 )
+       ED 5B 06 fd  ld de, (newest+2)
+       DF           rst 0x18 data<-dehl
+                                        //  while {
+      >CD ?? ??     call dup            //   dup
+      |CD ?? ??     call name           //   name
+      |E1 D1 D5 E5  peek dehl           //   it
+      |DF           rst 0x18 data<-dehl
+      |CD ?? ??     call cmp$           //   cmp$ 
+      |                                 //  }
+      |01 FC FF     ld bc, -4
+      |DD 09        add ix, bc
+      |DD 7E 00     ld a, (ix+0)
+      |A7           and a, a
+      |28 ??*     + jr z, +??
+      |CD ?? ??   | call previous       //  previous
+      +18 ??*     | jr -??
+                  V                     // }
+       E1 D1        pop dehl
+       C9           ret
+                    
+exec ( addr -- * )
+Execute code at addr.
+
+check ( -- )
+Check for stack over-/underflow.

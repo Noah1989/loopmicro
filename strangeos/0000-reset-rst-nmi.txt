@@ -1,0 +1,50 @@
+Execution starts here after reset.
+Setup return stack and jump to startup code.
+
+@0000  C3 80 00     jp boot @0080
+@0004  
+
+Common routines that can be called using rst.
+
+These I/O routines just adjust the stack without
+actually doing anything. I/O is done by the
+emulator using breakpoints. On real hardware these
+should redirect to actual drivers.
+rst 0x08 ( c -- ) write char to stdout
+@0008  01 FC FF     ld bc, -4
+@000c  DD 09|C9     add ix, bc ; ret
+rst 0x10 ( -- c ) get char from stdin
+@0010  01 04 00     ld bc, 4
+@0014  DD 09|C9     add ix, bc ; ret
+
+rst 0x18 ( -- n ) push dehl to data stack
+@0018  FF           rst 0x38 (error)
+@001c
+
+rst 0x20 ( n -- ) pop dehl from data stack
+@0020  FF           rst 0x38 (error)
+@0024
+
+rst 0x28/0x30
+When entering through 0x28, pushes bc bytes taken
+directly from after the rst instruction to the
+data stack (using ix) and jumps back to after the data.
+When entering through 0x30, the B0 byte is a no-op
+(well, actually or a, b -- so be careful!)
+leaving just jp (hl) which effectively turns rst 0x30
+into call (hl).
+@0028  DD 5D DD 54  ld de, ix
+@002c  DD 09|E1|ED  add ix, bc ; pop hl ; ldir
+@0030  B0|E9        (ldir/or a, b) ; jp (hl)
+@0034
+
+rst 0x38 (error handler)
+For now, this just halts.
+@0038  F3|76|18 FC  di ; halt ; jr -4
+@003c
+
+...
+
+non-maskable interrupt (0x66)
+Unused for now (calls error handler)
+@0064  00 00|FF     rst 0x38

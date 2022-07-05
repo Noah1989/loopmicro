@@ -1,0 +1,87 @@
+readln ( -- )
+Read line from stdin to buffer at 0xfe00
+@0200 +18 0A*80 01  jr +10 (previous: for$ @0180)
+@0204 |72 65 61 64  "read
+@0208 |6C 6E 00      ln"
+@020c >21 00 fe     ld hl, 0xfe00
+@0210 >36 00        ld (hl), 0
+@0214 |E5           push hl
+@0218 |D7           rst 0x10 (stdin)
+@021c |DD 7E FC     ld a, (ix-4)
+@0220 |FE 20        cp a, 0x20
+@0224 |38 2A*     + jr C, +42 (control)
+@0228 |F5         | push af
+@022c |CF         | rst 0x08 (stdout/echo)
+@0230 |F1         | pop af
+@0234 |E1         | pop hl
+@0238 |77         | ld (hl), a
+@023c |23         | inc hl
+@0240>|7C         | ld a, h
+@0244||FE FE      | cp 0xfe
+@0248|+28 C6*     | jr z, -58
+@024c| FF         | rst 0x38 (error)
+     | control:   v
+     | Handle control characters 
+     | via lookup table.
+@0250| 01 FC FF     ld bc, -4
+@0254| DD 09        add ix, bc
+@0258| 21 78 02     ld hl, handler_table
+@025c| 4F;06 00     ld c, a ; ld b, 0
+@0260| 09 09        add hl, bc (2x)
+@0264| 5E   ;23     ld e, (hl) ; inc hl
+@0268| 56   ;EB     ld d, (hl) ; ex de, hl
+@026c| F7           rst 0x30 (call hl)
+@0270| E1           pop hl
+@0274+ 18 CA*       jr -54
+
+handler_table:
+@0278 [b8 02|b8 02] ^@     , ^A
+@027c [b8 02|b8 02] ^B     , ^C
+@0280 [b8 02|b8 02] ^D     , ^E
+@0284 [b8 02|b8 02] ^F     , ^G
+@0288 [e0 02|b8 02] ^H (BS), ^I
+@028c [c8 02|b8 02] ^J (LF), ^K
+@0290 [b8 02|b8 02] ^L     , ^M
+@0294 [b8 02|b8 02] ^N     , ^O
+@0298 [b8 02|b8 02] ^P     , ^Q
+@029c [b8 02|b8 02] ^R     , ^S
+@02a0 [b8 02|b8 02] ^T     , ^U
+@02a4 [b8 02|b8 02] ^V     , ^W
+@02a8 [b8 02|b8 02] ^X     , ^Y
+@02ac [b8 02|b8 02] ^Z     , ^[
+@02b0 [b8 02|b8 02] ^\     , ^]
+@02b4 [b8 02|b8 02] ^^     , ^_
+
+handler_noop:
+@02b8  01 04 00;EF  ld bc, 4 ; rst 0x28 (push data)
+@02bc [07 00 00 00] (bell character)
+@02c0  CF           rst 0x08 (stdout)
+@02c4  C9           ret
+
+handler_lf:
+@02c8  01 04 00;EF  ld bc, 4 ; rst 0x28 (push data)
+@02cc [0A 00 00 00] (line feed)
+@02d0  CF           rst 0x08 (stdout)
+@02d4  C1           pop bc (discard return address)
+@02d8  E1           pop hl (discard saved hl)
+@02dc  C9           ret    (return from readln)
+
+handler_bs:
+@02e0  D1           pop de (return address)
+@02e4  E1           pop hl (input pointer)
+@02e8  7D           ld a, l
+@02ec  A7           and a, a (check for empty buffer)
+@02f0 +20 0E*       jr nz, +14
+@02f4 |E5           push hl
+@02f8 |D5           push de
+@02fc |C3 b8 02     jp handler_noop
+@0300 >2D           dec l
+@0304  E5           push hl
+@0308  D5           push de
+@030c  01 0C 00;EF  ld bc, 12 ; rst 0x28 (push data)
+@0310 [08 00 00 00] (backspace)
+@0314 [20 00 00 00] (space)
+@0318 [08 00 00 00] (backspace)
+@031c  CF CF CF     rst 0x08 (stdout) 3x
+@0320  C9           ret
+

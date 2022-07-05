@@ -1,0 +1,14 @@
+Hello, World! ( -- )
+@0100 +18 0A*80 00  jr +10 (previous: boot @0080)
+@0104 |68 65 6c 6c  "hell
+@0108 |6f 00         o"
+@010c >01 08 00|EF  ld bc, 8 ; rst 0x28
+@0110 [20 01 00 00] c$ @0120 (text)
+@0114 [08 00 00 00] fn @0008 (stdout)
+@0118  CD 80 01     call for$ @0180
+@011c  C9           ret
+text
+@0120  53 74 72 61  "Stra
+@0124  6E 67 65 20   nge 
+@0128  4F 53 0a 00   OS" (newline)
+
